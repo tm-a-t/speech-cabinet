@@ -3,8 +3,8 @@ import "~/styles/globals.css";
 import {type Metadata} from "next";
 import {ThemeProvider} from '~/app/_components/ui/theme-provider';
 
-import '@fontsource/libre-baskerville/400.css';
-import '@fontsource/libre-baskerville/700.css';
+import '@fontsource/spectral/400.css';
+import '@fontsource/spectral/700.css';
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -16,10 +16,12 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider attribute="class" defaultTheme="dark">
+      <ThemeProvider attribute="class" defaultTheme="dark">
+        <main className="flex min-h-screen bg-stone-900 text-stone-50">
           {children}
-        </ThemeProvider>
+        </main>
+      </ThemeProvider>
       </body>
     </html>
-  );
+);
 }

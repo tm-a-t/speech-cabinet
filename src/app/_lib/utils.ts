@@ -8,3 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export function uniqueValues<T>(array: Array<T>): T[] {
   return [...new Set(array)]
 }
+
+export function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
+}

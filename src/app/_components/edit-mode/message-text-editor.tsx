@@ -5,9 +5,12 @@ import {Paragraph} from '@tiptap/extension-paragraph';
 import {Document} from '@tiptap/extension-document';
 import {Text} from '@tiptap/extension-text';
 import {Placeholder} from '@tiptap/extension-placeholder';
+import {cn} from '~/app/_lib/utils';
 
-function TextEditor(props: {content: string, onUpdate: (value: string) => void}) {
+function MessageTextEditor(props: {content: string, onUpdate: (value: string) => void}) {
   const editor = useEditor({
+    immediatelyRender: false,
+    autofocus: 'end',
     onUpdate({ editor }) {
       props.onUpdate(editor.getHTML())
     },
@@ -18,20 +21,20 @@ function TextEditor(props: {content: string, onUpdate: (value: string) => void})
     },
     extensions: [
       Placeholder.configure({
-        placeholder: 'Some text...',
+        placeholder: 'Type a line...',
       }),
       Document,
       Text,
       Paragraph.configure({
         HTMLAttributes: {
-          class: 'leading-7 [&:not(:first-child)]:mt-1 [&:first-child]:inline',
+          class: '[&:not(:first-child)]:mt-3 [&:first-child]:inline',
         },
       }),
     ],
     content: props.content,
   })
 
-  return <EditorContent editor={editor} className="inline"/>
+  return <EditorContent editor={editor} className={cn("inline")}/>
 }
 
-export default TextEditor
+export default MessageTextEditor

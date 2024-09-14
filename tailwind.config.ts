@@ -7,7 +7,7 @@ export default {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ["'Libre Baskerville'", ...fontFamily.sans]
+  			sans: ["'Spectral'", ...fontFamily.sans]
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -23,5 +23,11 @@ export default {
 			}
   	}
   },
+	safelist: [
+		'text-intellect',
+		'text-psyche',
+		'text-physique',
+		'text-motorics',
+	],
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;

@@ -2,25 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 @layer base {
-  :root {
-    --radius: 0.5rem;
-  }
+    :root {
+        --radius: 0.5rem;
+        font-size: 16px;
+    }
 }
 
+/*@font-face {*/
+/*    font-family: 'Sina Nova';*/
+/*    src: url('/Sina Nova W01 Medium.ttf') format('truetype');*/
+/*}*/
 
 *, ::before, ::after {
-  border-color: #292524;
+    border-color: #292524;
 }
 
 .tiptap:focus {
-  outline: none;
+    outline: none;
+}
+
+.tiptap p.is-editor-empty:first-child {
+    display: inline-block;
 }
 
 .tiptap p.is-editor-empty:first-child::before {
-  color: #adb5bd;
-  content: attr(data-placeholder);
-  display: inline;
-  /*float: left;*/
-  height: 0;
-  pointer-events: none;
+    /*color: rgb(120 113 108);*/
+    opacity: .2;
+    content: attr(data-placeholder);
+    display: inline;
+    float: left;
+    height: 0;
+    pointer-events: none;
+}
+
+.editor-quotation p:first-child:not(.is-editor-empty)::before,
+.editor-quotation p:last-child:not(.is-empty)::after,
+.editor-quotation p:last-child.is-empty:not(.is-editor-empty)::before {
+    content: '"';
+}
+
+@keyframes fadeInWhenAppear {
+    0% {
+        opacity: 0;
+        display: none;
+    }
+
+    1% {
+        opacity: 0;
+        display: block;
+    }
+
+    100% {
+        opacity: 1;
+        display: block;
+    }
 }
