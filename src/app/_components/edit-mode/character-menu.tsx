@@ -10,7 +10,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "~/app/_components/ui/command";
-import {Drawer, DrawerContent, DrawerTrigger} from "~/app/_components/ui/drawer";
+import {Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger} from "~/app/_components/ui/drawer";
 import {cn, getColorClass, getDefaultPortraitUrl, uniqueValues} from "~/app/_lib/utils";
 import {Info, Pencil, SquareUser, Trash, Users} from 'lucide-react';
 import {
@@ -30,9 +30,9 @@ import {
 import {characters, skillColorClass, skills} from '~/app/_lib/names';
 import {Tooltip, TooltipContent, TooltipTrigger} from "../ui/tooltip";
 import {Message, SavedData} from "~/app/_lib/data-types";
-import {NameOptionList} from "./name-option-list";
+import {NameSelect} from "./name-select";
 import {TypeSelect} from '~/app/_components/edit-mode/type-select';
-import { PortraitSelect } from "./portrait-select";
+import {PortraitSelect} from "./portrait-select";
 
 export function CharacterMenu({message, saveMessage, removeMessage, data, saveData, usedNames}: {
   message: Message,
@@ -42,44 +42,25 @@ export function CharacterMenu({message, saveMessage, removeMessage, data, saveDa
   saveData: (data: SavedData) => void,
   usedNames: string[],
 }) {
-  const [open, setOpen] = React.useState(false);
   const isDesktop = useIsDesktop();
-  const [selectedOption, setSelectedOption] = React.useState<string>(message.name);
-
-  function handleSelectedOption(option: string) {
-    setSelectedOption(option);
-    saveMessage({
-      ...message,
-      name: option ?? "",
-    });
-  }
+  const [open, setOpen] = React.useState(false);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="outline"
-                className={cn("uppercase tracking-wider h-8 px-3", getColorClass(selectedOption, data))}>
-          {selectedOption}
+                className={cn("uppercase tracking-wider h-8 px-3", getColorClass(message.name, data))}>
+          {message.name}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="start">
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>
-            <Users className="mr-2 h-4 w-4"/>
-            Change character
-          </DropdownMenuSubTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuSubContent className="p-0">
-              <NameOptionList setOpen={setOpen}
-                              setSelectedOption={handleSelectedOption}
-                              usedNames={usedNames}
-                              selectedOption={selectedOption}
-                              isDesktop={isDesktop}
-                              data={data}/>
-            </DropdownMenuSubContent>
-          </DropdownMenuPortal>
-        </DropdownMenuSub>
-        <PortraitSelect message={message} data={data} saveData={saveData}/>
+        <NameSelect message={message}
+                    saveMessage={saveMessage}
+                    setOpen={setOpen}
+                    usedNames={usedNames}
+                    isDesktop={isDesktop}
+                    data={data}/>
+        <PortraitSelect message={message} data={data} saveData={saveData} setOpen={setOpen}/>
         <TypeSelect message={message} data={data} saveData={saveData}/>
         <DropdownMenuItem onSelect={removeMessage}>
           <Trash className="mr-2 h-4 w-4"/>
@@ -87,6 +68,7 @@ export function CharacterMenu({message, saveMessage, removeMessage, data, saveDa
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+
   );
 
   // return (

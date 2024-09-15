@@ -7,7 +7,7 @@ import {
 } from '~/app/_components/ui/dropdown-menu';
 import {SquareUser} from 'lucide-react';
 import {Command, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator} from '~/app/_components/ui/command';
-import {characters, skills} from '~/app/_lib/names';
+import {characters, harryPortraitNames, allPortraitNames, skills} from '~/app/_lib/names';
 import {Tooltip, TooltipContent, TooltipTrigger} from '~/app/_components/ui/tooltip';
 import {getDefaultPortraitUrl, getPortraitUrl} from '~/app/_lib/utils';
 import * as React from 'react';
@@ -15,11 +15,16 @@ import {Message, SavedData} from '~/app/_lib/data-types';
 import {Skeleton} from '~/app/_components/ui/skeleton';
 import { SkeletonImage } from '../ui/skeleton-image';
 
-export function PortraitSelect({message, data, saveData}: {
+export function PortraitSelect({message, data, saveData, setOpen}: {
   message: Message,
   data: SavedData,
   saveData: (data: SavedData) => void,
+  setOpen: (value: boolean) => void,
 }) {
+  if (message.name !== 'You' && (characters.includes(message.name) || skills.includes(message.name))) {
+    return
+  }
+
   function handleSelectPortraitUrl(name: string | null) {
     saveData({
       ...data,
@@ -31,8 +36,10 @@ export function PortraitSelect({message, data, saveData}: {
         }
       }
     });
+    setTimeout(() => setOpen(false), 200);
   }
 
+  const options = message.name === 'You' ? harryPortraitNames : allPortraitNames;
   return (
     <DropdownMenuSub>
       <DropdownMenuSubTrigger>
@@ -58,7 +65,7 @@ export function PortraitSelect({message, data, saveData}: {
                              className="w-1/4 aspect-portrait flex text-center align-center text-zinc-500">
                   Clear portrait
                 </CommandItem>
-                {[...characters, ...skills].map((name) => {
+                {options.map((name) => {
                   const url = getDefaultPortraitUrl(name)!;
                   return <CommandItem onSelect={() => handleSelectPortraitUrl(name)}
                                       value={name} className="w-1/4" key={name}>

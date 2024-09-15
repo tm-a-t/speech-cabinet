@@ -1,7 +1,7 @@
 import {ClassValue, clsx} from 'clsx';
 import {twMerge} from 'tailwind-merge';
 import {SavedData} from './data-types';
-import {characters, skillColorClass, skills} from '~/app/_lib/names';
+import {characters, allPortraitNames, skillColorClass, skills} from '~/app/_lib/names';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -28,12 +28,20 @@ export function downloadFile(path: string, name: string) {
   link.remove();
 }
 
+export function formatTime(): string {
+  const pad = (n: number, s = 2) => (`${new Array(s).fill(0)}${n}`).slice(-s);
+  const d = new Date();
+
+  return `${pad(d.getFullYear(), 4)}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}-${pad(d.getMinutes())}`;
+}
+
 export function getDefaultPortraitUrl(name: string): string {
   return '/portraits/' + name + '.png';
 }
 
-export function getPortraitUrl(name: string, data: SavedData): string  {
-  return data.overrides.portraitUrl[name] ?? getDefaultPortraitUrl(name);
+export function getPortraitUrl(name: string, data: SavedData): string {
+  return data.overrides.portraitUrl[name] ??
+    (allPortraitNames.includes(name) ? getDefaultPortraitUrl(name) : '');
 }
 
 export function getColorClass(name: string, data: SavedData): string {

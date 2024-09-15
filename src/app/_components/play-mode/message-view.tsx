@@ -1,7 +1,6 @@
 import {CharacterMenu} from '~/app/_components/edit-mode/character-menu';
 import {Button} from '~/app/_components/ui/button';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/app/_components/ui/select';
-import MessageTextEditor from '~/app/_components/edit-mode/message-text-editor';
 import React from 'react';
 import {difficulties, Difficulty, Message, Result, SavedData} from '~/app/_lib/data-types';
 import {cn, getColorClass} from '~/app/_lib/utils';

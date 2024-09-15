@@ -9,7 +9,7 @@ import History from '@tiptap/extension-history';
 import {cn} from '~/app/_lib/utils';
 import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
 
-function MessageTextEditor(props: { content: string, onUpdate: (value: string) => void }) {
+export function MessageTextEditor(props: { content: string, onUpdate: (value: string) => void }) {
   const isDesktop = useIsDesktop();
   const editor = useEditor({
     immediatelyRender: false,
@@ -36,5 +36,3 @@ function MessageTextEditor(props: { content: string, onUpdate: (value: string) =
 
   return <EditorContent editor={editor} className={cn("inline disco-message")}/>;
 }
-
-export default MessageTextEditor;

@@ -1,7 +1,7 @@
 import {CharacterMenu} from '~/app/_components/edit-mode/character-menu';
 import {Button} from '~/app/_components/ui/button';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/app/_components/ui/select';
-import MessageTextEditor from '~/app/_components/edit-mode/message-text-editor';
+import {MessageTextEditor} from '~/app/_components/edit-mode/message-text-editor';
 import React from 'react';
 import {difficulties, Difficulty, Message, Result, SavedData} from '~/app/_lib/data-types';
 import {DropdownMenu, DropdownMenuTrigger} from '../ui/dropdown-menu';
@@ -69,20 +69,6 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
                          saveData={saveData}
                          usedNames={usedNames}/>
         </LineElement>
-
-        {/*{isSkill && !message.check &&*/}
-        {/*  <LineElement>*/}
-        {/*    <Button variant="ghost" onClick={() => handleCheckToggle(true)} className="pl-1 pr-2 ml-0.5 text-zinc-500">*/}
-        {/*      + Check*/}
-        {/*    </Button>*/}
-        {/*  </LineElement>*/}
-        {/*  // <Toggle className="ml-1"*/}
-        {/*  //         aria-label="Toggle skill check"*/}
-        {/*  //         pressed={message.check !== undefined}*/}
-        {/*  //         onPressedChange={handleCheckToggle}>*/}
-        {/*  //   <Dices className="w-4 h-4 text-zinc-500"/>*/}
-        {/*  // </Toggle>*/}
-        {/*}*/}
 
         {showCheck &&
           <LineElement className="text-zinc-400">

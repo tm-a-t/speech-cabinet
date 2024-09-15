@@ -7,7 +7,7 @@ import {getVideoStatus, startRender} from '~/app/_lib/server-actions';
 import {totalDuration} from '../../_lib/time';
 import {Progress} from '../ui/progress';
 import { Loader2, Download } from 'lucide-react';
-import {downloadFile} from '~/app/_lib/utils';
+import {downloadFile, formatTime} from '~/app/_lib/utils';
 
 export function DownloadButton({data}: { data: SavedData }) {
   const [showButton, setShowButton] = useState(true);
@@ -15,7 +15,7 @@ export function DownloadButton({data}: { data: SavedData }) {
   const [downloadProgress, setDownloadProgress] = useState<number | null>(null);
   const [showSpinner, setShowSpinner] = useState(false);
   const [showResult, setShowResult] = useState(false);
-  const total = totalDuration(data);
+  const total = totalDuration(data) + 2000;
   const progressPercentage = Math.min((downloadProgress ?? 0) / total * 100, 100);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export function DownloadButton({data}: { data: SavedData }) {
           setShowSpinner(false);
           setShowResult(true);
           clearInterval(timer);
-          downloadFile('/api/video/' + videoId, 'disco.mp4');
+          downloadFile('/api/video/' + videoId, `Disco ${formatTime()}.mp4`);
         }
       })();
     }, 1000);
@@ -54,10 +54,10 @@ export function DownloadButton({data}: { data: SavedData }) {
 
   return (
     <>
-      <div className="absolute top-0 left-0 right-0 p-2">
+      <div className="absolute bottom-0 left-0 right-0 p-2">
         {downloadProgress && <Progress value={progressPercentage}/>}
       </div>
-      <div className="mt-3 inline-flex justify-center content-center min-h-12 w-full relative">
+      <div className="mt-4 text-center inline-flex justify-center content-center min-h-12 w-full relative">
         {showButton &&
           <Button onClick={handleDownload} variant="ghost"
                  disabled={downloadProgress !== null || showSpinner}
@@ -70,7 +70,7 @@ export function DownloadButton({data}: { data: SavedData }) {
           <Loader2 className="animate-spin w-8 h-8"/>
         }
         {showResult &&
-          <span>Download started. <a className="underline underline-offset-4" href={'/api/video/' + videoId} target="_blank">Link to the video</a></span>
+          <span>Download started. You can also use <a className="underline underline-offset-4" href={'/api/video/' + videoId} target="_blank">the link to the video.</a></span>
         }
       </div>
     </>

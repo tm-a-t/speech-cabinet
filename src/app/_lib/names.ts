@@ -53,12 +53,11 @@ export const characters = [
   'Eugene',
   'Evrart Claire',
   'Fat Angus',
-  'Frittte clerk',
+  'Fritte clerk',
   'Fuck the World',
   'Garte, the Cafeteria Manager',
   'Gary, the Cryptofascist',
   'Gaston Martin',
-  'George',
   'Glen',
   'Gorący Kubek',
   'Horse-Faced Woman',
@@ -76,7 +75,6 @@ export const characters = [
   'Lilienne\'s Twin',
   'Lilienne\'s Other Twin',
   'Lilienne, the Net Picker',
-  'Lily Carter',
   'Little Lily',
   'Mack Torson',
   'Man on Water Lock',
@@ -111,7 +109,6 @@ export const characters = [
   'Sunday Friend',
   'Sylvie',
   'The Deserter',
-  'The Gardener',
   'The Hanged Man',
   'The Pigs',
   'Theo',
@@ -150,3 +147,19 @@ export const skillColorClass: Record<string, string> = {
   'Interfacing': 'text-motorics',
   'Composure': 'text-motorics',
 }
+
+export const harryPortraitNames = [
+  'you',
+  'you, shaved',
+  'you, without expression',
+  'you, shaved, without expression',
+  'you, fascist',
+  'you, shaved fascist',
+  'you, obscured',
+]
+
+export const allPortraitNames = [
+  ...harryPortraitNames,
+  ...skills,
+  ...characters.filter(name => name !== 'You'),
+]

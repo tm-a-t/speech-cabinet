@@ -32,7 +32,7 @@ export function Player({data}: { data: SavedData }) {
         setTimeout(() => setIsLastMessageShown(true), 100)
       }, delay);
     }
-  }, [shownMessages]);
+  }, [shownMessages, messagePortraits]);
 
   useEffect(() => {
     Promise.all(
@@ -48,7 +48,7 @@ export function Player({data}: { data: SavedData }) {
       <div id="tape-background" className="tape-background absolute left-0 right-0 bottom-0"
            style={{top: yPosition - playerHeight, transition: 'top .3s cubic-bezier(.1, .3, .7, .9)'}}></div>
       {data.showPortraits && shownPortrait !== null &&
-        <img src={shownPortrait} alt="" className="absolute z-20 w-64 top-32 left-4"/>
+        <img src={shownPortrait} alt="" className="absolute z-20 w-64 top-32 left-5 shadow-lg"/>
       }
       <div id="messages" className={"absolute px-12 py-48 text-3xl leading-[3rem]"}
            style={{top: yPosition + 'px', transition: 'top .3s cubic-bezier(.1, .3, .7, .9)'}}>
