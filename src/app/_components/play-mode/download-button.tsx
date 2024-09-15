@@ -4,9 +4,10 @@ import {Button} from '~/app/_components/ui/button';
 import {useEffect, useState} from 'react';
 import {SavedData} from '~/app/_lib/data-types';
 import {getVideoStatus, startRender} from '~/app/_lib/server-actions';
-import {totalDuration} from './time';
+import {totalDuration} from '../../_lib/time';
 import {Progress} from '../ui/progress';
 import { Loader2, Download } from 'lucide-react';
+import {downloadFile} from '~/app/_lib/utils';
 
 export function DownloadButton({data}: { data: SavedData }) {
   const [showButton, setShowButton] = useState(true);
@@ -38,6 +39,7 @@ export function DownloadButton({data}: { data: SavedData }) {
           setShowSpinner(false);
           setShowResult(true);
           clearInterval(timer);
+          downloadFile('/api/video/' + videoId, 'disco.mp4');
         }
       })();
     }, 1000);
@@ -68,7 +70,7 @@ export function DownloadButton({data}: { data: SavedData }) {
           <Loader2 className="animate-spin w-8 h-8"/>
         }
         {showResult &&
-          <span>Download started. <a className="underline underline-offset-4" href={'/video/' + videoId + '.mp4'} target="_blank">Link to the video</a></span>
+          <span>Download started. <a className="underline underline-offset-4" href={'/api/video/' + videoId} target="_blank">Link to the video</a></span>
         }
       </div>
     </>

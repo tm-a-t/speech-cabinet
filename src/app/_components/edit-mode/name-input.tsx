@@ -99,24 +99,27 @@ function OptionList(
 
   return (
     <Command>
-      <CommandInput placeholder="Name..." autoFocus onValueChange={text => setInput(text.trim())}/>
+      <CommandInput placeholder="Character..." onValueChange={text => setInput(text.trim())} className="uppercase tracking-wider"/>
       <CommandList>
         {/*<CommandEmpty>No results found.</CommandEmpty>*/}
 
-        <CommandGroup heading="Used characters">
-          {usedNames.map((name) => <OptionItem option={name} onSelect={() => selectOption(name)} key={name}/>)}
-        </CommandGroup>
-        <CommandSeparator/>
+        {usedNames.length && <>
+          <CommandGroup heading="Used characters">
+            {usedNames.map((name) => <OptionItem option={name} category="used" onSelect={() => selectOption(name)}
+                                                 key={name}/>)}
+          </CommandGroup>
+          <CommandSeparator/>
+        </>}
         <CommandGroup heading="Skills">
-          {skills.map((option) => <OptionItem option={option} onSelect={() => selectOption(option)} key={option}/>)}
+          {skills.map((option) => <OptionItem option={option} category="skills" onSelect={() => selectOption(option)} key={option}/>)}
         </CommandGroup>
         <CommandGroup heading="Other characters">
-          {characters.map((option) => <OptionItem option={option} onSelect={() => selectOption(option)} key={option}/>)}
+          {characters.map((option) => <OptionItem option={option} category="other" onSelect={() => selectOption(option)} key={option}/>)}
         </CommandGroup>
         {customOption && <>
           <CommandSeparator/>
           <CommandGroup heading="Create character">
-            <OptionItem option={customOption} onSelect={() => selectOption(customOption)}/>
+            <OptionItem option={customOption} category="new" onSelect={() => selectOption(customOption)}/>
           </CommandGroup>
         </>}
       </CommandList>
@@ -124,11 +127,11 @@ function OptionList(
   );
 }
 
-function OptionItem({option, onSelect}: { option: string, onSelect: (() => void) }) {
+function OptionItem({option, category, onSelect}: { option: string, category: string, onSelect: (() => void) }) {
   return (
     <CommandItem
       key={option}
-      value={option}
+      value={category + ' / ' + option}
       onSelect={onSelect}
       className={cn("uppercase tracking-wider", nameClass[option])}
     >

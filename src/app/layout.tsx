@@ -17,7 +17,7 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
     <html lang="en" suppressHydrationWarning>
       <body>
       <ThemeProvider attribute="class" defaultTheme="dark">
-        <main className="flex min-h-screen bg-stone-900 text-stone-50">
+        <main className="flex bg-zinc-900 text-zinc-50 min-h-dvh">
           {children}
         </main>
       </ThemeProvider>

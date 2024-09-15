@@ -67,7 +67,7 @@ export function MessageEditor({message, saveMessage, usedNames, removeMessage}: 
   }
 
   return (
-    <div className="pl-8 leading-8 [&:not(:first-child)]:mt-4">
+    <div className="pl-8 leading-7 [&:not(:first-child)]:mt-6">
       <span className="-ml-8 relative h-0">
         <LineElement>
           <NameInput value={message.name}
@@ -78,7 +78,7 @@ export function MessageEditor({message, saveMessage, usedNames, removeMessage}: 
 
         {/*{isSkill && !message.check &&*/}
         {/*  <LineElement>*/}
-        {/*    <Button variant="ghost" onClick={() => handleCheckToggle(true)} className="pl-1 pr-2 ml-0.5 text-stone-500">*/}
+        {/*    <Button variant="ghost" onClick={() => handleCheckToggle(true)} className="pl-1 pr-2 ml-0.5 text-zinc-500">*/}
         {/*      + Check*/}
         {/*    </Button>*/}
         {/*  </LineElement>*/}
@@ -86,12 +86,12 @@ export function MessageEditor({message, saveMessage, usedNames, removeMessage}: 
         {/*  //         aria-label="Toggle skill check"*/}
         {/*  //         pressed={message.check !== undefined}*/}
         {/*  //         onPressedChange={handleCheckToggle}>*/}
-        {/*  //   <Dices className="w-4 h-4 text-stone-500"/>*/}
+        {/*  //   <Dices className="w-4 h-4 text-zinc-500"/>*/}
         {/*  // </Toggle>*/}
         {/*}*/}
 
         {isSkill &&
-          <LineElement className="text-stone-500">
+          <LineElement className="text-zinc-400">
             <Select onValueChange={handleCheckDifficultySelect} value={message.check?.difficulty ?? 'none'}>
               <SelectTrigger className="h-8">
                 <SelectValue/>
@@ -108,7 +108,7 @@ export function MessageEditor({message, saveMessage, usedNames, removeMessage}: 
         }
 
         {message.check &&
-          <LineElement className="text-stone-500">
+          <LineElement className="text-zinc-400">
             <Select onValueChange={handleCheckResultSelect} value={message.check.result}>
               <SelectTrigger className="h-8">
                 <SelectValue/>
@@ -122,8 +122,8 @@ export function MessageEditor({message, saveMessage, usedNames, removeMessage}: 
         }
       </span>
 
-      <span className="text-speech"> &ndash; </span>
-      <span className="text-speech">
+      <span className="text-zinc-300"> &ndash; </span>
+      <span className="text-zinc-300">
         <MessageTextEditor content={message.text} onUpdate={handleTextUpdate}/>
       </span>
     </div>

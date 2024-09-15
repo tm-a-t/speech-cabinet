@@ -8,13 +8,20 @@
     }
 }
 
+@layer utilities {
+    .tape-background {
+        background: url('/bg.png') repeat-y top center;
+        background-size: 100% auto;
+    }
+}
+
 /*@font-face {*/
 /*    font-family: 'Sina Nova';*/
 /*    src: url('/Sina Nova W01 Medium.ttf') format('truetype');*/
 /*}*/
 
 *, ::before, ::after {
-    border-color: #292524;
+    border-color: #27272a;
 }
 
 .tiptap:focus {
@@ -25,9 +32,9 @@
     display: inline-block;
 }
 
-.tiptap p.is-editor-empty:first-child::before {
+.tiptap p.is-empty::before {
     /*color: rgb(120 113 108);*/
-    opacity: .2;
+    opacity: .4;
     content: attr(data-placeholder);
     display: inline;
     float: left;

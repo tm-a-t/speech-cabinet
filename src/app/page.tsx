@@ -8,6 +8,8 @@ import {Editor} from '~/app/_components/edit-mode/editor';
 import {Player} from './_components/play-mode/player';
 import {cn} from './_lib/utils';
 import { DownloadButton } from './_components/play-mode/download-button';
+import {Tabs, TabsList, TabsTrigger } from './_components/ui/tabs';
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from './_components/ui/menubar';
 
 export default function HomePage() {
   const [data, setData] = useState<SavedData | null>(null);
@@ -31,14 +33,45 @@ export default function HomePage() {
   }
 
   return (
-    <>
+    <Tabs className="w-full h-full">
+      <div className="fixed z-20 top-0 left-0 right-0 p-2 flex justify-between items-center">
+        <Menubar>
+          <MenubarMenu>
+            <MenubarTrigger>Dialogue Elysium</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem>
+                New Tab
+              </MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+          <MenubarMenu>
+            <MenubarTrigger>Settings</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem>
+                New Tab
+              </MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
+        <TabsList>
+          <TabsTrigger value="account">
+            <PencilRuler className="h-3 w-3 mr-1.5"/>
+            Edit
+          </TabsTrigger>
+          <TabsTrigger value="password">
+            <Play className="h-3 w-3 mr-1.5"/>
+            Preview
+          </TabsTrigger>
+        </TabsList>
+      </div>
+
       {activeTab === 'edit' && data &&
         <Editor data={data} saveData={saveData}/>
       }
       {activeTab === 'play' && data &&
-        <div className="h-full min-h-dvh w-full bg-stone-950">
-          <div className="h-[512px] mt-8">
-            <div className="scale-[0.4] -translate-y-[384px]">
+        <div className="h-full min-h-dvh w-full pb-24">
+          <div className="h-[512px] mt-8 relative">
+            <div className="scale-[0.4] w-[720px] relative -translate-y-[30%] -translate-x-[50%] left-1/2 shadow-xl">
               <Player data={data}/>
             </div>
           </div>
@@ -46,18 +79,18 @@ export default function HomePage() {
         </div>
       }
 
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg bg-stone-950 flex gap-1 p-1">
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg bg-zinc-950 flex gap-1 p-1 border">
         <Button onClick={() => setActiveTab('edit')} variant={activeTab === 'edit' ? "secondary" : "ghost"}
-                className={cn((activeTab === 'edit') && "dark:bg-stone-800/80 pointer-events-none")}>
+                className={cn((activeTab === 'edit') && "dark:bg-zinc-800/80 pointer-events-none")}>
           <PencilRuler className="h-4 w-4 mr-2"/>
           Edit
         </Button>
         <Button onClick={() => setActiveTab('play')} variant={activeTab === 'play' ? "secondary" : "ghost"}>
           <Play className="h-4 w-4 mr-2"/>
-          Run
+          Preview
         </Button>
       </div>
-    </>
+    </Tabs>
   );
 }
 

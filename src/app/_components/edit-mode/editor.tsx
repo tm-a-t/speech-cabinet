@@ -51,10 +51,7 @@ export function Editor({data, saveData}: { data: SavedData, saveData: (data: Sav
   }
 
   return (
-    <div className="container mx-auto px-1 max-w-xl mb-64">
-      <h1 className="text-2xl mt-8">Disco Elysium Dialogue Builder</h1>
-      <p className="mt-3 mb-12">Edit some lines and export dialogue animation.</p>
-
+    <div className="container mx-auto pl-6 pr-4 sm:px-12 max-w-xl pb-64 pt-16 h-full min-h-dvh tape-background">
       {data?.messages.map((message, index) =>
         <MessageEditor
           message={message}
@@ -63,7 +60,7 @@ export function Editor({data, saveData}: { data: SavedData, saveData: (data: Sav
           usedNames={usedNames}
           key={index + message.name + message.text[0]}/>,
       )}
-      <Button variant="secondary" onClick={addMessage} className="mt-10">+ Add line</Button>
+      <Button variant="ghost" onClick={addMessage} className="mt-4 text-zinc-500 w-full pl-3">+ Add line</Button>
     </div>
   );
 }

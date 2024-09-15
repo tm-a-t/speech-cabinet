@@ -9,16 +9,16 @@ import { nameClass } from '~/app/_lib/names';
 
 export function MessageView({message, className}: { message: Message, className?: string }) {
   return (
-    <div className={cn("pl-8 [&:not(:first-child)]:mt-6", className)} style={{transition: ".2s opacity linear"}}>
+    <div className={cn("pl-8 mt-8 [&:not(:last-child)]:opacity-60", className)} style={{transition: ".2s opacity linear"}}>
       <span className={cn("-ml-8 uppercase tracking-wider", nameClass[message.name])}>{message.name}</span>
       {message.check &&
-        <span className="text-stone-500"> [
+        <span className="text-zinc-400"> [
           {message.check.difficulty}: {message.check.result}
           ]</span>
       }
 
-      <span className="text-speech"> &ndash; </span>
-      <span className="text-speech" dangerouslySetInnerHTML={{__html: message.text}}></span>
+      <span className="text-zinc-300"> &ndash; </span>
+      <span className="text-zinc-300" dangerouslySetInnerHTML={{__html: message.text}}></span>
     </div>
   );
 }

@@ -1,12 +1,12 @@
 'use server';
 
 import {SavedData} from "./data-types";
-import {totalDuration} from '~/app/_components/play-mode/time';
+import {totalDuration} from '~/app/_lib/time';
 import {PuppeteerScreenRecorder} from 'puppeteer-screen-recorder/build/main';
 import puppeteer from 'puppeteer';
 import {env} from '~/env';
 import {db} from "~/server/db";
-import {sleep} from '~/app/_lib/utils';
+import {getVideoPath, sleep} from '~/app/_lib/utils';
 import * as fs from 'fs';
 
 export async function startRender(data: SavedData) {
@@ -30,7 +30,7 @@ export async function startRender(data: SavedData) {
 
 async function render(data: SavedData, id: string) {
   const params = new URLSearchParams({data: JSON.stringify(data)}).toString();
-  const filename = 'temp/' + id + '.mp4';
+  const filename = getVideoPath(id);
 
   const browser = await puppeteer.launch({
     args: [`--window-size=720,1280`],
@@ -55,5 +55,5 @@ async function render(data: SavedData, id: string) {
 
 export async function getVideoStatus(id: string): Promise<boolean> {
   const video = await db.video.findFirst({where: {id}});
-  return video!.isReady ?? true;
+  return video?.isReady ?? true;
 }
