@@ -1,6 +1,6 @@
 import {Message, SavedData} from '~/app/_lib/data-types';
 
-export const startDelay = 500;
+export const startDelay = 2000;
 const endDelay = 1000;
 
 export function totalDuration(data: SavedData) {
@@ -9,5 +9,5 @@ export function totalDuration(data: SavedData) {
 }
 
 export function getMessageDuration(message: Message) {
-  return 10 * message.text.length + 750;
+  return 20 * message.text.length + 500;
 }

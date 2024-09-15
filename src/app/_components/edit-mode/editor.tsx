@@ -17,6 +17,16 @@ export function Editor({data, saveData}: { data: SavedData, saveData: (data: Sav
     });
   }
 
+  function removeMessage(index: number) {
+    if (data === null) return;
+    saveData({
+      ...data,
+      messages: data.messages.filter((_, i) =>
+        i !== index,
+      ),
+    });
+  }
+
   function addMessage() {
     if (data === null) return;
 
@@ -40,27 +50,19 @@ export function Editor({data, saveData}: { data: SavedData, saveData: (data: Sav
     });
   }
 
-  function removeMessage(index: number) {
-    if (data === null) return;
-    saveData({
-      ...data,
-      messages: data.messages.filter((_, i) =>
-        i !== index,
-      ),
-    });
-  }
-
   return (
-    <div className="container mx-auto pl-6 pr-4 sm:px-12 max-w-xl pb-64 pt-16 h-full min-h-dvh tape-background">
+    <div className="container mx-auto pl-6 pr-4 sm:px-12 max-w-xl pb-64 pt-28 lg:pt-12 h-full min-h-dvh tape-background">
       {data?.messages.map((message, index) =>
         <MessageEditor
           message={message}
           saveMessage={m => saveMessage(index, m)}
           removeMessage={() => removeMessage(index)}
+          data={data}
+          saveData={saveData}
           usedNames={usedNames}
           key={index + message.name + message.text[0]}/>,
       )}
-      <Button variant="ghost" onClick={addMessage} className="mt-4 text-zinc-500 w-full pl-3">+ Add line</Button>
+      <Button variant="ghost" onClick={addMessage} className="mt-4 opacity-30 hover:opacity-100 transition-opacity block pl-3">+ Add line</Button>
     </div>
   );
 }

@@ -1,17 +1,29 @@
 export type SavedData = {
-  messages: Array<Message>,
-  version: '0.1',
+  messages: Array<Message>
+  overrides: {
+    checks: {
+      [character: string]: boolean
+    }
+    colorClass: {
+      [character: string]: string
+    }
+    portraitUrl: {
+      [character: string]: string
+    }
+  }
+  showPortraits: boolean
+  version: '0.1'
 }
 
 export type Message = {
-  text: string,
-  name: string,
-  check?: Check,
+  text: string
+  name: string
+  check?: Check
 }
 
 export type Check = {
-  difficulty: Difficulty,
-  result: Result,
+  difficulty: Difficulty
+  result: Result
 }
 
 export const difficulties = [
@@ -27,3 +39,16 @@ export const difficulties = [
 ] as const;
 export type Difficulty = typeof difficulties[number];
 export type Result = 'Success' | 'Failure';
+
+export const defaultData: SavedData = {
+  messages: [
+
+  ],
+  overrides: {
+    checks: {},
+    colorClass: {},
+    portraitUrl: {},
+  },
+  showPortraits: true,
+  version: '0.1',
+}

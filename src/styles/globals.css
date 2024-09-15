@@ -13,6 +13,14 @@
         background: url('/bg.png') repeat-y top center;
         background-size: 100% auto;
     }
+
+    .disco-message p {
+        @apply [&:not(:first-child)]:mt-[1em] [&:first-child]:inline;
+    }
+
+    .aspect-portrait {
+        aspect-ratio: 18 / 25;
+    }
 }
 
 /*@font-face {*/
@@ -33,6 +41,7 @@
 }
 
 .tiptap p.is-empty::before {
+    @apply text-zinc-500;
     /*color: rgb(120 113 108);*/
     opacity: .4;
     content: attr(data-placeholder);

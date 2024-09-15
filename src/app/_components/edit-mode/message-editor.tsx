@@ -1,30 +1,22 @@
-import {NameInput} from '~/app/_components/edit-mode/name-input';
+import {CharacterMenu} from '~/app/_components/edit-mode/character-menu';
 import {Button} from '~/app/_components/ui/button';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/app/_components/ui/select';
 import MessageTextEditor from '~/app/_components/edit-mode/message-text-editor';
 import React from 'react';
-import {difficulties, Difficulty, Message, Result} from '~/app/_lib/data-types';
+import {difficulties, Difficulty, Message, Result, SavedData} from '~/app/_lib/data-types';
 import {DropdownMenu, DropdownMenuTrigger} from '../ui/dropdown-menu';
 import {cn} from '~/app/_lib/utils';
 import { skills } from '~/app/_lib/names';
 
-export function MessageEditor({message, saveMessage, usedNames, removeMessage}: {
+export function MessageEditor({message, saveMessage, removeMessage, data, saveData, usedNames}: {
   message: Message,
   saveMessage: (m: Message) => void,
   removeMessage: () => void,
+  data: SavedData,
+  saveData: (data: SavedData) => void,
   usedNames: string[],
 }) {
-  const isSkill = skills.includes(message.name);
-
-  function handleNameSelect(params: string | null) {
-    saveMessage({
-      ...message,
-      name: params ?? "",
-      check: params && !skills.includes(params)
-        ? undefined
-        : message.check,
-    });
-  }
+  const showCheck = data.overrides.checks[message.name] || skills.includes(message.name);
 
   function handleCheckToggle(value: boolean) {
     saveMessage({
@@ -70,10 +62,12 @@ export function MessageEditor({message, saveMessage, usedNames, removeMessage}: 
     <div className="pl-8 leading-7 [&:not(:first-child)]:mt-6">
       <span className="-ml-8 relative h-0">
         <LineElement>
-          <NameInput value={message.name}
-                     onSelect={handleNameSelect}
-                     onRemoveLine={removeMessage}
-                     usedNames={usedNames}/>
+          <CharacterMenu message={message}
+                         saveMessage={saveMessage}
+                         removeMessage={removeMessage}
+                         data={data}
+                         saveData={saveData}
+                         usedNames={usedNames}/>
         </LineElement>
 
         {/*{isSkill && !message.check &&*/}
@@ -90,7 +84,7 @@ export function MessageEditor({message, saveMessage, usedNames, removeMessage}: 
         {/*  // </Toggle>*/}
         {/*}*/}
 
-        {isSkill &&
+        {showCheck &&
           <LineElement className="text-zinc-400">
             <Select onValueChange={handleCheckDifficultySelect} value={message.check?.difficulty ?? 'none'}>
               <SelectTrigger className="h-8">
@@ -107,7 +101,7 @@ export function MessageEditor({message, saveMessage, usedNames, removeMessage}: 
           </LineElement>
         }
 
-        {message.check &&
+        {showCheck && message.check &&
           <LineElement className="text-zinc-400">
             <Select onValueChange={handleCheckResultSelect} value={message.check.result}>
               <SelectTrigger className="h-8">

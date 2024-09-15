@@ -1,5 +1,7 @@
 import {ClassValue, clsx} from 'clsx';
 import {twMerge} from 'tailwind-merge';
+import {SavedData} from './data-types';
+import {characters, skillColorClass, skills} from '~/app/_lib/names';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -24,4 +26,16 @@ export function downloadFile(path: string, name: string) {
   document.body.appendChild(link);
   link.click();
   link.remove();
+}
+
+export function getDefaultPortraitUrl(name: string): string {
+  return '/portraits/' + name + '.png';
+}
+
+export function getPortraitUrl(name: string, data: SavedData): string  {
+  return data.overrides.portraitUrl[name] ?? getDefaultPortraitUrl(name);
+}
+
+export function getColorClass(name: string, data: SavedData): string {
+  return data.overrides.colorClass[name] ?? skillColorClass[name] ?? '';
 }

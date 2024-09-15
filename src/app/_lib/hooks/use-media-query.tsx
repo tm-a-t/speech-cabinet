@@ -17,3 +17,7 @@ export function useMediaQuery(query: string) {
 
   return value
 }
+
+export function useIsDesktop() {
+  return useMediaQuery("(min-width: 768px)");
+}
