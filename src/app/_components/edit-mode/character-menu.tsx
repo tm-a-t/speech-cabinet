@@ -54,12 +54,7 @@ export function CharacterMenu({message, saveMessage, removeMessage, data, saveDa
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="start">
-        <NameSelect message={message}
-                    saveMessage={saveMessage}
-                    setOpen={setOpen}
-                    usedNames={usedNames}
-                    isDesktop={isDesktop}
-                    data={data}/>
+        <NameSelect message={message} saveMessage={saveMessage} setOpen={setOpen} usedNames={usedNames} data={data}/>
         <PortraitSelect message={message} data={data} saveData={saveData} setOpen={setOpen}/>
         <TypeSelect message={message} data={data} saveData={saveData}/>
         <DropdownMenuItem onSelect={removeMessage}>
@@ -68,7 +63,6 @@ export function CharacterMenu({message, saveMessage, removeMessage, data, saveDa
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-
   );
 
   // return (

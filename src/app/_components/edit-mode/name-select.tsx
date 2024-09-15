@@ -22,13 +22,7 @@ import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
 import {Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger} from '../ui/drawer';
 
 export function NameSelect(
-  {
-    message,
-    saveMessage,
-    setOpen,
-    usedNames,
-    data,
-  }: {
+  props: {
     message: Message,
     saveMessage: (message: Message) => void,
     setOpen: (open: boolean) => void,
@@ -37,13 +31,10 @@ export function NameSelect(
   },
 ) {
   const isDesktop = useIsDesktop();
-  const [selectedOption, setSelectedOption] = React.useState(message.name);
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   function handleSelectedOption(option: string) {
-    setSelectedOption(option);
-    saveMessage({
-      ...message,
+    props.saveMessage({
+      ...(props.message),
       name: option ?? "",
     });
   }
@@ -58,13 +49,12 @@ export function NameSelect(
       <DropdownMenuSub>
         <DropdownMenuSubTrigger>{label}</DropdownMenuSubTrigger>
         <DropdownMenuPortal>
-          <DropdownMenuSubContent className="p-0">
-            <NameOptionList setOpen={setOpen}
+          <DropdownMenuSubContent className="p-0 w-60">
+            <NameOptionList setOpen={props.setOpen}
                             setSelectedOption={handleSelectedOption}
-                            usedNames={usedNames}
-                            selectedOption={selectedOption}
-                            isDesktop={isDesktop}
-                            data={data}/>
+                            usedNames={props.usedNames}
+                            selectedOption={props.message.name}
+                            data={props.data}/>
           </DropdownMenuSubContent>
         </DropdownMenuPortal>
       </DropdownMenuSub>
@@ -72,22 +62,19 @@ export function NameSelect(
   }
 
   return (
-    <DrawerTrigger asChild>
-      <DropdownMenuItem>Hello</DropdownMenuItem>
-    </DrawerTrigger>
-  );
-}
-
-export function NameSelectDrawer({children}: {children: React.ReactNode}) {
-  return (
     <Drawer>
-      {children}
-      <DrawerContent>
-        <DrawerTitle>Ok</DrawerTitle>
-        <DrawerDescription>Ok</DrawerDescription>
+      <DrawerTrigger asChild>
+        <DropdownMenuItem onSelect={e => e.preventDefault()}>{label}</DropdownMenuItem>
+      </DrawerTrigger>
+      <DrawerContent className="h-96">
+        <NameOptionList setOpen={props.setOpen}
+                        setSelectedOption={handleSelectedOption}
+                        usedNames={props.usedNames}
+                        selectedOption={props.message.name}
+                        data={props.data}/>
       </DrawerContent>
     </Drawer>
-  )
+  );
 }
 
 function NameOptionList(
@@ -102,7 +89,6 @@ function NameOptionList(
     setSelectedOption: (option: string) => void,
     selectedOption: string,
     usedNames: string[],
-    isDesktop: boolean,
     data: SavedData,
   },
 ) {
@@ -121,7 +107,7 @@ function NameOptionList(
   }
 
   return (
-    <Command className="w-60">
+    <Command>
       <CommandInput placeholder="Name..."
                     onValueChange={text => setInput(text.trim().toUpperCase())}
                     className="[&:not(:placeholder-shown)]:uppercase"/>

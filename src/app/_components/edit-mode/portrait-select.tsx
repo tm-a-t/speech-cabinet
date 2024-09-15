@@ -1,4 +1,5 @@
 import {
+  DropdownMenuItem,
   DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuSub,
@@ -14,6 +15,8 @@ import * as React from 'react';
 import {Message, SavedData} from '~/app/_lib/data-types';
 import {Skeleton} from '~/app/_components/ui/skeleton';
 import { SkeletonImage } from '../ui/skeleton-image';
+import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
+import {Drawer, DrawerContent, DrawerTrigger} from '~/app/_components/ui/drawer';
 
 export function PortraitSelect({message, data, saveData, setOpen}: {
   message: Message,
@@ -24,6 +27,7 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
   if (message.name !== 'You' && (characters.includes(message.name) || skills.includes(message.name))) {
     return
   }
+  const isDesktop = useIsDesktop();
 
   function handleSelectPortraitUrl(name: string | null) {
     saveData({
@@ -39,49 +43,80 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
     setTimeout(() => setOpen(false), 200);
   }
 
+  const label = <>
+    <SquareUser className="mr-2 h-4 w-4"/>
+    Edit portrait
+  </>;
+
+  if (isDesktop) {
+    return (
+      <DropdownMenuSub>
+        <DropdownMenuSubTrigger>{label}</DropdownMenuSubTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuSubContent className="p-0 w-72">
+            <PortraitOptionList
+              message={message}
+              data={data}
+              onSelectPortraitUrl={handleSelectPortraitUrl}></PortraitOptionList>
+          </DropdownMenuSubContent>
+        </DropdownMenuPortal>
+      </DropdownMenuSub>
+    )
+  }
+
+  return (
+    <Drawer>
+      <DrawerTrigger asChild>
+        <DropdownMenuItem onSelect={e => e.preventDefault()}>{label}</DropdownMenuItem>
+      </DrawerTrigger>
+      <DrawerContent>
+        <PortraitOptionList
+          message={message}
+          data={data}
+          onSelectPortraitUrl={handleSelectPortraitUrl}></PortraitOptionList>
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
+function PortraitOptionList({message, data, onSelectPortraitUrl}: {
+  message: Message,
+  data: SavedData,
+  onSelectPortraitUrl: (value: string | null) => void,
+}) {
   const options = message.name === 'You' ? harryPortraitNames : allPortraitNames;
   return (
-    <DropdownMenuSub>
-      <DropdownMenuSubTrigger>
-        <SquareUser className="mr-2 h-4 w-4"/>
-        Edit portrait
-      </DropdownMenuSubTrigger>
-      <DropdownMenuPortal>
-        <DropdownMenuSubContent className="p-0">
-          <Command className="w-72">
-            <p className="text-sm text-zinc-400 px-3 py-2 flex items-center">
-              Custom portraits coming soon.
-            </p>
-            <CommandSeparator/>
-            {getPortraitUrl(message.name, data) && <>
-              <SkeletonImage src={getPortraitUrl(message.name, data)} alt="Current portrait"
-                            className="w-1/2 mx-auto aspect-portrait"/>
-              <CommandSeparator/>
-            </>}
-            <CommandInput placeholder="Search..."/>
-            <CommandList>
-              <CommandGroup className="[&>*]:flex [&>*]:flex-wrap [&>*]:w-full">
-                <CommandItem onSelect={() => handleSelectPortraitUrl(null)}
-                             className="w-1/4 aspect-portrait flex text-center align-center text-zinc-500">
-                  Clear portrait
-                </CommandItem>
-                {options.map((name) => {
-                  const url = getDefaultPortraitUrl(name)!;
-                  return <CommandItem onSelect={() => handleSelectPortraitUrl(name)}
-                                      value={name} className="w-1/4" key={name}>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <SkeletonImage src={url} alt={name} className="w-[54px] h-[75px]"/>
-                      </TooltipTrigger>
-                      <TooltipContent className="uppercase tracking-wider">{name}</TooltipContent>
-                    </Tooltip>
-                  </CommandItem>;
-                })}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </DropdownMenuSubContent>
-      </DropdownMenuPortal>
-    </DropdownMenuSub>
+    <Command>
+      <p className="text-sm text-zinc-400 px-3 py-2 flex items-center">
+        Custom portraits coming soon.
+      </p>
+      <CommandSeparator/>
+      {getPortraitUrl(message.name, data) && <>
+        <SkeletonImage src={getPortraitUrl(message.name, data)} alt="Current portrait"
+                       className="w-1/2 max-w-28 mx-auto aspect-portrait"/>
+        <CommandSeparator/>
+      </>}
+      <CommandInput placeholder="Search..."/>
+      <CommandList>
+        <CommandGroup className="[&>*]:flex [&>*]:flex-wrap [&>*]:w-full">
+          <CommandItem onSelect={() => onSelectPortraitUrl(null)}
+                       className="w-1/4 aspect-portrait flex text-center align-center text-zinc-500">
+            Clear portrait
+          </CommandItem>
+          {options.map((name) => {
+            const url = getDefaultPortraitUrl(name)!;
+            return <CommandItem onSelect={() => onSelectPortraitUrl(name)}
+                                value={name} className="w-1/4" key={name}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <SkeletonImage src={url} alt={name} className="w-[54px] h-[75px]"/>
+                </TooltipTrigger>
+                <TooltipContent className="uppercase tracking-wider">{name}</TooltipContent>
+              </Tooltip>
+            </CommandItem>;
+          })}
+        </CommandGroup>
+      </CommandList>
+    </Command>
   )
 }
