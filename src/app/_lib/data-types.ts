@@ -12,6 +12,7 @@ export type SavedData = {
     }
   }
   showPortraits: boolean
+  music: string | null
   version: '0.1'
 }
 
@@ -50,5 +51,6 @@ export const defaultData: SavedData = {
     portraitUrl: {},
   },
   showPortraits: true,
+  music: '/Sea Power - Instrument of Surrender.m4a',
   version: '0.1',
 }

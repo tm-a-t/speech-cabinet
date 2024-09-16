@@ -10,7 +10,7 @@ export function MessageView({message, data, className}: { message: Message, data
   const showCheck = data.overrides.checks[message.name] || skills.includes(message.name);
 
   return (
-    <div className={cn("pl-8 mt-8 [&:not(:last-child)]:opacity-60", className)}
+    <div className={cn("pl-8 mt-14 [&:not(:last-child)]:opacity-60", className)}
          style={{transition: ".2s opacity linear"}}>
       <span className={cn("-ml-8 uppercase tracking-wider", getColorClass(message.name, data))}>{message.name}</span>
       {showCheck && message.check &&
@@ -20,7 +20,7 @@ export function MessageView({message, data, className}: { message: Message, data
       }
 
       <span className="text-zinc-300"> &ndash; </span>
-      <span className="text-zinc-300 disco-message" dangerouslySetInnerHTML={{__html: message.text}}></span>
+      <span className="text-zinc-300 [&>p]:mt-14 [&>p:first-child]:inline" dangerouslySetInnerHTML={{__html: message.text}}></span>
     </div>
   );
 }

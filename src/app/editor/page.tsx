@@ -22,12 +22,17 @@ import {
   MenubarCheckboxItem,
   MenubarContent,
   MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
+  MenubarMenu, MenubarRadioGroup, MenubarRadioItem,
+  MenubarSeparator, MenubarSub, MenubarSubContent,
+  MenubarSubTrigger,
   MenubarTrigger,
 } from '../_components/ui/menubar';
 import Link from 'next/link';
-import { downloadFile, formatTime } from "../_lib/utils";
+import {downloadFile, formatTime} from "../_lib/utils";
+import {ost} from "../_lib/music";
+import {MusicSelect} from '~/app/_components/main-menu/music-select';
+import {SiteSubmenu} from '~/app/_components/main-menu/site-submenu';
+import {DialogueSubmenu} from '~/app/_components/main-menu/dialogue-submenu';
 
 export default function EditorPage() {
   const [data, setData] = useState<SavedData | null>(null);
@@ -48,84 +53,16 @@ export default function EditorPage() {
     localStorage.setItem('data', JSON.stringify(newData));
   }
 
-  function saveShowPortraits(value: boolean) {
-    if (data === null) {
-      return;
-    }
-    saveData({
-      ...data,
-      showPortraits: value,
-    });
-  }
-
-  function exportData() {
-    const base64 = btoa(JSON.stringify(data));
-    downloadFile('data:application/json;base64,' + base64, `Disco Export ${formatTime()}.json`)
-  }
-
-  function importData() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    input.onchange = e => {
-      const files = (e.target as HTMLInputElement).files!;
-      void files[0]!.text().then(text => {
-        setData(JSON.parse(text));
-      })
-    }
-    input.click();
-  }
-
   return (
     <Tabs className="w-full h-full m-0" defaultValue="edit">
       <div
         className="fixed z-20 top-0 left-0 right-0 px-2 py-2 flex flex-wrap gap-1 items-center bg-zinc-950 lg:bg-transparent">
-        <Dialog>
-          <Menubar className=" mr-auto">
-            <MenubarMenu>
-              <MenubarTrigger>Speech Cabinet</MenubarTrigger>
-              <MenubarContent className="w-72">
-                  <DialogTrigger asChild>
-                    <MenubarItem>
-                      About
-                    </MenubarItem>
-                  </DialogTrigger>
-                <MenubarSeparator/>
-                <MenubarItem disabled>
-                  We don't have anything to talk about anymore.
-                  Every combination of words has been played out.
-                  The atoms don't form us anymore: us, our love, our unborn daughters.
-                </MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-            <MenubarMenu>
-              <MenubarTrigger className="text-zinc-400">Dialogue</MenubarTrigger>
-              {data &&
-                <MenubarContent>
-                  <MenubarCheckboxItem checked={data.showPortraits} onCheckedChange={saveShowPortraits}>Display
-                    portraits</MenubarCheckboxItem>
-                  <MenubarSeparator/>
-                  <MenubarItem inset>Music</MenubarItem>
-                  <MenubarSeparator/>
-                  <MenubarItem inset onSelect={exportData}>Export data</MenubarItem>
-                  <MenubarItem inset onSelect={importData}>Import data</MenubarItem>
-                  <MenubarItem className="text-red-400" inset onSelect={() => setData(defaultData)}>
-                    Reset dialogue
-                  </MenubarItem>
-                </MenubarContent>
-              }
-            </MenubarMenu>
-          </Menubar>
-
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Speech Cabinet</DialogTitle>
-            </DialogHeader>
-            <p>
-              Something!
-            </p>
-          </DialogContent>
-        </Dialog>
+        <Menubar className="mr-auto">
+          <SiteSubmenu data={data} saveData={saveData}/>
+          {data &&
+            <DialogueSubmenu data={data} saveData={saveData}/>
+          }
+        </Menubar>
 
         <TabsList>
           <TabsTrigger value="edit">
@@ -143,9 +80,9 @@ export default function EditorPage() {
         </TabsContent>
         <TabsContent value="play">
           <div className="h-full min-h-dvh w-full pb-16">
-            <div className="h-[512px] mt-20 lg:mt-4 relative">
+            <div className="h-[576px] mt-20 lg:mt-4 relative">
               <div
-                className="scale-[0.2] w-[1080px] relative -translate-y-[40%] -translate-x-[50%] left-1/2 border-2 box-content">
+                className="scale-[0.3] -translate-y-[35%] w-[1080px] relative -translate-x-[50%] left-1/2 border-2 box-content">
                 <Player data={data}/>
               </div>
             </div>

@@ -34,5 +34,5 @@ export function MessageTextEditor(props: { content: string, onUpdate: (value: st
     content: props.content,
   });
 
-  return <EditorContent editor={editor} className={cn("inline disco-message")}/>;
+  return <EditorContent editor={editor} className={cn("inline [&_p]:mt-4 [&_p:first-child]:inline")}/>;
 }

@@ -14,10 +14,6 @@
         background-size: 100% auto;
     }
 
-    .disco-message p {
-        @apply [&:not(:first-child)]:mt-[1em] [&:first-child]:inline;
-    }
-
     .aspect-portrait {
         aspect-ratio: 18 / 25;
     }

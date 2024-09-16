@@ -33,7 +33,7 @@ async function render(data: SavedData, id: string) {
   const filename = getVideoPath(id);
 
   const browser = await puppeteer.launch({
-    args: [`--window-size=1080,1920`],
+    args: [`--window-size=1080,1920`, '--enable-gpu', '--use-angle'],
     defaultViewport: {
       width: 1080,
       height: 1920,

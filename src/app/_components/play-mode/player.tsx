@@ -5,6 +5,7 @@ import {MessageView} from '~/app/_components/play-mode/message-view';
 import React, {useEffect, useState} from 'react';
 import { getMessageDuration, startDelay } from "../../_lib/time";
 import {cn, getDefaultPortraitUrl, getPortraitUrl } from "~/app/_lib/utils";
+import {SkeletonImage} from '~/app/_components/ui/skeleton-image';
 
 export function Player({data}: { data: SavedData }) {
   const playerHeight = 1920;
@@ -48,9 +49,9 @@ export function Player({data}: { data: SavedData }) {
       <div id="tape-background" className="tape-background absolute left-0 right-0 bottom-0"
            style={{top: yPosition - playerHeight, transition: 'top .3s cubic-bezier(.1, .3, .7, .9)'}}></div>
       {data.showPortraits &&
-        <img src={shownPortrait || ''} alt="" className={cn("absolute z-20 w-64 top-32 left-5 border shadow-lg transition-all", !shownPortrait && 'opacity-0')}/>
+        <SkeletonImage src={shownPortrait ?? ''} alt="" className={cn('absolute aspect-portrait z-20 w-96 top-32 left-5 border shadow-lg')}/>
       }
-      <div id="messages" className={"absolute px-12 py-48 text-3xl leading-[3rem]"}
+      <div id="messages" className={"absolute px-20 py-48 text-[2.75rem] leading-[4.5rem]"}
            style={{top: yPosition + 'px', transition: 'top .3s cubic-bezier(.1, .3, .7, .9)'}}>
         {shownMessages.map((message, index) =>
           <MessageView
