@@ -29,14 +29,14 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
   }
   const isDesktop = useIsDesktop();
 
-  function handleSelectPortraitUrl(name: string | null) {
+  function handleSelectPortraitUrl(url: string) {
     saveData({
       ...data,
       overrides: {
         ...data.overrides,
         portraitUrl: {
           ...data.overrides.portraitUrl,
-          [message.name]: name ? getDefaultPortraitUrl(name) : '',
+          [message.name]: url,
         }
       }
     });
@@ -45,7 +45,7 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
 
   const label = <>
     <SquareUser className="mr-2 h-4 w-4"/>
-    Edit portrait
+    Set portrait
   </>;
 
   if (isDesktop) {
@@ -67,7 +67,7 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <DropdownMenuItem onSelect={e => e.preventDefault()}>{label}</DropdownMenuItem>
+        <DropdownMenuItem onSelect={e => e.preventDefault()}>{label}...</DropdownMenuItem>
       </DrawerTrigger>
       <DrawerContent>
         <PortraitOptionList
@@ -82,34 +82,35 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
 function PortraitOptionList({message, data, onSelectPortraitUrl}: {
   message: Message,
   data: SavedData,
-  onSelectPortraitUrl: (value: string | null) => void,
+  onSelectPortraitUrl: (value: string) => void,
 }) {
+  const current = getPortraitUrl(message.name, data)
   const options = message.name === 'You' ? harryPortraitNames : allPortraitNames;
   return (
-    <Command>
+    <Command defaultValue={current}>
       <p className="text-sm text-zinc-400 px-3 py-2 flex items-center">
         Custom portraits coming soon.
       </p>
       <CommandSeparator/>
-      {getPortraitUrl(message.name, data) && <>
-        <SkeletonImage src={getPortraitUrl(message.name, data)} alt="Current portrait"
+      {current && <>
+        <SkeletonImage src={current} alt="Current portrait"
                        className="w-1/2 max-w-28 mx-auto aspect-portrait"/>
         <CommandSeparator/>
       </>}
       <CommandInput placeholder="Search..."/>
       <CommandList>
         <CommandGroup className="[&>*]:flex [&>*]:flex-wrap [&>*]:w-full">
-          <CommandItem onSelect={() => onSelectPortraitUrl(null)}
+          <CommandItem onSelect={() => onSelectPortraitUrl('')}
                        className="w-1/4 aspect-portrait flex text-center align-center text-zinc-500">
             Clear portrait
           </CommandItem>
           {options.map((name) => {
             const url = getDefaultPortraitUrl(name)!;
-            return <CommandItem onSelect={() => onSelectPortraitUrl(name)}
-                                value={name} className="w-1/4" key={name}>
+            return <CommandItem onSelect={() => onSelectPortraitUrl(url)}
+                                value={url} className="w-1/4" key={name}>
               <Tooltip>
                 <TooltipTrigger>
-                  <SkeletonImage src={url} alt={name} className="w-[54px] h-[75px]"/>
+                  <SkeletonImage src={url} alt={name} className="min-w-[54px] min-h-[75px]"/>
                 </TooltipTrigger>
                 <TooltipContent className="uppercase tracking-wider">{name}</TooltipContent>
               </Tooltip>

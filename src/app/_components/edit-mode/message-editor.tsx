@@ -6,7 +6,7 @@ import React from 'react';
 import {difficulties, Difficulty, Message, Result, SavedData} from '~/app/_lib/data-types';
 import {DropdownMenu, DropdownMenuTrigger} from '../ui/dropdown-menu';
 import {cn} from '~/app/_lib/utils';
-import { skills } from '~/app/_lib/names';
+import {skills} from '~/app/_lib/names';
 
 export function MessageEditor({message, saveMessage, removeMessage, data, saveData, usedNames}: {
   message: Message,
@@ -59,8 +59,8 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
   }
 
   return (
-    <div className="pl-8 leading-7 [&:not(:first-child)]:mt-6">
-      <span className="-ml-8 relative h-0">
+    <div className="sm:pl-8 leading-7 [&:not(:first-child)]:mt-5 sm:[&:not(:first-child)]:mt-6">
+      <span className="sm:-ml-8 relative h-0">
         <LineElement>
           <CharacterMenu message={message}
                          saveMessage={saveMessage}
@@ -71,39 +71,42 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
         </LineElement>
 
         {showCheck &&
-          <LineElement className="text-zinc-400">
-            <Select onValueChange={handleCheckDifficultySelect} value={message.check?.difficulty ?? 'none'}>
-              <SelectTrigger className="h-8">
-                <SelectValue/>
-                {message.check && ":"}
-              </SelectTrigger>
-              <SelectContent className="w-60">
-                <SelectItem value="none">No skill check</SelectItem>
-                {difficulties.map(difficulty =>
-                  <SelectItem value={difficulty} key={difficulty}>{difficulty}</SelectItem>,
-                )}
-              </SelectContent>
-            </Select>
-          </LineElement>
-        }
+          <span className="inline-block sm:inline">
+            <LineElement className="text-zinc-400">
+              <Select onValueChange={handleCheckDifficultySelect} value={message.check?.difficulty ?? 'none'}>
+                <SelectTrigger className="h-8">
+                  <SelectValue/>
+                  {message.check && ":"}
+                </SelectTrigger>
+                <SelectContent className="w-60">
+                  <SelectItem value="none">No skill check</SelectItem>
+                  {difficulties.map(difficulty =>
+                    <SelectItem value={difficulty} key={difficulty}>{difficulty}</SelectItem>,
+                  )}
+                </SelectContent>
+              </Select>
+            </LineElement>
 
-        {showCheck && message.check &&
-          <LineElement className="text-zinc-400">
-            <Select onValueChange={handleCheckResultSelect} value={message.check.result}>
-              <SelectTrigger className="h-8">
-                <SelectValue/>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Failure">Failure</SelectItem>
-                <SelectItem value="Success">Success</SelectItem>
-              </SelectContent>
-            </Select>
-          </LineElement>
+            {showCheck && message.check &&
+              <LineElement className="text-zinc-400">
+                <Select onValueChange={handleCheckResultSelect} value={message.check.result}>
+                  <SelectTrigger className="h-8">
+                    <SelectValue/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Failure">Failure</SelectItem>
+                    <SelectItem value="Success">Success</SelectItem>
+                  </SelectContent>
+                </Select>
+              </LineElement>
+            }
+          </span>
         }
       </span>
 
-      <span className="text-zinc-300"> &ndash; </span>
-      <span className="text-zinc-300">
+      <span className="text-zinc-300 hidden sm:inline"> &ndash; </span>
+      <span
+        className="text-zinc-300 block sm:inline bg-white bg-opacity-10 sm:bg-transparent px-2 py-1 sm:p-0 mt-1 sm:m-0 rounded">
         <MessageTextEditor content={message.text} onUpdate={handleTextUpdate}/>
       </span>
     </div>

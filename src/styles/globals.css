@@ -41,8 +41,7 @@
 }
 
 .tiptap p.is-empty::before {
-    @apply text-zinc-500;
-    /*color: rgb(120 113 108);*/
+    @apply text-white text-opacity-80 sm:text-opacity-30;
     opacity: .4;
     content: attr(data-placeholder);
     display: inline;

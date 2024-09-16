@@ -4,10 +4,10 @@ import {Message, SavedData} from "../../_lib/data-types";
 import {MessageView} from '~/app/_components/play-mode/message-view';
 import React, {useEffect, useState} from 'react';
 import { getMessageDuration, startDelay } from "../../_lib/time";
-import { getDefaultPortraitUrl, getPortraitUrl } from "~/app/_lib/utils";
+import {cn, getDefaultPortraitUrl, getPortraitUrl } from "~/app/_lib/utils";
 
 export function Player({data}: { data: SavedData }) {
-  const playerHeight = 1280;
+  const playerHeight = 1920;
 
   const [shownMessages, setShownMessages] = useState<Message[]>([]);
   const [isLastMessageShown, setIsLastMessageShown] = useState(false);
@@ -44,11 +44,11 @@ export function Player({data}: { data: SavedData }) {
   }, []);
 
   return (
-    <div className="relative w-[720px] h-[1280px] overflow-hidden">
+    <div className="relative w-[1080px] h-[1920px] overflow-hidden">
       <div id="tape-background" className="tape-background absolute left-0 right-0 bottom-0"
            style={{top: yPosition - playerHeight, transition: 'top .3s cubic-bezier(.1, .3, .7, .9)'}}></div>
-      {data.showPortraits && shownPortrait !== null &&
-        <img src={shownPortrait} alt="" className="absolute z-20 w-64 top-32 left-5 shadow-lg"/>
+      {data.showPortraits &&
+        <img src={shownPortrait || ''} alt="" className={cn("absolute z-20 w-64 top-32 left-5 border shadow-lg transition-all", !shownPortrait && 'opacity-0')}/>
       }
       <div id="messages" className={"absolute px-12 py-48 text-3xl leading-[3rem]"}
            style={{top: yPosition + 'px', transition: 'top .3s cubic-bezier(.1, .3, .7, .9)'}}>

@@ -1,7 +1,7 @@
 'use server';
 
 import {SavedData} from "./data-types";
-import {totalDuration} from '~/app/_lib/time';
+import {totalDuration, totalTimeLimit} from '~/app/_lib/time';
 import {PuppeteerScreenRecorder} from 'puppeteer-screen-recorder/build/main';
 import puppeteer from 'puppeteer';
 import {env} from '~/env';
@@ -33,20 +33,22 @@ async function render(data: SavedData, id: string) {
   const filename = getVideoPath(id);
 
   const browser = await puppeteer.launch({
-    args: [`--window-size=720,1280`],
+    args: [`--window-size=1080,1920`],
     defaultViewport: {
-      width: 720,
-      height: 1280,
+      width: 1080,
+      height: 1920,
     },
   });
   const page = await browser.newPage();
+  await page.goto('http://localhost:3000/render?' + params);
   // eslint-expect-error @typescript-eslint/no-unsafe-call @typescript-eslint/no-unsafe-member-access
   const recorder = new PuppeteerScreenRecorder(page, {
     ffmpeg_Path: env.FFMPEG_PATH,
-    fps: 60,
+    format: 'png',
+    fps: 30,
+    recordDurationLimit: totalTimeLimit,
   });
   await recorder.start(filename);
-  await page.goto('http://localhost:3000/render?' + params);
   await sleep(totalDuration(data));
   await recorder.stop();
   await browser.close();

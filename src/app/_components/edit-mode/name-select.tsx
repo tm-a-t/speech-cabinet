@@ -31,6 +31,7 @@ export function NameSelect(
   },
 ) {
   const isDesktop = useIsDesktop();
+  const [drawerOpen, setDrawerOpen] = React.useState();
 
   function handleSelectedOption(option: string) {
     props.saveMessage({
@@ -64,7 +65,7 @@ export function NameSelect(
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <DropdownMenuItem onSelect={e => e.preventDefault()}>{label}</DropdownMenuItem>
+        <DropdownMenuItem onSelect={e => e.preventDefault()}>{label}...</DropdownMenuItem>
       </DrawerTrigger>
       <DrawerContent className="h-96">
         <NameOptionList setOpen={props.setOpen}
@@ -106,12 +107,18 @@ function NameOptionList(
     setOpen(false);
   }
 
+  React.useEffect(() => {
+    document.getElementById('name-select-input')?.focus();
+  }, []);
+
   return (
     <Command>
-      <CommandInput placeholder="Name..."
-                    onValueChange={text => setInput(text.trim().toUpperCase())}
-                    className="[&:not(:placeholder-shown)]:uppercase"/>
-      <CommandList>
+      <CommandInput
+        id="name-select-input"
+        placeholder="Name..."
+        onValueChange={text => setInput(text.trim().toUpperCase())}
+        className="[&:not(:placeholder-shown)]:uppercase"/>
+      <CommandList data-vaul-no-drag>
         {/*<CommandEmpty>No results found.</CommandEmpty>*/}
 
         {usedNames.length && <>
@@ -129,7 +136,7 @@ function NameOptionList(
                             data={data}/>,
           )}
         </CommandGroup>
-        <CommandGroup heading="Other">
+        <CommandGroup heading="More characters">
           {characters.map((option) =>
             <NameOptionItem option={option} category="other" onSelect={() => selectOption(option)} key={option}
                             data={data}/>,

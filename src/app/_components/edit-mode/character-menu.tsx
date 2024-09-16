@@ -64,29 +64,4 @@ export function CharacterMenu({message, saveMessage, removeMessage, data, saveDa
       </DropdownMenuContent>
     </DropdownMenu>
   );
-
-  // return (
-  //   <Drawer open={open} onOpenChange={setOpen}>
-  //     <DrawerTrigger asChild>
-  //       <Button variant="outline" className={cn("uppercase tracking-wider h-8 px-3", skillColorClass[selectedOption])}>
-  //         {selectedOption}
-  //       </Button>
-  //     </DrawerTrigger>
-  //     <DrawerContent>
-  //       <div className="mt-4 border-t border-b">
-  //         <NameOptionList setOpen={setOpen}
-  //                         setSelectedOption={handleSelectedOption}
-  //                         usedNames={usedNames}
-  //                         selectedOption={selectedOption}
-  //                         isDesktop={isDesktop}/>
-  //       </div>
-  //       <div className="m-4">
-  //         <Button variant="secondary" onSelect={removeMessage}>
-  //           <Trash className="mr-2 h-4 w-4"/>
-  //           Remove line
-  //         </Button>
-  //       </div>
-  //     </DrawerContent>
-  //   </Drawer>
-  // );
 }

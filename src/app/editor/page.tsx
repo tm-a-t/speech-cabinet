@@ -145,7 +145,7 @@ export default function EditorPage() {
           <div className="h-full min-h-dvh w-full pb-16">
             <div className="h-[512px] mt-20 lg:mt-4 relative">
               <div
-                className="scale-[0.4] w-[720px] relative -translate-y-[30%] -translate-x-[50%] left-1/2 border-2 box-content">
+                className="scale-[0.2] w-[1080px] relative -translate-y-[40%] -translate-x-[50%] left-1/2 border-2 box-content">
                 <Player data={data}/>
               </div>
             </div>

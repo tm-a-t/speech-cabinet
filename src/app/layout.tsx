@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="overflow-visible">
+      <body className="overflow-y-visible overflow-x-hidden">
       <ThemeProvider attribute="class" defaultTheme="dark">
         <TooltipProvider>
           <main className="flex bg-zinc-900 text-zinc-50 min-h-dvh">

@@ -51,7 +51,7 @@ export function Editor({data, saveData}: { data: SavedData, saveData: (data: Sav
   }
 
   return (
-    <div className="container mx-auto pl-6 pr-4 sm:px-12 max-w-xl pb-64 pt-28 lg:pt-12 h-full min-h-dvh tape-background">
+    <div className="container mx-auto px-6 sm:px-12 max-w-xl pb-64 pt-28 lg:pt-12 h-full min-h-dvh tape-background">
       {data?.messages.map((message, index) =>
         <MessageEditor
           message={message}

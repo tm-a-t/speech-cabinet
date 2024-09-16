@@ -149,13 +149,13 @@ export const skillColorClass: Record<string, string> = {
 }
 
 export const harryPortraitNames = [
-  'you',
-  'you, shaved',
-  'you, without expression',
-  'you, shaved, without expression',
-  'you, fascist',
-  'you, shaved fascist',
-  'you, obscured',
+  'You',
+  'You, shaved',
+  'You, without expression',
+  'You, shaved, without expression',
+  'You, fascist',
+  'You, shaved fascist',
+  'You, obscured',
 ]
 
 export const allPortraitNames = [

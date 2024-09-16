@@ -16,7 +16,7 @@ export function MessageTextEditor(props: { content: string, onUpdate: (value: st
     onUpdate({editor}) {
       props.onUpdate(editor.getHTML());
     },
-    autofocus: isDesktop ? 'end' : null,
+    // autofocus: isDesktop ? 'end' : null,
     editorProps: {
       attributes: {
         class: 'inline min-w-20',
