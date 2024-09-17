@@ -15,8 +15,9 @@ datasource db {
 }
 
 model Video {
-  id      String  @id @default(uuid())
-  isReady Boolean @default(false)
+  id       String  @id @default(uuid())
+  isReady  Boolean @default(false)
+  progress Int     @default(0)
 }
 
 // Necessary for Next auth

@@ -11,16 +11,36 @@ import React from 'react';
 import {Command, CommandGroup, CommandInput, CommandItem, CommandList} from '~/app/_components/ui/command';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import {Circle} from 'lucide-react';
+import { useIsDesktop } from '~/app/_lib/hooks/use-media-query';
+import {Drawer, DrawerContent, DrawerTrigger} from '~/app/_components/ui/drawer';
+import {DropdownMenuItem} from '~/app/_components/ui/dropdown-menu';
 
 export function MusicSelect({value, saveValue}: { value: string | null, saveValue: (value: string | null) => void }) {
+  const isDesktop = useIsDesktop();
+
+  const label = 'Music';
+
+  if (isDesktop) {
+    return (
+      <MenubarSub>
+        <MenubarSubTrigger inset>{label}</MenubarSubTrigger>
+        <MenubarSubContent className="p-0">
+          <MusicSelectList value={value} saveValue={saveValue}/>
+        </MenubarSubContent>
+      </MenubarSub>
+    );
+  }
+
   return (
-    <MenubarSub>
-      <MenubarSubTrigger inset>Music</MenubarSubTrigger>
-      <MenubarSubContent className="p-0">
+    <Drawer>
+      <DrawerTrigger asChild>
+        <MenubarItem inset onSelect={e => e.preventDefault()}>{label}...</MenubarItem>
+      </DrawerTrigger>
+      <DrawerContent>
         <MusicSelectList value={value} saveValue={saveValue}/>
-      </MenubarSubContent>
-    </MenubarSub>
-  );
+      </DrawerContent>
+    </Drawer>
+  )
 }
 
 function MusicSelectList({value, saveValue}: { value: string | null, saveValue: (value: string | null) => void }) {
@@ -29,7 +49,7 @@ function MusicSelectList({value, saveValue}: { value: string | null, saveValue: 
       <CommandInput placeholder="Search..."/>
       <CommandList>
         {ost.map(track =>
-          <CommandItem onSelect={() => saveValue(track.url)} className="pl-9">
+          <CommandItem onSelect={() => saveValue(track.url)} className="pl-9" key={track.name}>
             {track.url === value &&
               <span className="absolute left-3 flex h-3.5 w-3.5 items-center justify-center">
                   <Circle className="h-2 w-2 fill-current"/>

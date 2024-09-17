@@ -1,13 +1,15 @@
 'use client';
 
-import {redirect} from 'next/navigation';
 import {defaultData} from '../_lib/data-types';
 import {Button} from '~/app/_components/ui/button';
+import { useRouter } from 'next/navigation';
 
 export default function ResetPage() {
+  const router = useRouter()
+
   function reset() {
     localStorage.setItem('data', JSON.stringify(defaultData));
-    redirect('/editor');
+    router.push('/editor');
   }
 
   return (

@@ -9,7 +9,7 @@ import {
   CommandSeparator,
 } from '~/app/_components/ui/command';
 import {cn, getColorClass} from '~/app/_lib/utils';
-import {Message, SavedData} from '~/app/_lib/data-types';
+import {Message, DiscoData} from '~/app/_lib/data-types';
 import {
   DropdownMenuItem,
   DropdownMenuPortal,
@@ -27,7 +27,7 @@ export function NameSelect(
     saveMessage: (message: Message) => void,
     setOpen: (open: boolean) => void,
     usedNames: string[],
-    data: SavedData,
+    data: DiscoData,
   },
 ) {
   const isDesktop = useIsDesktop();
@@ -90,7 +90,7 @@ function NameOptionList(
     setSelectedOption: (option: string) => void,
     selectedOption: string,
     usedNames: string[],
-    data: SavedData,
+    data: DiscoData,
   },
 ) {
   const [input, setInput] = React.useState('');
@@ -107,14 +107,15 @@ function NameOptionList(
     setOpen(false);
   }
 
-  React.useEffect(() => {
-    document.getElementById('name-select-input')?.focus();
-  }, []);
+  // React.useEffect(() => {
+  //   document.getElementById('name-select-input')?.focus();
+  // }, []);
 
   return (
     <Command>
       <CommandInput
-        id="name-select-input"
+        autoFocus
+        // id="name-select-input"
         placeholder="Name..."
         onValueChange={text => setInput(text.trim().toUpperCase())}
         className="[&:not(:placeholder-shown)]:uppercase"/>
@@ -158,7 +159,7 @@ function NameOptionItem({option, category, onSelect, data}: {
   option: string,
   category: string,
   onSelect: () => void,
-  data: SavedData
+  data: DiscoData
 }) {
   return (
     <CommandItem

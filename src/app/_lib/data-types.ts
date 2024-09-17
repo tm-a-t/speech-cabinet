@@ -1,4 +1,4 @@
-export type SavedData = {
+export type DiscoData = {
   messages: Array<Message>
   overrides: {
     checks: {
@@ -13,6 +13,7 @@ export type SavedData = {
   }
   showPortraits: boolean
   music: string | null
+  skipMusicIntro: boolean
   version: '0.1'
 }
 
@@ -41,7 +42,7 @@ export const difficulties = [
 export type Difficulty = typeof difficulties[number];
 export type Result = 'Success' | 'Failure';
 
-export const defaultData: SavedData = {
+export const defaultData: DiscoData = {
   messages: [
 
   ],
@@ -51,6 +52,7 @@ export const defaultData: SavedData = {
     portraitUrl: {},
   },
   showPortraits: true,
-  music: '/Sea Power - Instrument of Surrender.m4a',
+  music: null,
+  skipMusicIntro: true,
   version: '0.1',
 }

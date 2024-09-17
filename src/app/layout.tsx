@@ -19,7 +19,7 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
       <body className="overflow-y-visible overflow-x-hidden">
       <ThemeProvider attribute="class" defaultTheme="dark">
         <TooltipProvider>
-          <main className="flex bg-zinc-900 text-zinc-50 min-h-dvh">
+          <main className="flex bg-zinc-900 text-zinc-50 min-h-dvh" data-vaul-drawer-wrapper>
             {children}
           </main>
         </TooltipProvider>

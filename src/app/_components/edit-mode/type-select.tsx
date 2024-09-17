@@ -7,13 +7,13 @@ import {
 import {Pencil} from 'lucide-react';
 import {getColorClass} from '~/app/_lib/utils';
 import * as React from 'react';
-import {Message, SavedData} from '~/app/_lib/data-types';
+import {Message, DiscoData} from '~/app/_lib/data-types';
 import {characters, skills} from '~/app/_lib/names';
 
 export function TypeSelect({message, data, saveData}: {
   message: Message,
-  data: SavedData,
-  saveData: (data: SavedData) => void,
+  data: DiscoData,
+  saveData: (data: DiscoData) => void,
 }) {
   if (characters.includes(message.name) || skills.includes(message.name)) {
     return

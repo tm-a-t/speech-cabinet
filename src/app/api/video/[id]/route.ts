@@ -3,7 +3,8 @@ import {NextRequest, NextResponse} from 'next/server';
 import * as fs from 'fs';
 import {getVideoPath} from '~/app/_lib/utils';
 
-export const dynamic = 'force-static';  // cache this route
+// cache this route
+// export const dynamic = 'force-static';
 
 export async function GET(
   request: NextRequest,

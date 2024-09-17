@@ -20,8 +20,11 @@ export default {
 				physique: '#CB476A',
 				motorics: '#E3B734',
 				speech: '#CFD5BF',
+			},
+			backgroundImage: {
+				frame: "url('/frame.png')",
 			}
-  	}
+  	},
   },
 	safelist: [
 		'text-intellect',

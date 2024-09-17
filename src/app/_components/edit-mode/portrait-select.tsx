@@ -12,7 +12,7 @@ import {characters, harryPortraitNames, allPortraitNames, skills} from '~/app/_l
 import {Tooltip, TooltipContent, TooltipTrigger} from '~/app/_components/ui/tooltip';
 import {getDefaultPortraitUrl, getPortraitUrl} from '~/app/_lib/utils';
 import * as React from 'react';
-import {Message, SavedData} from '~/app/_lib/data-types';
+import {Message, DiscoData} from '~/app/_lib/data-types';
 import {Skeleton} from '~/app/_components/ui/skeleton';
 import { SkeletonImage } from '../ui/skeleton-image';
 import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
@@ -20,8 +20,8 @@ import {Drawer, DrawerContent, DrawerTrigger} from '~/app/_components/ui/drawer'
 
 export function PortraitSelect({message, data, saveData, setOpen}: {
   message: Message,
-  data: SavedData,
-  saveData: (data: SavedData) => void,
+  data: DiscoData,
+  saveData: (data: DiscoData) => void,
   setOpen: (value: boolean) => void,
 }) {
   if (message.name !== 'You' && (characters.includes(message.name) || skills.includes(message.name))) {
@@ -81,7 +81,7 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
 
 function PortraitOptionList({message, data, onSelectPortraitUrl}: {
   message: Message,
-  data: SavedData,
+  data: DiscoData,
   onSelectPortraitUrl: (value: string) => void,
 }) {
   const current = getPortraitUrl(message.name, data)

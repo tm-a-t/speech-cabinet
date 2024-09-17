@@ -13,10 +13,10 @@ export function MessageTextEditor(props: { content: string, onUpdate: (value: st
   const isDesktop = useIsDesktop();
   const editor = useEditor({
     immediatelyRender: false,
-    onUpdate({editor}) {
+    onBlur({editor}) {
       props.onUpdate(editor.getHTML());
     },
-    // autofocus: isDesktop ? 'end' : null,
+    autofocus: isDesktop ? 'end' : false,
     editorProps: {
       attributes: {
         class: 'inline min-w-20',
@@ -31,8 +31,8 @@ export function MessageTextEditor(props: { content: string, onUpdate: (value: st
       Text,
       Paragraph,
     ],
-    content: props.content,
+    content: props.content || '<p>Hi</p><p>there</p>',
   });
 
-  return <EditorContent editor={editor} className={cn("inline [&_p]:mt-4 [&_p:first-child]:inline")}/>;
+  return <EditorContent editor={editor} className={cn("inline [&_p:not(.is-editor-empty)]:mt-4 [&_p:first-child]:inline")}/>;
 }

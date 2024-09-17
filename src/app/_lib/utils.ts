@@ -1,6 +1,6 @@
 import {ClassValue, clsx} from 'clsx';
 import {twMerge} from 'tailwind-merge';
-import {SavedData} from './data-types';
+import {DiscoData} from './data-types';
 import {characters, allPortraitNames, skillColorClass, skills} from '~/app/_lib/names';
 
 export function cn(...inputs: ClassValue[]) {
@@ -39,11 +39,11 @@ export function getDefaultPortraitUrl(name: string): string {
   return '/portraits/' + name + '.png';
 }
 
-export function getPortraitUrl(name: string, data: SavedData): string {
+export function getPortraitUrl(name: string, data: DiscoData): string {
   return data.overrides.portraitUrl[name] ??
     (allPortraitNames.includes(name) ? getDefaultPortraitUrl(name) : '');
 }
 
-export function getColorClass(name: string, data: SavedData): string {
+export function getColorClass(name: string, data: DiscoData): string {
   return data.overrides.colorClass[name] ?? skillColorClass[name] ?? '';
 }

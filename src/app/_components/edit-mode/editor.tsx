@@ -1,10 +1,10 @@
-import {Message, SavedData} from "~/app/_lib/data-types";
+import {Message, DiscoData} from "~/app/_lib/data-types";
 import {Button} from '~/app/_components/ui/button';
 import React from 'react';
 import {MessageEditor} from "./message-editor";
 import {uniqueValues} from '~/app/_lib/utils';
 
-export function Editor({data, saveData}: { data: SavedData, saveData: (data: SavedData) => void }) {
+export function Editor({data, saveData}: { data: DiscoData, saveData: (data: DiscoData) => void }) {
   const usedNames = uniqueValues(data?.messages.map(message => message.name)) ?? [];
 
   function saveMessage(index: number, message: Message) {

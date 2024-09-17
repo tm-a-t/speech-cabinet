@@ -3,7 +3,7 @@ import {Button} from '~/app/_components/ui/button';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/app/_components/ui/select';
 import {MessageTextEditor} from '~/app/_components/edit-mode/message-text-editor';
 import React from 'react';
-import {difficulties, Difficulty, Message, Result, SavedData} from '~/app/_lib/data-types';
+import {difficulties, Difficulty, Message, Result, DiscoData} from '~/app/_lib/data-types';
 import {DropdownMenu, DropdownMenuTrigger} from '../ui/dropdown-menu';
 import {cn} from '~/app/_lib/utils';
 import {skills} from '~/app/_lib/names';
@@ -12,8 +12,8 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
   message: Message,
   saveMessage: (m: Message) => void,
   removeMessage: () => void,
-  data: SavedData,
-  saveData: (data: SavedData) => void,
+  data: DiscoData,
+  saveData: (data: DiscoData) => void,
   usedNames: string[],
 }) {
   const showCheck = data.overrides.checks[message.name] || skills.includes(message.name);
@@ -59,7 +59,7 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
   }
 
   return (
-    <div className="sm:pl-8 leading-7 [&:not(:first-child)]:mt-5 sm:[&:not(:first-child)]:mt-6">
+    <div className="sm:pl-8 leading-7 [&:not(:first-child)]:mt-5 sm:[&:not(:first-child)]:mt-4">
       <span className="sm:-ml-8 relative h-0">
         <LineElement>
           <CharacterMenu message={message}
@@ -106,7 +106,7 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
 
       <span className="text-zinc-300 hidden sm:inline"> &ndash; </span>
       <span
-        className="text-zinc-300 block sm:inline bg-white bg-opacity-10 sm:bg-transparent px-2 py-1 sm:p-0 mt-1 sm:m-0 rounded">
+        className="text-zinc-300 block sm:inline border-b sm:border-0 px-2 sm:p-0 mt-2 sm:m-0 rounded">
         <MessageTextEditor content={message.text} onUpdate={handleTextUpdate}/>
       </span>
     </div>

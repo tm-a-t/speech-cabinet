@@ -12,7 +12,7 @@ import {
 } from "~/app/_components/ui/command";
 import {Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger} from "~/app/_components/ui/drawer";
 import {cn, getColorClass, getDefaultPortraitUrl, uniqueValues} from "~/app/_lib/utils";
-import {Info, Pencil, SquareUser, Trash, Users} from 'lucide-react';
+import {Info, Pencil, SquareUser, Trash, Users, User, ArrowUp, ArrowDown} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +29,7 @@ import {
 } from "~/app/_components/ui/dropdown-menu";
 import {characters, skillColorClass, skills} from '~/app/_lib/names';
 import {Tooltip, TooltipContent, TooltipTrigger} from "../ui/tooltip";
-import {Message, SavedData} from "~/app/_lib/data-types";
+import {Message, DiscoData} from "~/app/_lib/data-types";
 import {NameSelect} from "./name-select";
 import {TypeSelect} from '~/app/_components/edit-mode/type-select';
 import {PortraitSelect} from "./portrait-select";
@@ -38,8 +38,8 @@ export function CharacterMenu({message, saveMessage, removeMessage, data, saveDa
   message: Message,
   saveMessage: (message: Message) => void,
   removeMessage: () => void,
-  data: SavedData,
-  saveData: (data: SavedData) => void,
+  data: DiscoData,
+  saveData: (data: DiscoData) => void,
   usedNames: string[],
 }) {
   const isDesktop = useIsDesktop();
@@ -57,6 +57,15 @@ export function CharacterMenu({message, saveMessage, removeMessage, data, saveDa
         <NameSelect message={message} saveMessage={saveMessage} setOpen={setOpen} usedNames={usedNames} data={data}/>
         <PortraitSelect message={message} data={data} saveData={saveData} setOpen={setOpen}/>
         <TypeSelect message={message} data={data} saveData={saveData}/>
+        <DropdownMenuSeparator/>
+        <DropdownMenuItem>
+          <ArrowUp className="mr-2 h-4 w-4"/>
+          Move up
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <ArrowDown className="mr-2 h-4 w-4"/>
+          Move down
+        </DropdownMenuItem>
         <DropdownMenuItem onSelect={removeMessage}>
           <Trash className="mr-2 h-4 w-4"/>
           Remove line
