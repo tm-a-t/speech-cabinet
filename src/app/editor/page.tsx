@@ -1,44 +1,16 @@
 'use client';
 
 
-import {Button} from "~/app/_components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/app/_components/ui/dialog";
 import React, {useEffect, useState} from 'react';
 import {defaultData, DiscoData} from '../_lib/data-types';
 import {Editor} from '~/app/_components/edit-mode/editor';
-import {Player} from '../_components/play-mode/player';
-import {DownloadButton} from '../_components/play-mode/download-button';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from '../_components/ui/tabs';
 import {
   Menubar,
-  MenubarCheckboxItem,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu, MenubarRadioGroup, MenubarRadioItem,
-  MenubarSeparator, MenubarSub, MenubarSubContent,
-  MenubarSubTrigger,
-  MenubarTrigger,
 } from '../_components/ui/menubar';
-import Link from 'next/link';
-import {downloadFile, formatTime} from "../_lib/utils";
-import {ost} from "../_lib/music";
-import {MusicSelect} from '~/app/_components/main-menu/music-select';
 import {SiteSubmenu} from '~/app/_components/main-menu/site-submenu';
 import {FileSubmenu} from '~/app/_components/main-menu/file-submenu';
 import {VideoSubmenu} from '~/app/_components/main-menu/video-submenu';
-import { Play } from "lucide-react";
-import {Drawer, DrawerContent, DrawerTrigger} from '~/app/_components/ui/drawer';
-import {DropdownMenuItem} from '~/app/_components/ui/dropdown-menu';
 import {PlayerButton} from '~/app/_components/main-menu/player-button';
-import DrawerDemo from '~/app/_components/test';
 
 export default function EditorPage() {
   const [data, setData] = useState<DiscoData | null>(null);

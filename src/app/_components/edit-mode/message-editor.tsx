@@ -16,7 +16,7 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
   saveData: (data: DiscoData) => void,
   usedNames: string[],
 }) {
-  const showCheck = data.overrides.checks[message.name] || skills.includes(message.name);
+  const showCheck = data.overrides.checks[message.name] ?? skills.includes(message.name);
 
   function handleCheckToggle(value: boolean) {
     saveMessage({

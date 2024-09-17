@@ -2,34 +2,16 @@ import * as React from "react";
 
 import {useIsDesktop} from "~/app/_lib/hooks/use-media-query";
 import {Button} from "~/app/_components/ui/button";
-import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "~/app/_components/ui/command";
-import {Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger} from "~/app/_components/ui/drawer";
-import {cn, getColorClass, getDefaultPortraitUrl, uniqueValues} from "~/app/_lib/utils";
-import {Info, Pencil, SquareUser, Trash, Users, User, ArrowUp, ArrowDown} from 'lucide-react';
+import {cn, getColorClass} from "~/app/_lib/utils";
+import {ArrowDown, ArrowUp, Trash} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-  DropdownMenuLabel,
 } from "~/app/_components/ui/dropdown-menu";
-import {characters, skillColorClass, skills} from '~/app/_lib/names';
-import {Tooltip, TooltipContent, TooltipTrigger} from "../ui/tooltip";
-import {Message, DiscoData} from "~/app/_lib/data-types";
+import {DiscoData, Message} from "~/app/_lib/data-types";
 import {NameSelect} from "./name-select";
 import {TypeSelect} from '~/app/_components/edit-mode/type-select';
 import {PortraitSelect} from "./portrait-select";

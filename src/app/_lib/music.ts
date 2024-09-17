@@ -74,10 +74,11 @@ function playSound(path: string) {
 
 export function playMusic(path: string | null, skipIntro: boolean): HTMLAudioElement {
   const audio = document.createElement('audio');
-  audio.src = path || '';
+  audio.src = path ?? '';
+  audio.volume = .25;
   audio.loop = true;
   if (skipIntro) {
-    audio.currentTime = 21;  // a random default, seems to work ok in general
+    audio.currentTime = 37;  // a random default, seems to work ok in general
   }
   document.body.appendChild(audio);
   void audio.play();

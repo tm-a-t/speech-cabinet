@@ -36,8 +36,9 @@
     display: inline-block;
 }
 
+/* Editor placeholder */
 .tiptap p.is-empty::before {
-    @apply text-white text-opacity-80 sm:text-opacity-30;
+    @apply text-white text-opacity-50;
     opacity: .4;
     content: attr(data-placeholder);
     display: inline;

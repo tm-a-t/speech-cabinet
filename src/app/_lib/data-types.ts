@@ -1,15 +1,9 @@
 export type DiscoData = {
   messages: Array<Message>
   overrides: {
-    checks: {
-      [character: string]: boolean
-    }
-    colorClass: {
-      [character: string]: string
-    }
-    portraitUrl: {
-      [character: string]: string
-    }
+    checks: Record<string, boolean>
+    colorClass: Record<string, string>
+    portraitUrl: Record<string, string>
   }
   showPortraits: boolean
   music: string | null

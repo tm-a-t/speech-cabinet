@@ -5,7 +5,7 @@ import {totalDuration, totalTimeLimit} from '~/app/_lib/time';
 import {env} from '~/env';
 import {db} from "~/server/db";
 import {getVideoPath, sleep} from '~/app/_lib/utils';
-// @ts-ignore
+// @ts-expect-error
 import WebVideoCreator, {VIDEO_ENCODER, logger} from 'web-video-creator';
 
 const wvc = new WebVideoCreator();

@@ -1,20 +1,25 @@
 import {
   DropdownMenuItem,
   DropdownMenuPortal,
-  DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from '~/app/_components/ui/dropdown-menu';
 import {SquareUser} from 'lucide-react';
-import {Command, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator} from '~/app/_components/ui/command';
-import {characters, harryPortraitNames, allPortraitNames, skills} from '~/app/_lib/names';
+import {
+  Command,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from '~/app/_components/ui/command';
+import {allPortraitNames, characters, harryPortraitNames, skills} from '~/app/_lib/names';
 import {Tooltip, TooltipContent, TooltipTrigger} from '~/app/_components/ui/tooltip';
 import {getDefaultPortraitUrl, getPortraitUrl} from '~/app/_lib/utils';
 import * as React from 'react';
-import {Message, DiscoData} from '~/app/_lib/data-types';
-import {Skeleton} from '~/app/_components/ui/skeleton';
-import { SkeletonImage } from '../ui/skeleton-image';
+import {DiscoData, Message} from '~/app/_lib/data-types';
+import {SkeletonImage} from '../ui/skeleton-image';
 import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
 import {Drawer, DrawerContent, DrawerTrigger} from '~/app/_components/ui/drawer';
 
@@ -24,10 +29,10 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
   saveData: (data: DiscoData) => void,
   setOpen: (value: boolean) => void,
 }) {
+  const isDesktop = useIsDesktop();
   if (message.name !== 'You' && (characters.includes(message.name) || skills.includes(message.name))) {
     return
   }
-  const isDesktop = useIsDesktop();
 
   function handleSelectPortraitUrl(url: string) {
     saveData({
@@ -105,7 +110,7 @@ function PortraitOptionList({message, data, onSelectPortraitUrl}: {
             Clear portrait
           </CommandItem>
           {options.map((name) => {
-            const url = getDefaultPortraitUrl(name)!;
+            const url = getDefaultPortraitUrl(name);
             return <CommandItem onSelect={() => onSelectPortraitUrl(url)}
                                 value={url} className="w-1/4" key={name}>
               <Tooltip>

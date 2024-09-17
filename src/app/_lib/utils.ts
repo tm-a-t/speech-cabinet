@@ -29,10 +29,13 @@ export function downloadFile(path: string, name: string) {
 }
 
 export function formatTime(): string {
-  const pad = (n: number, s = 2) => (`${new Array(s).fill(0)}${n}`).slice(-s);
   const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} `
+    + `${pad(d.getHours())}-${pad(d.getMinutes())}`;
+}
 
-  return `${pad(d.getFullYear(), 4)}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}-${pad(d.getMinutes())}`;
+function pad(num: number): string {
+  return `00${num}`.slice(-2);
 }
 
 export function getDefaultPortraitUrl(name: string): string {

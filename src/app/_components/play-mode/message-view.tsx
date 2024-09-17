@@ -7,7 +7,7 @@ import {cn, getColorClass} from '~/app/_lib/utils';
 import {skillColorClass, skills} from '~/app/_lib/names';
 
 export function MessageView({message, data, className}: { message: Message, data: DiscoData, className?: string }) {
-  const showCheck = data.overrides.checks[message.name] || skills.includes(message.name);
+  const showCheck = data.overrides.checks[message.name] ?? skills.includes(message.name);
 
   return (
     <div className={cn("pl-12 mt-14 [&:not(:last-child)]:opacity-60", className)}

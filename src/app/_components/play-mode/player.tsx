@@ -13,7 +13,8 @@ export function Player({data}: { data: DiscoData }) {
 
   const [shownMessages, setShownMessages] = useState<Message[]>([]);
   const [isLastMessageShown, setIsLastMessageShown] = useState(false);
-  const [yPosition, setYPosition] = useState(900);
+  // can't figure out the math, this is the position when the background doesn't scroll
+  const [yPosition, setYPosition] = useState(1540);
 
   const [messagePortraits, setMessagePortraits] = useState<Array<string | null>>([]);
   const [shownPortrait, setShownPortrait] = useState<string | null>(null);
@@ -39,7 +40,7 @@ export function Player({data}: { data: DiscoData }) {
   }, [shownMessages, messagePortraits]);
 
   useEffect(() => {
-    Promise.all(
+    void Promise.all(
       data.messages.map(async message => {
         const url = getPortraitUrl(message.name, data);
         return (await fetch(url)).status === 200 ? url : null;
