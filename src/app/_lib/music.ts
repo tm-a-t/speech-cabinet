@@ -75,7 +75,7 @@ function playSound(path: string) {
 export function playMusic(path: string | null, skipIntro: boolean): HTMLAudioElement {
   const audio = document.createElement('audio');
   audio.src = path ?? '';
-  audio.volume = .25;
+  audio.volume = .2;
   audio.loop = true;
   if (skipIntro) {
     audio.currentTime = 37;  // a random default, seems to work ok in general

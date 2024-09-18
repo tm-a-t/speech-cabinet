@@ -32,7 +32,7 @@ export function VideoSubmenu({data, saveData}: { data: DiscoData, saveData: (dat
       <MenubarTrigger className="text-zinc-400">Options</MenubarTrigger>
       <MenubarContent>
         <MenubarCheckboxItem checked={data.showPortraits} onCheckedChange={saveShowPortraits}>
-          Display portraits
+          Portraits in video
         </MenubarCheckboxItem>
         <MenubarCheckboxItem checked={data.skipMusicIntro} onCheckedChange={saveSkipMusicIntro} disabled={data.music === null}>
           Skip music intro

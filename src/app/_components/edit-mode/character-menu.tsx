@@ -30,8 +30,8 @@ export function CharacterMenu({message, saveMessage, removeMessage, data, saveDa
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline"
-                className={cn("uppercase tracking-wider h-8 px-3", getColorClass(message.name, data))}>
+        <Button variant="ghost"
+                className={cn("h-8 px-3 sm:px-3 uppercase tracking-wider [&:last-child]:-mr-2", getColorClass(message.name, data))}>
           {message.name}
         </Button>
       </DropdownMenuTrigger>
