@@ -24,7 +24,7 @@ export function SiteSubmenu({data, saveData}: {data: DiscoData | null, saveData:
               Every combination of words has been played out.
               The atoms don&apos;t form us anymore: us, our love, our unborn daughters.
             </p>
-            <p>I made Disco Elysum dialogue generator — because somebody had ot.</p>
+            <p>I made Disco Elysum dialogue generator — because somebody had to.</p>
           </DialogContent>
         </Dialog>
       </MenubarContent>

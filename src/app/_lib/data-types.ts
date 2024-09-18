@@ -1,3 +1,20 @@
+import {is} from 'typia';
+
+export function toDiscoData(json: string): DiscoData | null {
+  try {
+    const dataSave = JSON.parse(json);
+    console.log(is<string>('hello'))
+    console.log('hey')
+    if (is<DiscoData>(dataSave)) {
+      return dataSave;
+    }
+    return null;
+  } catch (SyntaxError) {
+    return null;
+  }
+}
+
+
 export type DiscoData = {
   messages: Array<Message>
   overrides: {
@@ -37,9 +54,7 @@ export type Difficulty = typeof difficulties[number];
 export type Result = 'Success' | 'Failure';
 
 export const defaultData: DiscoData = {
-  messages: [
-
-  ],
+  messages: [],
   overrides: {
     checks: {},
     colorClass: {},
@@ -49,4 +64,4 @@ export const defaultData: DiscoData = {
   music: null,
   skipMusicIntro: true,
   version: '0.1',
-}
+};

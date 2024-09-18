@@ -73,7 +73,7 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
             <span className="inline-block">
                 <Select onValueChange={handleCheckDifficultySelect} value={message.check?.difficulty ?? 'none'}>
                   <SelectTrigger
-                    className="h-8 sm:px-1 text-zinc-400 dark:bg-transparent dark:border-0 hover:dark:bg-zinc-800 hover:text-white transition-all">
+                    className="h-8 sm:px-1 text-zinc-400 dark:bg-transparent dark:border-0 hover:dark:bg-zinc-800 hover:text-white transition">
                     <SelectValue/>
                   </SelectTrigger>
                   <SelectContent className="w-60">
@@ -87,7 +87,7 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
               {showCheck && message.check &&
                 <Select onValueChange={handleCheckResultSelect} value={message.check.result}>
                   <SelectTrigger
-                    className="h-8 sm:px-1 text-zinc-400 dark:bg-transparent dark:border-0 hover:dark:bg-zinc-800 hover:text-white transition-all">
+                    className="h-8 sm:px-1 text-zinc-400 dark:bg-transparent dark:border-0 hover:dark:bg-zinc-800 hover:text-white transition">
                     <SelectValue/>
                   </SelectTrigger>
                   <SelectContent>

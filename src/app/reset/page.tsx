@@ -9,7 +9,7 @@ export default function ResetPage() {
 
   function reset() {
     localStorage.setItem('data', JSON.stringify(defaultData));
-    router.push('/editor');
+    router.push('/');
   }
 
   return (
