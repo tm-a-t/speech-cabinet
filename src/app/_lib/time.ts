@@ -12,5 +12,5 @@ export function totalDuration(data: DiscoData) {
 }
 
 export function getMessageDuration(message: Message) {
-  return 30 * (message.text.length + message.name.length) + 1000;
+  return 20 * (message.text.length + message.name.length) + 1000;
 }

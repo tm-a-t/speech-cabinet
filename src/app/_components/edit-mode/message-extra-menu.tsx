@@ -3,7 +3,7 @@ import * as React from "react";
 import {useIsDesktop} from "~/app/_lib/hooks/use-media-query";
 import {Button} from "~/app/_components/ui/button";
 import {cn, getColorClass} from "~/app/_lib/utils";
-import {ArrowDown, ArrowUp, Trash} from 'lucide-react';
+import {ArrowDown, ArrowUp, Ellipsis, EllipsisVertical, Trash} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,14 +15,15 @@ import {DiscoData, Message} from "~/app/_lib/data-types";
 import {NameSelect} from "./name-select";
 import {TypeSelect} from '~/app/_components/edit-mode/type-select';
 import {PortraitSelect} from "./portrait-select";
+import {characters, skills} from '~/app/_lib/names';
 
-export function CharacterMenu({message, saveMessage, removeMessage, data, saveData, usedNames}: {
+export function MessageExtraMenu({message, removeMessage, data, saveData, moveMessageUp, moveMessageDown}: {
   message: Message,
-  saveMessage: (message: Message) => void,
   removeMessage: () => void,
   data: DiscoData,
   saveData: (data: DiscoData) => void,
-  usedNames: string[],
+  moveMessageUp: () => void,
+  moveMessageDown: () => void,
 }) {
   const isDesktop = useIsDesktop();
   const [open, setOpen] = React.useState(false);
@@ -30,24 +31,26 @@ export function CharacterMenu({message, saveMessage, removeMessage, data, saveDa
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost"
-                className={cn("h-8 px-3 sm:px-3 uppercase tracking-wider [&:last-child]:-mr-2", getColorClass(message.name, data))}>
-          {message.name}
+        <Button variant="ghost" className="message-menu-button h-8 text-base px-2 ml-auto text-zinc-400 sm:absolute -left-8 transition">
+          <Ellipsis className="h-4 w-4 hidden sm:block"/>
+          <EllipsisVertical className="h-4 w-4 mb-1 sm:hidden"/>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="start">
-        <NameSelect message={message} saveMessage={saveMessage} setOpen={setOpen} usedNames={usedNames} data={data}/>
         <PortraitSelect message={message} data={data} saveData={saveData} setOpen={setOpen}/>
         <TypeSelect message={message} data={data} saveData={saveData}/>
-        <DropdownMenuSeparator/>
-        <DropdownMenuItem>
+        {message.name === 'You' || (!characters.includes(message.name) && !skills.includes(message.name)) &&
+          <DropdownMenuSeparator/>
+        }
+        <DropdownMenuItem onSelect={e => {moveMessageUp(); e.preventDefault()}}>
           <ArrowUp className="mr-2 h-4 w-4"/>
           Move up
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={e => {moveMessageDown(); e.preventDefault()}}>
           <ArrowDown className="mr-2 h-4 w-4"/>
           Move down
         </DropdownMenuItem>
+        <DropdownMenuSeparator/>
         <DropdownMenuItem onSelect={removeMessage}>
           <Trash className="mr-2 h-4 w-4"/>
           Remove line

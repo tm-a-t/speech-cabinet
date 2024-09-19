@@ -11,15 +11,19 @@ import {
 import {cn, getColorClass} from '~/app/_lib/utils';
 import {Message, DiscoData} from '~/app/_lib/data-types';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuPortal,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 } from '~/app/_components/ui/dropdown-menu';
 import {Users} from 'lucide-react';
 import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
 import {Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger} from '../ui/drawer';
+import {Button} from '~/app/_components/ui/button';
 
 export function NameSelect(
   props: {
@@ -40,38 +44,38 @@ export function NameSelect(
     });
   }
 
-  const label = <>
-    <Users className="mr-2 h-4 w-4"/>
-    Change character
-  </>;
+  const button = <Button variant="ghost"
+                         className={cn("h-8 px-3 sm:px-3 sm:text-base uppercase tracking-wider", getColorClass(props.message.name, props.data))}>
+    {props.message.name}
+  </Button>;
 
   if (isDesktop) {
     return (
-      <DropdownMenuSub>
-        <DropdownMenuSubTrigger>{label}</DropdownMenuSubTrigger>
-        <DropdownMenuPortal>
-          <DropdownMenuSubContent className="p-0 w-60">
-            <NameOptionList setOpen={props.setOpen}
-                            setSelectedOption={handleSelectedOption}
-                            usedNames={props.usedNames}
-                            selectedOption={props.message.name}
-                            data={props.data}/>
-          </DropdownMenuSubContent>
-        </DropdownMenuPortal>
-      </DropdownMenuSub>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>{button}</DropdownMenuTrigger>
+        <DropdownMenuContent className="p-0 w-60">
+          <NameOptionList setOpen={props.setOpen}
+                          setSelectedOption={handleSelectedOption}
+                          usedNames={props.usedNames}
+                          selectedOption={props.message.name}
+                          isDesktop={isDesktop}
+                          data={props.data}/>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   }
 
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <DropdownMenuItem onSelect={e => e.preventDefault()}>{label}...</DropdownMenuItem>
+        {button}
       </DrawerTrigger>
       <DrawerContent className="h-96">
         <NameOptionList setOpen={props.setOpen}
                         setSelectedOption={handleSelectedOption}
                         usedNames={props.usedNames}
                         selectedOption={props.message.name}
+                        isDesktop={isDesktop}
                         data={props.data}/>
       </DrawerContent>
     </Drawer>
@@ -84,19 +88,23 @@ function NameOptionList(
     setSelectedOption,
     selectedOption,
     usedNames,
+    isDesktop,
     data,
   }: {
     setOpen: (open: boolean) => void,
     setSelectedOption: (option: string) => void,
     selectedOption: string,
     usedNames: string[],
+    isDesktop: boolean,
     data: DiscoData,
   },
 ) {
   const [input, setInput] = React.useState('');
 
   const customOption =
-    input.length > 0 && skills.find(option => option == input) == null
+    input.length > 0
+    && skills.find(option => option.toLowerCase() == input) == null
+    && characters.find(option => option.toLowerCase() == input) == null
       ? input
       : null;
 
@@ -107,15 +115,10 @@ function NameOptionList(
     setOpen(false);
   }
 
-  // React.useEffect(() => {
-  //   document.getElementById('name-select-input')?.focus();
-  // }, []);
-
   return (
     <Command>
       <CommandInput
-        autoFocus
-        // id="name-select-input"
+        autoFocus={isDesktop}
         placeholder="Name..."
         onValueChange={text => setInput(text.trim().toUpperCase())}
         className="[&:not(:placeholder-shown)]:uppercase"/>

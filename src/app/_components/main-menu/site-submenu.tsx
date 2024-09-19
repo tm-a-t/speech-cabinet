@@ -19,11 +19,15 @@ export function SiteSubmenu({data, saveData}: {data: DiscoData | null, saveData:
             <DialogHeader>
               <DialogTitle>Speech Cabinet</DialogTitle>
             </DialogHeader>
-            <p className="text-zinc-400">
+            <p>
               Every combination of words has been played out.
               The atoms don&apos;t form us anymore: us, our love, our unborn daughters.
             </p>
-            <p>I made Disco Elysum dialogue generator — because somebody had to.</p>
+            <hr/>
+            <p>
+              This site is Disco Elysum dialogue generator, made by tmat.
+              See <a href="https://www.reddit.com/r/DiscoElysium/comments/1fgkudy/im_building_a_site_for_animating_discostyle/" className="underline underline-offset-4" target="_blank">the reddit posts.</a>
+            </p>
           </DialogContent>
         </Dialog>
       </MenubarContent>

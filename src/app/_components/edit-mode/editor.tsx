@@ -51,13 +51,29 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
     });
   }
 
+  function moveMessageDown(index: number) {
+    if (data === null) return;
+    if (index < 0 || index + 1 > data.messages.length) return;
+
+    saveData({
+      ...data,
+      messages: data.messages.map((m, i) => {
+        if (i === index) return data.messages[index + 1]!;
+        if (i === index + 1) return data.messages[index]!;
+        return m;
+      }),
+    })
+  }
+
   return (
-    <div className="container mx-auto px-6 sm:px-12 max-w-xl pb-64 pt-24 xl:pt-12 h-full min-h-dvh tape-background">
+    <div className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 pt-24 xl:pt-12 h-full min-h-dvh tape-background">
       {data?.messages.map((message, index) =>
         <MessageEditor
           message={message}
           saveMessage={m => saveMessage(index, m)}
           removeMessage={() => removeMessage(index)}
+          moveMessageUp={() => moveMessageDown(index - 1)}
+          moveMessageDown={() => moveMessageDown(index)}
           data={data}
           saveData={saveData}
           usedNames={usedNames}

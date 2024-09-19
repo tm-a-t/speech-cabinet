@@ -1,4 +1,4 @@
-import {CharacterMenu} from '~/app/_components/edit-mode/character-menu';
+import {MessageExtraMenu} from '~/app/_components/edit-mode/message-extra-menu';
 import {Button} from '~/app/_components/ui/button';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/app/_components/ui/select';
 import React from 'react';
