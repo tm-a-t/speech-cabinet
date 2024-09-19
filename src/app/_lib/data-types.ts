@@ -1,20 +1,3 @@
-import {is} from 'typia';
-
-export function toDiscoData(json: string): DiscoData | null {
-  try {
-    const dataSave = JSON.parse(json);
-    console.log(is<string>('hello'))
-    console.log('hey')
-    if (is<DiscoData>(dataSave)) {
-      return dataSave;
-    }
-    return null;
-  } catch (SyntaxError) {
-    return null;
-  }
-}
-
-
 export type DiscoData = {
   messages: Array<Message>
   overrides: {
@@ -29,8 +12,8 @@ export type DiscoData = {
 }
 
 export type Message = {
-  text: string
   name: string
+  text: string
   check?: Check
 }
 
@@ -54,14 +37,24 @@ export type Difficulty = typeof difficulties[number];
 export type Result = 'Success' | 'Failure';
 
 export const defaultData: DiscoData = {
-  messages: [],
+  messages: [
+    {name: 'Kim Kitsuragi', text: '"The boots are ceramic, vitreous enamel. They\'re fused to his skin from blood flowing downward postmortem. Removal of the boots is left for Processing."'},
+    {
+      name: 'Drama',
+      text: 'It would be *clever* of you to omit the boots altogether, sire. If you are to *keep* them for yourself -- as you ought to. You have deserved them more than anyone else!',
+      check: {
+        difficulty: 'Easy',
+        result: 'Success',
+      }
+    },
+  ],
   overrides: {
     checks: {},
     colorClass: {},
     portraitUrl: {},
   },
   showPortraits: true,
-  music: null,
+  music: '/music/Sea Power - Instrument of Surrender.m4a',
   skipMusicIntro: true,
   version: '0.1',
 };

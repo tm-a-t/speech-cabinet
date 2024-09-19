@@ -31,8 +31,8 @@ export function MessageTextEditor(props: { content: string, onUpdate: (value: st
       Text,
       Paragraph,
     ],
-    content: props.content || '<p>Hi</p><p>there</p>',
+    content: props.content || '',
   });
 
-  return <EditorContent editor={editor} className={cn("inline [&_p:not(.is-editor-empty)]:mt-4 [&_p:first-child]:inline")}/>;
+  return <EditorContent editor={editor} className={cn("sm:inline [&_p:not(:first-child)]:mt-4 sm:[&_p:first-child]:inline")}/>;
 }

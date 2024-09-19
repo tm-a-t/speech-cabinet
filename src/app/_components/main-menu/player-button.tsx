@@ -20,7 +20,7 @@ export function PlayerButton({data, onMouseOver}: {data: DiscoData, onMouseOver:
     return (
       <Dialog>
         <DialogTrigger asChild>{button}</DialogTrigger>
-        <DialogContent>
+        <DialogContent className="w-[26rem] p-0 dark:bg-opacity-0 border-0">
           <PlayerWrapper data={data}/>
         </DialogContent>
       </Dialog>
@@ -40,10 +40,10 @@ export function PlayerButton({data, onMouseOver}: {data: DiscoData, onMouseOver:
 function PlayerWrapper({data}: {data: DiscoData}) {
   return (
     <>
-      <div className="w-full overflow-hidden">
-        <div className="h-[576px] my-12 lg:my-1">
+      <div className="w-[324px] overflow-hidden mx-auto">
+        <div className="h-[576px] my-12 lg:my-1 border box-content">
           <div
-            className="scale-[0.3] -translate-y-[35%] w-[1080px] relative -translate-x-[50%] left-1/2 border-2 box-content">
+            className="scale-[0.3] -translate-y-[35%] w-[1080px] relative -translate-x-[50%] left-1/2">
             <Player data={data}/>
           </div>
         </div>

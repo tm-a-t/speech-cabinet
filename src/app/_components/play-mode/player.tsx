@@ -69,7 +69,7 @@ export function Player({data}: { data: DiscoData }) {
             message={message}
             data={data}
             className={!isLastMessageShown && index + 1 === shownMessages.length ? "opacity-0" : ""}
-            key={index + message.name + message.text[0]}/>,
+            key={index + message.name + message.text}/>,
         )}
       </div>
     </div>

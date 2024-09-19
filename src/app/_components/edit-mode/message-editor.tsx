@@ -60,7 +60,7 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
 
   return (
     <div className="sm:pl-6 leading-7 [&:not(:first-child)]:mt-5 sm:[&:not(:first-child)]:mt-5">
-      <span className="sm:-ml-6 -ml-1 inline-block h-0">
+      <span className="sm:-ml-6 -ml-1 -mr-1 inline-block h-0">
         <span className="relative h-0 sm:-ml-3">
             <CharacterMenu message={message}
                            saveMessage={saveMessage}
@@ -102,19 +102,9 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
       </span>
 
       <span className="text-zinc-300 hidden sm:inline"> &ndash; </span>
-      <span
-        className="text-zinc-300 block sm:inline border-b sm:border-0 px-2 sm:p-0 mt-2 sm:m-0 rounded">
+      <span className="text-zinc-300 block sm:inline border-b sm:border-0 px-2 sm:p-0 mt-2 sm:m-0 rounded">
         <MessageTextEditor content={message.text} onUpdate={handleTextUpdate}/>
       </span>
     </div>
   );
 }
-
-function LineElement({children, className}: { children?: React.ReactNode, className?: string }) {
-  return (
-    <span className={cn(className, "inline-block h-0")}>
-      {children}
-    </span>
-  );
-}
-

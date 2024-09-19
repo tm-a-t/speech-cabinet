@@ -44,7 +44,7 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
       messages: [
         ...data.messages,
         {
-          text: '',
+          text: '<p></p>',
           name: secondLastMessage?.name ?? lastMessage?.name ?? 'You',
         },
       ],
@@ -52,7 +52,7 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
   }
 
   return (
-    <div className="container mx-auto px-6 sm:px-12 max-w-xl pb-64 pt-28 lg:pt-12 h-full min-h-dvh tape-background">
+    <div className="container mx-auto px-6 sm:px-12 max-w-xl pb-64 pt-24 xl:pt-12 h-full min-h-dvh tape-background">
       {data?.messages.map((message, index) =>
         <MessageEditor
           message={message}
@@ -61,12 +61,12 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
           data={data}
           saveData={saveData}
           usedNames={usedNames}
-          key={index + message.name + message.text[0]}/>,
+          key={index + message.name + message.text}/>,
       )}
-      <Button variant="ghost" onClick={addMessage} className="mt-4 -ml-2 opacity-30 hover:opacity-100 transition-opacity block pl-3">+ Add line</Button>
+      <Button variant="ghost" onClick={addMessage} className="mt-4 -ml-2 opacity-30 hover:opacity-100 transition-opacity block sm:pl-3">+ Add line</Button>
 
       {totalDuration(data) > totalTimeLimit &&
-        <div className="mt-12 opacity-60">
+        <div className="mt-12 opacity-60 px-2 sm:px-0">
           <p>
             Sorry, your dialogue is {Math.ceil(totalDuration(data) / 1000)} seconds long.
             The site only renders up to {totalTimeLimit / 1000} seconds of mp4 video:

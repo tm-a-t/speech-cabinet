@@ -20,7 +20,6 @@ export function SiteSubmenu({data, saveData}: {data: DiscoData | null, saveData:
               <DialogTitle>Speech Cabinet</DialogTitle>
             </DialogHeader>
             <p className="text-zinc-400">
-              We don&apos;t have anything to talk about anymore.
               Every combination of words has been played out.
               The atoms don&apos;t form us anymore: us, our love, our unborn daughters.
             </p>

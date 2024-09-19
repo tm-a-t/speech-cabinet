@@ -29,7 +29,7 @@ export function FileSubmenu({data, saveData}: { data: DiscoData, saveData: (data
   function importData() {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.disco,.json';
+    input.accept = '.disco';
     input.onchange = e => {
       const files = (e.target as HTMLInputElement).files!;
       void files[0]!.text().then(text => {
