@@ -20,6 +20,7 @@ wvc.config({
   ffmpegDebug: true,
   ffmpegExecutablePath: 'ffmpeg',
   frameFormat: 'png',
+  browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
 });
 
 async function renderVideo(data: DiscoData, id: string) {
@@ -37,7 +38,7 @@ async function renderVideo(data: DiscoData, id: string) {
   video.on("progress", async (progress: number) => {
     await db.video.update({where: {id}, data: {progress: Math.floor(progress)}}).catch(console.error);
   });
-  await video.startAndWait();
+  await video.startAndWait()
   await db.video.update({where: {id}, data: {isReady: true}});
 }
 
