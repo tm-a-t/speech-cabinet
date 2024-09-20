@@ -61,8 +61,7 @@ export function NameSelect(
         {button}
       </DrawerTrigger>
       <DrawerContent className="h-96">
-        <NameOptionList setOpen={setIsOpen}
-                        setSelectedOption={handleSelectedOption}
+        <NameOptionList setSelectedOption={handleSelectedOption}
                         usedNames={props.usedNames}
                         selectedOption={props.message.name}
                         isDesktop={isDesktop}
