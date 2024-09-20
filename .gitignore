@@ -52,3 +52,7 @@ temp/
 
 # nix nix nix nix
 .direnv/
+
+# debug vivod
+.bin/
+tmp/
