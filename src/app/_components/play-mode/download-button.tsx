@@ -2,10 +2,10 @@
 
 import {Button} from '~/app/_components/ui/button';
 import {useEffect, useState} from 'react';
-import {DiscoData} from '~/app/_lib/data-types';
+import type {DiscoData} from '~/app/_lib/data-types';
 import {getVideoProgress, getVideoQueuePosition, startRender} from '~/app/_lib/server-actions';
 import {Progress} from '../ui/progress';
-import {Download, Loader2} from 'lucide-react';
+import {Download} from 'lucide-react';
 import {downloadFile, formatTime} from '~/app/_lib/utils';
 
 enum State {
@@ -52,7 +52,7 @@ export function DownloadButton({data}: { data: DiscoData }) {
       void fetchFunction();
     }, 1000);
     return () => clearInterval(timer);
-  }, [downloadProgress, state]);
+  }, [downloadProgress, state, videoId]);
 
   // useEffect(() => {
   //   if (!showSpinner) return;

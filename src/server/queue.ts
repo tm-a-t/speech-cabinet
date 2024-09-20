@@ -1,6 +1,6 @@
-import PgBoss, {Job, Db, SendOptions} from 'pg-boss';
+import PgBoss, {type Job} from 'pg-boss';
 import {env} from '~/env';
-import {DiscoData} from '~/app/_lib/data-types';
+import type {DiscoData} from '~/app/_lib/data-types';
 
 export const boss = new PgBoss(env.DATABASE_URL);
 boss.on('error', console.error);
@@ -12,7 +12,7 @@ type RenderVideoData = {
 }
 export type RenderVideoJob = Job<RenderVideoData>
 
-export async function startJob(data: RenderVideoData) {
+export async function startJob(data: RenderVideoData): Promise<void> {
   await boss.start();
   await boss.send(queue, data, {id: data.videoId});
 }
@@ -31,7 +31,7 @@ export async function getJobPosition(id: string): Promise<number> {
     AND state IN ('active', 'created')
     AND created_on < (SELECT created_on FROM pgboss.job WHERE id = $2)`
 
-  // @ts-expect-error
+  // @ts-expect-error A workaround to execute SQL as PgBoss does
   const result = await boss.getDb().executeSql(sql, [queue, id])
   return parseFloat(result.rows[0].count)
 }

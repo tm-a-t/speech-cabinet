@@ -80,10 +80,10 @@ export const defaultData: DiscoData = {
 
 export function toDiscoData(input: string): DiscoData | null {
   try {
-    const object = JSON.parse(input);
+    const object: any = JSON.parse(input);
     return discoData.parse(object);
   }
-  catch (e) {
+  catch (_) {
     // Parsing JSON or parsing the object failed
     return null;
   }

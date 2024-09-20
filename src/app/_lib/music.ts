@@ -1,4 +1,4 @@
-import {DiscoData} from '~/app/_lib/data-types';
+import type {DiscoData} from '~/app/_lib/data-types';
 import {getColorClass} from '~/app/_lib/utils';
 
 type OstItem = { name: string, url: string | null }

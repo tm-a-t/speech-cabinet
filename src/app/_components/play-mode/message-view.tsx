@@ -1,10 +1,7 @@
-import {MessageExtraMenu} from '~/app/_components/edit-mode/message-extra-menu';
-import {Button} from '~/app/_components/ui/button';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/app/_components/ui/select';
 import React from 'react';
-import {difficulties, Difficulty, Message, Result, DiscoData} from '~/app/_lib/data-types';
+import type {DiscoData, Message} from '~/app/_lib/data-types';
 import {cn, getColorClass} from '~/app/_lib/utils';
-import {skillColorClass, skills} from '~/app/_lib/names';
+import {skills} from '~/app/_lib/names';
 
 export function MessageView({message, data, className}: { message: Message, data: DiscoData, className?: string }) {
   const showCheck = data.overrides.checks[message.name] ?? skills.includes(message.name);

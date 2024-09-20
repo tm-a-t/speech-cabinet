@@ -4,7 +4,7 @@ import {Play} from 'lucide-react';
 import React from 'react';
 import {Player} from '~/app/_components/play-mode/player';
 import {DownloadButton} from '~/app/_components/play-mode/download-button';
-import {DiscoData} from '~/app/_lib/data-types';
+import type {DiscoData} from '~/app/_lib/data-types';
 import {Dialog, DialogContent, DialogTrigger} from '~/app/_components/ui/dialog';
 import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
 

@@ -1,8 +1,5 @@
 import * as React from "react";
-
-import {useIsDesktop} from "~/app/_lib/hooks/use-media-query";
 import {Button} from "~/app/_components/ui/button";
-import {cn, getColorClass} from "~/app/_lib/utils";
 import {ArrowDown, ArrowUp, Ellipsis, EllipsisVertical, Trash} from 'lucide-react';
 import {
   DropdownMenu,
@@ -11,8 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/app/_components/ui/dropdown-menu";
-import {DiscoData, Message} from "~/app/_lib/data-types";
-import {NameSelect} from "./name-select";
+import type {DiscoData, Message} from "~/app/_lib/data-types";
 import {TypeSelect} from '~/app/_components/edit-mode/type-select';
 import {PortraitSelect} from "./portrait-select";
 import {characters, skills} from '~/app/_lib/names';
@@ -25,7 +21,6 @@ export function MessageExtraMenu({message, removeMessage, data, saveData, moveMe
   moveMessageUp: () => void,
   moveMessageDown: () => void,
 }) {
-  const isDesktop = useIsDesktop();
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -39,7 +34,8 @@ export function MessageExtraMenu({message, removeMessage, data, saveData, moveMe
       <DropdownMenuContent className="w-48" align="start">
         <PortraitSelect message={message} data={data} saveData={saveData} setOpen={setOpen}/>
         <TypeSelect message={message} data={data} saveData={saveData}/>
-        {message.name === 'You' || (!characters.includes(message.name) && !skills.includes(message.name)) &&
+        {(message.name === 'You' || (!characters.includes(message.name) && !skills.includes(message.name)))
+          &&
           <DropdownMenuSeparator/>
         }
         <DropdownMenuItem onSelect={e => {moveMessageUp(); e.preventDefault()}}>

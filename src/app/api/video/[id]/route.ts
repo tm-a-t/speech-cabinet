@@ -1,5 +1,5 @@
 import {db} from '~/server/db';
-import {NextRequest, NextResponse} from 'next/server';
+import {type NextRequest, NextResponse} from 'next/server';
 import * as fs from 'fs';
 import {getVideoPath} from '~/app/_lib/utils';
 

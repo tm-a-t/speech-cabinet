@@ -7,7 +7,7 @@ import {
 import {Pencil} from 'lucide-react';
 import {getColorClass} from '~/app/_lib/utils';
 import * as React from 'react';
-import {Message, DiscoData} from '~/app/_lib/data-types';
+import type {Message, DiscoData} from '~/app/_lib/data-types';
 import {characters, skills} from '~/app/_lib/names';
 
 export function TypeSelect({message, data, saveData}: {

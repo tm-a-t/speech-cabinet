@@ -1,12 +1,14 @@
 'use client';
 
-import {Message, DiscoData} from "../../_lib/data-types";
+import type {DiscoData, Message} from "../../_lib/data-types";
 import {MessageView} from '~/app/_components/play-mode/message-view';
 import React, {useEffect, useState} from 'react';
 import {getMessageDuration, startDelay} from "../../_lib/time";
-import {cn, getDefaultPortraitUrl, getPortraitUrl} from "~/app/_lib/utils";
+import {getPortraitUrl} from "~/app/_lib/utils";
 import {Skeleton} from '~/app/_components/ui/skeleton';
 import {playCharacterSound, playMusic, stopMusic} from '~/app/_lib/music';
+import Image from 'next/image'
+import portraitFrame from '~/../public/frame.png'
 
 export function Player({data}: { data: DiscoData }) {
   const playerHeight = 1920;
@@ -37,7 +39,7 @@ export function Player({data}: { data: DiscoData }) {
       }, delay);
       return () => clearTimeout(timer);
     }
-  }, [shownMessages, messagePortraits]);
+  }, [shownMessages, messagePortraits, data]);
 
   useEffect(() => {
     void Promise.all(
@@ -49,7 +51,7 @@ export function Player({data}: { data: DiscoData }) {
 
     const music = playMusic(data.music, data.skipMusicIntro);
     return () => stopMusic(music);
-  }, []);
+  }, [data]);
 
   return (
     <div className="relative w-[1080px] h-[1920px] overflow-hidden">
@@ -57,9 +59,9 @@ export function Player({data}: { data: DiscoData }) {
            style={{top: yPosition - playerHeight, transition: 'top .3s cubic-bezier(.1, .3, .7, .9)'}}></div>
       {data.showPortraits && shownMessages.length && shownPortrait &&
         <div className="absolute aspect-portrait z-20 w-[27rem] h-auto top-32 left-4 flex items-center justify-center">
-          <img src="/frame.png" className="absolute top-1/2 -translate-y-1/2" alt=""/>
+          <Image src={portraitFrame} className="absolute top-1/2 -translate-y-1/2" alt=""/>
           {shownPortrait
-            ? <img src={shownPortrait} alt="" className="absolute px-6 w-full"/>
+            ? <Image src={shownPortrait} alt="" className="absolute px-6 w-full" width={720} height={1000}/>
             : <Skeleton className="aspect-portrait"/>
           }
         </div>}

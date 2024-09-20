@@ -1,19 +1,11 @@
-import {
-  MenubarCheckboxItem,
-  MenubarContent, MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarTrigger,
-} from '~/app/_components/ui/menubar';
-import {MusicSelect} from '~/app/_components/main-menu/music-select';
+import {MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger} from '~/app/_components/ui/menubar';
 import React from 'react';
-import {defaultData, DiscoData, toDiscoData} from '~/app/_lib/data-types';
+import {defaultData, type DiscoData, toDiscoData} from '~/app/_lib/data-types';
 import {downloadFile, formatTime} from '~/app/_lib/utils';
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,

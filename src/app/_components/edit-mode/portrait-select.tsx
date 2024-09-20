@@ -18,7 +18,7 @@ import {allPortraitNames, characters, harryPortraitNames, skills} from '~/app/_l
 import {Tooltip, TooltipContent, TooltipTrigger} from '~/app/_components/ui/tooltip';
 import {getDefaultPortraitUrl, getPortraitUrl} from '~/app/_lib/utils';
 import * as React from 'react';
-import {DiscoData, Message} from '~/app/_lib/data-types';
+import type {DiscoData, Message} from '~/app/_lib/data-types';
 import {SkeletonImage} from '../ui/skeleton-image';
 import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
 import {Drawer, DrawerContent, DrawerTrigger} from '~/app/_components/ui/drawer';
@@ -99,7 +99,7 @@ function PortraitOptionList({message, data, onSelectPortraitUrl}: {
       <CommandSeparator/>
       {current && <>
         <SkeletonImage src={current} alt="Current portrait"
-                       className="w-1/2 max-w-28 mx-auto aspect-portrait"/>
+                       className="w-1/2 max-w-28 mx-auto aspect-portrait" width={720} height={1000}/>
         <CommandSeparator/>
       </>}
       <CommandInput placeholder="Search..."/>
@@ -115,7 +115,7 @@ function PortraitOptionList({message, data, onSelectPortraitUrl}: {
                                 value={url} className="w-1/4" key={name}>
               <Tooltip>
                 <TooltipTrigger>
-                  <SkeletonImage src={url} alt={name} className="min-w-[54px] min-h-[75px]"/>
+                  <SkeletonImage src={url} alt={name} className="min-w-[54px] min-h-[75px]" width={720} height={1000}/>
                 </TooltipTrigger>
                 <TooltipContent className="uppercase tracking-wider">{name}</TooltipContent>
               </Tooltip>

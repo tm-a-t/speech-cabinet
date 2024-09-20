@@ -1,14 +1,13 @@
 import {
   MenubarCheckboxItem,
-  MenubarContent, MenubarItem,
+  MenubarContent,
   MenubarMenu,
   MenubarSeparator,
   MenubarTrigger,
 } from '~/app/_components/ui/menubar';
 import {MusicSelect} from '~/app/_components/main-menu/music-select';
 import React from 'react';
-import {defaultData, DiscoData} from '~/app/_lib/data-types';
-import {downloadFile, formatTime} from '~/app/_lib/utils';
+import type {DiscoData} from '~/app/_lib/data-types';
 
 export function VideoSubmenu({data, saveData}: { data: DiscoData, saveData: (data: DiscoData) => void }) {
   function saveShowPortraits(value: boolean) {

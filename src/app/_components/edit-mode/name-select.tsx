@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {characters, skillColorClass, skills} from '~/app/_lib/names';
+import {characters, skills} from '~/app/_lib/names';
 import {
   Command,
   CommandGroup,
@@ -9,27 +9,16 @@ import {
   CommandSeparator,
 } from '~/app/_components/ui/command';
 import {cn, getColorClass} from '~/app/_lib/utils';
-import {Message, DiscoData} from '~/app/_lib/data-types';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from '~/app/_components/ui/dropdown-menu';
-import {Users} from 'lucide-react';
+import type {DiscoData, Message} from '~/app/_lib/data-types';
+import {DropdownMenu, DropdownMenuContent, DropdownMenuTrigger} from '~/app/_components/ui/dropdown-menu';
 import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
-import {Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger} from '../ui/drawer';
+import {Drawer, DrawerContent, DrawerTrigger} from '../ui/drawer';
 import {Button} from '~/app/_components/ui/button';
 
 export function NameSelect(
   props: {
     message: Message,
     saveMessage: (message: Message) => void,
-    setOpen: (open: boolean) => void,
     usedNames: string[],
     data: DiscoData,
   },
@@ -56,8 +45,7 @@ export function NameSelect(
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>{button}</DropdownMenuTrigger>
         <DropdownMenuContent className="p-0 w-60">
-          <NameOptionList setOpen={props.setOpen}
-                          setSelectedOption={handleSelectedOption}
+          <NameOptionList setSelectedOption={handleSelectedOption}
                           usedNames={props.usedNames}
                           selectedOption={props.message.name}
                           isDesktop={isDesktop}
@@ -73,7 +61,7 @@ export function NameSelect(
         {button}
       </DrawerTrigger>
       <DrawerContent className="h-96">
-        <NameOptionList setOpen={props.setOpen}
+        <NameOptionList setOpen={setIsOpen}
                         setSelectedOption={handleSelectedOption}
                         usedNames={props.usedNames}
                         selectedOption={props.message.name}
@@ -86,14 +74,12 @@ export function NameSelect(
 
 function NameOptionList(
   {
-    setOpen,
     setSelectedOption,
     selectedOption,
     usedNames,
     isDesktop,
     data,
   }: {
-    setOpen: (open: boolean) => void,
     setSelectedOption: (option: string) => void,
     selectedOption: string,
     usedNames: string[],
@@ -114,7 +100,6 @@ function NameOptionList(
 
   function selectOption(option: string) {
     setSelectedOption(option);
-    setOpen(false);
   }
 
   return (

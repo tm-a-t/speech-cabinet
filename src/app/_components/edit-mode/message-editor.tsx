@@ -1,24 +1,32 @@
 import {MessageExtraMenu} from '~/app/_components/edit-mode/message-extra-menu';
-import {Button} from '~/app/_components/ui/button';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/app/_components/ui/select';
 import {MessageTextEditor} from '~/app/_components/edit-mode/message-text-editor';
 import React from 'react';
-import {difficulties, Difficulty, Message, Result, DiscoData} from '~/app/_lib/data-types';
-import {DropdownMenu, DropdownMenuTrigger} from '../ui/dropdown-menu';
-import {cn} from '~/app/_lib/utils';
+import {difficulties, type Difficulty, type DiscoData, type Message, type Result} from '~/app/_lib/data-types';
 import {skills} from '~/app/_lib/names';
 import {NameSelect} from '~/app/_components/edit-mode/name-select';
 
-export function MessageEditor({message, saveMessage, removeMessage, data, saveData, moveMessageUp, moveMessageDown, usedNames}: {
-  message: Message,
-  saveMessage: (m: Message) => void,
-  removeMessage: () => void,
-  data: DiscoData,
-  saveData: (data: DiscoData) => void,
-  moveMessageUp: () => void,
-  moveMessageDown: () => void,
-  usedNames: string[],
-}) {
+export function MessageEditor(
+  {
+    message,
+    saveMessage,
+    removeMessage,
+    data,
+    saveData,
+    moveMessageUp,
+    moveMessageDown,
+    usedNames,
+  }: {
+    message: Message,
+    saveMessage: (m: Message) => void,
+    removeMessage: () => void,
+    data: DiscoData,
+    saveData: (data: DiscoData) => void,
+    moveMessageUp: () => void,
+    moveMessageDown: () => void,
+    usedNames: string[],
+  },
+) {
   const showCheck = data.overrides.checks[message.name] ?? skills.includes(message.name);
 
   function handleCheckToggle(value: boolean) {
@@ -62,11 +70,12 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
   }
 
   return (
-    <div className="sm:pl-6 leading-7 [&:not(:first-child)]:mt-8 sm:[&:not(:first-child)]:mt-5 sm:[&:not(:hover)_.message-menu-button]:opacity-0">
+    <div
+      className="sm:pl-6 leading-7 [&:not(:first-child)]:mt-8 sm:[&:not(:first-child)]:mt-5 sm:[&:not(:hover)_.message-menu-button]:opacity-0">
       <span className="inline-block sm:h-0 sm:-ml-6 -ml-1 -mr-1 w-full sm:w-auto">
         <span className="relative sm:h-0 flex sm:-ml-3 w-full sm:w-auto">
           <span>
-            <NameSelect message={message} saveMessage={saveMessage} setOpen={() => {}} usedNames={usedNames} data={data}/>
+            <NameSelect message={message} saveMessage={saveMessage} usedNames={usedNames} data={data}/>
 
             {showCheck &&
               <span className="inline-block">

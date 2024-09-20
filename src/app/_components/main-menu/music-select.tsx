@@ -1,19 +1,10 @@
-import {
-  MenubarItem,
-  MenubarRadioGroup,
-  MenubarRadioItem,
-  MenubarSub,
-  MenubarSubContent,
-  MenubarSubTrigger,
-} from '~/app/_components/ui/menubar';
+import {MenubarItem, MenubarSub, MenubarSubContent, MenubarSubTrigger} from '~/app/_components/ui/menubar';
 import {ost} from '~/app/_lib/music';
 import React from 'react';
-import {Command, CommandGroup, CommandInput, CommandItem, CommandList} from '~/app/_components/ui/command';
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import {Command, CommandInput, CommandItem, CommandList} from '~/app/_components/ui/command';
 import {Circle} from 'lucide-react';
-import { useIsDesktop } from '~/app/_lib/hooks/use-media-query';
+import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
 import {Drawer, DrawerContent, DrawerTrigger} from '~/app/_components/ui/drawer';
-import {DropdownMenuItem} from '~/app/_components/ui/dropdown-menu';
 
 export function MusicSelect({value, saveValue}: { value: string | null, saveValue: (value: string | null) => void }) {
   const isDesktop = useIsDesktop();

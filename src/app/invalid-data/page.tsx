@@ -2,7 +2,7 @@
 
 import {defaultData} from '../_lib/data-types';
 import {Button} from '~/app/_components/ui/button';
-import {redirect, useRouter} from 'next/navigation';
+import {useRouter} from 'next/navigation';
 
 export default function ResetPage() {
   const router = useRouter()

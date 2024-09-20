@@ -1,5 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
+
 import {boss, queue, type RenderVideoJob} from '~/server/queue';
-import {DiscoData} from '~/app/_lib/data-types';
+import type {DiscoData} from '~/app/_lib/data-types';
 import {getVideoPath} from '~/app/_lib/utils';
 import {totalDuration} from '~/app/_lib/time';
 import {db} from '~/server/db';
@@ -30,12 +35,10 @@ async function renderVideo(data: DiscoData, id: string) {
     outputPath: filename,
   });
   video.on("progress", async (progress: number) => {
-    await db.video.update({where: {id}, data: {progress: Math.floor(progress)}}).then(() => {});
+    await db.video.update({where: {id}, data: {progress: Math.floor(progress)}}).catch(console.error);
   });
-  console.log('START RENDERING')
   await video.startAndWait();
-  console.log('END RENDERING')
-  await db.video.update({where: {id}, data: {isReady: true}}).then(() => {});
+  await db.video.update({where: {id}, data: {isReady: true}});
 }
 
 async function runWorker() {

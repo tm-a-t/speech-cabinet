@@ -2,7 +2,7 @@
 
 
 import React, {useEffect, useState} from 'react';
-import {defaultData, DiscoData, toDiscoData} from '~/app/_lib/data-types';
+import {defaultData, type DiscoData, toDiscoData} from '~/app/_lib/data-types';
 import {Editor} from '~/app/_components/edit-mode/editor';
 import {
   Menubar,
@@ -50,7 +50,7 @@ export default function EditorPage() {
         className="fixed z-20 top-0 left-0 right-0 py-2 px-3 flex flex-wrap gap-1 items-center bg-black xl:bg-transparent backdrop-blur xl:backdrop-blur-none bg-opacity-50 border-b xl:border-0">
         <Menubar className="border-0 dark:bg-transparent" value={menuValue} onValueChange={setMenuValue}
                  id="menubar">
-          <SiteSubmenu data={data} saveData={saveData}/>
+          <SiteSubmenu/>
           {data && <>
             <FileSubmenu data={data} saveData={saveData}/>
             <VideoSubmenu data={data} saveData={saveData}/>

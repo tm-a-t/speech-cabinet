@@ -1,4 +1,4 @@
-import {Message, DiscoData, message} from "~/app/_lib/data-types";
+import {type Message, type DiscoData, message} from "~/app/_lib/data-types";
 import {Button} from '~/app/_components/ui/button';
 import React from 'react';
 import {MessageEditor} from "./message-editor";
@@ -62,7 +62,7 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
         if (i === index + 1) return data.messages[index]!;
         return m;
       }),
-    })
+    });
   }
 
   return (
@@ -79,14 +79,15 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
           usedNames={usedNames}
           key={message.id}/>,
       )}
-      <Button variant="ghost" onClick={addMessage} className="mt-4 -ml-2 opacity-30 hover:opacity-100 transition-opacity block sm:pl-3">+ Add line</Button>
+      <Button variant="ghost" onClick={addMessage}
+              className="mt-4 -ml-2 opacity-30 hover:opacity-100 transition-opacity block sm:pl-3">+ Add line</Button>
 
       {totalDuration(data) > totalTimeLimit &&
         <div className="mt-12 opacity-60 px-2 sm:px-0">
           <p>
             Sorry, your dialogue is {Math.ceil(totalDuration(data) / 1000)} seconds long.
             The site only renders up to {totalTimeLimit / 1000} seconds of mp4 video:
-            it has just launched and I'm not sure it will handle the load.
+            it has just launched and I&apos;m not sure it will handle the load.
           </p>
           <p className="mt-2">
             You can edit the dialogue and preview the video as usual.

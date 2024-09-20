@@ -1,9 +1,9 @@
-import {ClassValue, clsx} from 'clsx';
+import {type ClassValue, clsx} from 'clsx';
+import type {DiscoData} from './data-types';
+import {allPortraitNames, skillColorClass} from '~/app/_lib/names';
 import {twMerge} from 'tailwind-merge';
-import {DiscoData} from './data-types';
-import {characters, allPortraitNames, skillColorClass, skills} from '~/app/_lib/names';
 
-export function cn(...inputs: ClassValue[]) {
+export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }
 
@@ -11,15 +11,15 @@ export function uniqueValues<T>(array: Array<T>): T[] {
   return [...new Set(array)];
 }
 
-export function sleep(ms: number) {
+export function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-export function debounce(fn: Function, ms = 500) {
+export function debounce<T extends (...args: A) => R, A extends unknown[], R>(callback: T, ms = 500): (...args: A) => void {
   let timeoutId: ReturnType<typeof setTimeout>;
-  return function (this: any, ...args: any[]) {
+  return function (...args: A) {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn.apply(this, args), ms);
+    timeoutId = setTimeout(() => callback.apply(args), ms);
   };
 }
 
@@ -27,7 +27,7 @@ export function getVideoPath(videoId: string): string {
   return 'temp/' + videoId + '.mp4';
 }
 
-export function downloadFile(path: string, name: string) {
+export function downloadFile(path: string, name: string): void {
   const link = document.createElement("a");
   link.setAttribute('download', name);
   link.href = path;

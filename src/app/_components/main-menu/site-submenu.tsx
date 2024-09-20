@@ -1,9 +1,8 @@
 import {MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger} from '~/app/_components/ui/menubar';
-import {DiscoData} from '~/app/_lib/data-types';
-import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription} from '~/app/_components/ui/dialog';
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from '~/app/_components/ui/dialog';
 import React from 'react';
 
-export function SiteSubmenu({data, saveData}: {data: DiscoData | null, saveData: (data: DiscoData) => void}) {
+export function SiteSubmenu() {
 
   return (
     <MenubarMenu>

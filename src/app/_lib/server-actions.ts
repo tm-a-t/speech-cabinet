@@ -1,6 +1,6 @@
 'use server';
 
-import {DiscoData} from "./data-types";
+import type {DiscoData} from "./data-types";
 import {db} from "~/server/db";
 import {getJobPosition, jobIsPending, startJob} from '~/server/queue';
 
