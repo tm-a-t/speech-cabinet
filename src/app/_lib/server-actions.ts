@@ -9,10 +9,12 @@ export async function startRender(data: DiscoData): Promise<{ id: string, queueP
   const id = dbModel.id;
   await startJob({videoId: id, discoData: data});
   const queuePosition = await getVideoQueuePosition(id);
+  console.log('something beautiful created', id)
   return {id, queuePosition};
 }
 
 export async function getVideoQueuePosition(id: string): Promise<number> {
+  console.log('something beautiful checked', id)
   if (!await jobIsPending(id)) {
     return 0;
   }

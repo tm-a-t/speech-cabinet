@@ -32,8 +32,8 @@ export function MessageExtraMenu({message, removeMessage, data, saveData, moveMe
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="start">
-        <PortraitSelect message={message} data={data} saveData={saveData} setOpen={setOpen}/>
         <TypeSelect message={message} data={data} saveData={saveData}/>
+        <PortraitSelect message={message} data={data} saveData={saveData} setOpen={setOpen}/>
         {(message.name === 'You' || (!characters.includes(message.name) && !skills.includes(message.name)))
           &&
           <DropdownMenuSeparator/>

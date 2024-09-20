@@ -19,7 +19,7 @@ export function debounce<T extends (...args: A) => R, A extends unknown[], R>(ca
   let timeoutId: ReturnType<typeof setTimeout>;
   return function (...args: A) {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback.apply(args), ms);
+    timeoutId = setTimeout(() => callback(...args), ms);
   };
 }
 

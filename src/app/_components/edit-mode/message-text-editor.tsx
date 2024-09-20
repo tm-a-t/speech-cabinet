@@ -1,6 +1,6 @@
 'use client';
 
-import {useEditor, EditorContent, type Editor} from '@tiptap/react';
+import {useEditor, EditorContent, type Editor, EditorEvents} from '@tiptap/react';
 import {Paragraph} from '@tiptap/extension-paragraph';
 import {Document} from '@tiptap/extension-document';
 import {Text} from '@tiptap/extension-text';
@@ -13,7 +13,7 @@ export function MessageTextEditor(props: { content: string, onUpdate: (value: st
   const isDesktop = useIsDesktop();
   const editor = useEditor({
     immediatelyRender: false,
-    onUpdate: debounce(({editor}: {editor: Editor}) => {
+    onUpdate: debounce(({editor}: EditorEvents['update']) => {
       props.onUpdate(editor.getHTML());
     }),
     autofocus: isDesktop ? 'end' : false,

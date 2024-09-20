@@ -4,13 +4,11 @@
 import React, {useEffect, useState} from 'react';
 import {defaultData, type DiscoData, toDiscoData} from '~/app/_lib/data-types';
 import {Editor} from '~/app/_components/edit-mode/editor';
-import {
-  Menubar,
-} from '~/app/_components/ui/menubar';
+import {Menubar} from '~/app/_components/ui/menubar';
 import {SiteSubmenu} from '~/app/_components/main-menu/site-submenu';
 import {FileSubmenu} from '~/app/_components/main-menu/file-submenu';
 import {VideoSubmenu} from '~/app/_components/main-menu/video-submenu';
-import {PlayerButton} from '~/app/_components/main-menu/player-button';
+import {WatchButton} from '~/app/_components/main-menu/watch-button';
 import {redirect} from 'next/navigation';
 
 export default function EditorPage() {
@@ -47,7 +45,7 @@ export default function EditorPage() {
   return (
     <div className="w-full h-full">
       <div
-        className="fixed z-20 top-0 left-0 right-0 py-2 px-3 flex flex-wrap gap-1 items-center bg-black xl:bg-transparent backdrop-blur xl:backdrop-blur-none bg-opacity-50 border-b xl:border-0">
+        className="fixed z-20 top-0 left-0 right-0 py-2 px-3 flex flex-wrap gap-1 items-center bg-zinc-950 xl:bg-transparent border-b xl:border-0">
         <Menubar className="border-0 dark:bg-transparent" value={menuValue} onValueChange={setMenuValue}
                  id="menubar">
           <SiteSubmenu/>
@@ -57,7 +55,7 @@ export default function EditorPage() {
           </>}
         </Menubar>
         {data &&
-          <PlayerButton data={data} onMouseOver={() => setMenuValue('empty')}/>
+          <WatchButton data={data} onMouseOver={() => setMenuValue('empty')}/>
         }
       </div>
 

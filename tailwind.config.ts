@@ -23,7 +23,7 @@ export default {
 			},
 			backgroundImage: {
 				frame: "url('/frame.png')",
-			}
+			},
   	},
   },
 	safelist: [

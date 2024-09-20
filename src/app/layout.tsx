@@ -7,6 +7,7 @@ import {Toaster} from "~/app/_components/ui/toaster";
 
 import '@fontsource/spectral/400.css';
 import '@fontsource/spectral/700.css';
+import {RenderStatusProvider} from '~/app/_components/render-status-provider';
 
 export const metadata: Metadata = {
   title: 'Speech Cabinet',
@@ -17,16 +18,18 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-    <body className="overflow-y-visible overflow-x-hidden">
-    <ThemeProvider attribute="class" defaultTheme="dark">
-      <TooltipProvider>
-        <main className="flex bg-zinc-900 text-zinc-50 min-h-dvh" data-vaul-drawer-wrapper>
-          {children}
-        </main>
-        <Toaster/>
-      </TooltipProvider>
-    </ThemeProvider>
-    </body>
+      <body className="overflow-y-visible overflow-x-hidden">
+        <ThemeProvider attribute="class" defaultTheme="dark">
+          <TooltipProvider>
+            <RenderStatusProvider>
+              <main className="flex bg-zinc-900 text-zinc-50 min-h-dvh" data-vaul-drawer-wrapper>
+                {children}
+              </main>
+            </RenderStatusProvider>
+            <Toaster/>
+          </TooltipProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
