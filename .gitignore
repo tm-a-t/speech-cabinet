@@ -49,3 +49,6 @@ yarn-error.log*
 public/music/
 public/sounds/
 temp/
+
+# nix nix nix nix
+.direnv/
