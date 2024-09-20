@@ -72,7 +72,7 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <DropdownMenuItem onSelect={e => e.preventDefault()}>{label}...</DropdownMenuItem>
+        <DropdownMenuItem onSelect={e => e.preventDefault()}>{label}</DropdownMenuItem>
       </DrawerTrigger>
       <DrawerContent>
         <PortraitOptionList

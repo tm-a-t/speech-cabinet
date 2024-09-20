@@ -1,4 +1,4 @@
-import {Message, DiscoData} from "~/app/_lib/data-types";
+import {Message, DiscoData, message} from "~/app/_lib/data-types";
 import {Button} from '~/app/_components/ui/button';
 import React from 'react';
 import {MessageEditor} from "./message-editor";
@@ -43,17 +43,17 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
       ...data,
       messages: [
         ...data.messages,
-        {
-          text: '<p></p>',
+        message.parse({
+          text: '',
           name: secondLastMessage?.name ?? lastMessage?.name ?? 'You',
-        },
+        }),
       ],
     });
   }
 
   function moveMessageDown(index: number) {
     if (data === null) return;
-    if (index < 0 || index + 1 > data.messages.length) return;
+    if (index < 0 || index + 1 >= data.messages.length) return;
 
     saveData({
       ...data,
@@ -77,7 +77,7 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
           data={data}
           saveData={saveData}
           usedNames={usedNames}
-          key={index + message.name + message.text}/>,
+          key={message.id}/>,
       )}
       <Button variant="ghost" onClick={addMessage} className="mt-4 -ml-2 opacity-30 hover:opacity-100 transition-opacity block sm:pl-3">+ Add line</Button>
 

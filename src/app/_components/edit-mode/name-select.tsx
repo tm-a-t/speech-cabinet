@@ -35,23 +35,25 @@ export function NameSelect(
   },
 ) {
   const isDesktop = useIsDesktop();
-  const [drawerOpen, setDrawerOpen] = React.useState();
+  const [isOpen, setIsOpen] = React.useState(false);
 
   function handleSelectedOption(option: string) {
     props.saveMessage({
       ...(props.message),
       name: option ?? "",
     });
+    setIsOpen(false);
   }
 
+  const colorClass = getColorClass(props.message.name, props.data);
   const button = <Button variant="ghost"
-                         className={cn("h-8 px-3 sm:px-3 sm:text-base uppercase tracking-wider", getColorClass(props.message.name, props.data))}>
+                         className={cn("h-8 px-3 sm:px-3 sm:text-base uppercase tracking-wider", colorClass)}>
     {props.message.name}
   </Button>;
 
   if (isDesktop) {
     return (
-      <DropdownMenu>
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>{button}</DropdownMenuTrigger>
         <DropdownMenuContent className="p-0 w-60">
           <NameOptionList setOpen={props.setOpen}
@@ -66,7 +68,7 @@ export function NameSelect(
   }
 
   return (
-    <Drawer>
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
         {button}
       </DrawerTrigger>

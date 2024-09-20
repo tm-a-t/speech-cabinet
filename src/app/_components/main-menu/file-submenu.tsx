@@ -7,7 +7,7 @@ import {
 } from '~/app/_components/ui/menubar';
 import {MusicSelect} from '~/app/_components/main-menu/music-select';
 import React from 'react';
-import {defaultData, DiscoData} from '~/app/_lib/data-types';
+import {defaultData, DiscoData, toDiscoData} from '~/app/_lib/data-types';
 import {downloadFile, formatTime} from '~/app/_lib/utils';
 import {
   Dialog,
@@ -18,9 +18,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '~/app/_components/ui/dialog';
-import { Button } from '../ui/button';
+import {Button} from '../ui/button';
+import {useToast} from "~/app/_lib/hooks/use-toast";
 
 export function FileSubmenu({data, saveData}: { data: DiscoData, saveData: (data: DiscoData) => void }) {
+  const {toast} = useToast();
+
   function exportData() {
     const base64 = btoa(JSON.stringify(data));
     downloadFile('data:application/json;base64,' + base64, `Disco Download ${formatTime()}.disco`);
@@ -29,11 +32,18 @@ export function FileSubmenu({data, saveData}: { data: DiscoData, saveData: (data
   function importData() {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.disco';
+    input.accept = '.disco,.json';
     input.onchange = e => {
       const files = (e.target as HTMLInputElement).files!;
       void files[0]!.text().then(text => {
-        saveData(JSON.parse(text));
+        const newData = toDiscoData(text);
+        if (newData) {
+          saveData(newData);
+        } else {
+          toast({
+            title: "Couldn't read the file",
+          })
+        }
       });
     };
     input.click();
@@ -51,7 +61,8 @@ export function FileSubmenu({data, saveData}: { data: DiscoData, saveData: (data
             <DialogHeader>
               <DialogTitle>Reset the dialogue</DialogTitle>
             </DialogHeader>
-            <p className="text-center sm:text-left">You will lose your current lines if you don&apos;t download them first.</p>
+            <p className="text-center sm:text-left">You will lose your current lines if you don&apos;t download them
+              first.</p>
             <div className="flex flex-wrap gap-1 mt-4 w-full justify-center sm:justify-start">
               <DialogClose asChild>
                 <Button variant="default" onClick={() => saveData(defaultData)}>Start new</Button>

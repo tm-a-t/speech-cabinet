@@ -2,7 +2,7 @@
 
 
 import React, {useEffect, useState} from 'react';
-import {defaultData, DiscoData} from '~/app/_lib/data-types';
+import {defaultData, DiscoData, toDiscoData} from '~/app/_lib/data-types';
 import {Editor} from '~/app/_components/edit-mode/editor';
 import {
   Menubar,
@@ -18,13 +18,17 @@ export default function EditorPage() {
   const [menuValue, setMenuValue] = useState('');
 
   useEffect(() => {
-    if (data === null) {
-      const dataSave = JSON.parse(localStorage.getItem('data') ?? 'null') as DiscoData;
-      if (dataSave) {
-        setData(dataSave);
-      } else {
-        setData(defaultData);
-      }
+    if (data !== null) return;
+    const dataSaveString = localStorage.getItem('data');
+    if (!dataSaveString) {
+      setData(defaultData);
+      return;
+    }
+    const dataSave = toDiscoData(dataSaveString);
+    if (dataSave) {
+      setData(dataSave);
+    } else {
+      redirect('/invalid-data');
     }
   });
 

@@ -1,21 +1,21 @@
 'use client';
 
-import {useEditor, EditorContent} from '@tiptap/react';
+import {useEditor, EditorContent, Editor} from '@tiptap/react';
 import {Paragraph} from '@tiptap/extension-paragraph';
 import {Document} from '@tiptap/extension-document';
 import {Text} from '@tiptap/extension-text';
 import {Placeholder} from '@tiptap/extension-placeholder';
 import History from '@tiptap/extension-history';
-import {cn} from '~/app/_lib/utils';
+import {cn, debounce} from '~/app/_lib/utils';
 import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
 
 export function MessageTextEditor(props: { content: string, onUpdate: (value: string) => void }) {
   const isDesktop = useIsDesktop();
   const editor = useEditor({
     immediatelyRender: false,
-    onBlur({editor}) {
+    onUpdate: debounce(({editor}: {editor: Editor}) => {
       props.onUpdate(editor.getHTML());
-    },
+    }),
     autofocus: isDesktop ? 'end' : false,
     editorProps: {
       attributes: {
@@ -34,5 +34,6 @@ export function MessageTextEditor(props: { content: string, onUpdate: (value: st
     content: props.content || '',
   });
 
-  return <EditorContent editor={editor} className={cn("sm:inline [&_p:not(:first-child)]:mt-4 sm:[&_p:first-child]:inline")}/>;
+  return <EditorContent editor={editor}
+                        className={cn("sm:inline [&_p:not(:first-child)]:mt-4 sm:[&_p:first-child]:inline")}/>;
 }

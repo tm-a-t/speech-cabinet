@@ -78,7 +78,7 @@ export function MessageEditor({message, saveMessage, removeMessage, data, saveDa
                     </SelectTrigger>
                     <SelectContent className="w-60">
                       <SelectItem value="none">No skill check</SelectItem>
-                      {difficulties.map(difficulty =>
+                      {difficulties.options.map(difficulty =>
                         <SelectItem value={difficulty} key={difficulty}>{difficulty}</SelectItem>,
                       )}
                     </SelectContent>
