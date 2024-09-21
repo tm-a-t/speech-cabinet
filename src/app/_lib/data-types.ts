@@ -69,7 +69,7 @@ export const defaultData: DiscoData = {
     portraitUrl: {},
   },
   showPortraits: true,
-  music: '/music/Sea Power - Instrument of Surrender.m4a',
+  music: null,
   skipMusicIntro: true,
   version: '0.1',
 };

@@ -19,7 +19,6 @@ wvc.config({
   compatibleRenderingMode: true,
   ffmpegDebug: true,
   ffmpegExecutablePath: 'ffmpeg',
-  frameFormat: 'png',
   browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
 });
 

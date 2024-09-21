@@ -5,7 +5,7 @@ import {downloadFile, formatTime} from '~/app/_lib/utils';
 import {
   Dialog,
   DialogClose,
-  DialogContent,
+  DialogContent, DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -13,7 +13,7 @@ import {
 import {Button} from '../ui/button';
 import {useToast} from "~/app/_lib/hooks/use-toast";
 
-export function FileSubmenu({data, saveData}: { data: DiscoData, saveData: (data: DiscoData) => void }) {
+export function FileSubmenu({data, saveData, close}: { data: DiscoData, saveData: (data: DiscoData) => void, close: () => void }) {
   const {toast} = useToast();
 
   function exportData() {
@@ -41,6 +41,11 @@ export function FileSubmenu({data, saveData}: { data: DiscoData, saveData: (data
     input.click();
   }
 
+  function handleStartNew() {
+    saveData(defaultData);
+    close();
+  }
+
   return (
     <MenubarMenu>
       <MenubarTrigger>File</MenubarTrigger>
@@ -52,13 +57,12 @@ export function FileSubmenu({data, saveData}: { data: DiscoData, saveData: (data
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Reset the dialogue</DialogTitle>
+              <DialogDescription>
+                You will lose your current lines if you don&apos;t download them first.
+              </DialogDescription>
             </DialogHeader>
-            <p className="text-center sm:text-left">You will lose your current lines if you don&apos;t download them
-              first.</p>
-            <div className="flex flex-wrap gap-1 mt-4 w-full justify-center sm:justify-start">
-              <DialogClose asChild>
-                <Button variant="default" onClick={() => saveData(defaultData)}>Start new</Button>
-              </DialogClose>
+            <div className="flex flex-wrap gap-1 mt-5 w-full justify-center sm:justify-start">
+              <Button variant="default" onClick={handleStartNew}>Start new</Button>
               <Button variant="secondary" onClick={exportData}>Download current</Button>
             </div>
           </DialogContent>

@@ -6,9 +6,10 @@ import {TooltipProvider} from '~/app/_components/ui/tooltip';
 import {Toaster} from "~/app/_components/ui/toaster";
 
 import '@fontsource/spectral/400.css';
-import '@fontsource/spectral/700.css';
-import '@fontsource/commissioner/400.css';
-import '@fontsource/commissioner/600.css';
+import '@fontsource/geologica/300.css';
+import '@fontsource/geologica/400.css';
+import '@fontsource/geologica/500.css';
+import '@fontsource/geologica/600.css';
 import {RenderStatusProvider} from '~/app/_components/render-status-provider';
 
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="overflow-y-visible overflow-x-hidden">
+      <body className="overflow-y-visible overflow-x-hidden leading-5">
         <ThemeProvider attribute="class" defaultTheme="dark">
           <TooltipProvider>
             <RenderStatusProvider>

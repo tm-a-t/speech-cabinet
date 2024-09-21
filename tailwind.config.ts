@@ -7,7 +7,7 @@ export default {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ["'Commissioner'", ...fontFamily.sans],
+  			sans: ["'Geologica'", ...fontFamily.sans],
 				disco: ["'Spectral'", ...fontFamily.serif],
   		},
   		borderRadius: {

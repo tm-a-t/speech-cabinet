@@ -9,7 +9,7 @@ import {MusicSelect} from '~/app/_components/main-menu/music-select';
 import React from 'react';
 import type {DiscoData} from '~/app/_lib/data-types';
 
-export function VideoSubmenu({data, saveData}: { data: DiscoData, saveData: (data: DiscoData) => void }) {
+export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveData: (data: DiscoData) => void, close: () => void }) {
   function saveShowPortraits(value: boolean) {
     if (data === null) return;
     saveData({
@@ -26,6 +26,11 @@ export function VideoSubmenu({data, saveData}: { data: DiscoData, saveData: (dat
     });
   }
 
+  function handleSaveMusic(music: string | null) {
+    saveData({...data, music});
+    close();
+  }
+
   return (
     <MenubarMenu>
       <MenubarTrigger>Options</MenubarTrigger>
@@ -37,7 +42,7 @@ export function VideoSubmenu({data, saveData}: { data: DiscoData, saveData: (dat
           Skip music intro
         </MenubarCheckboxItem>
         <MenubarSeparator/>
-        <MusicSelect value={data.music} saveValue={(music) => saveData({...data, music})}/>
+        <MusicSelect value={data.music} saveValue={handleSaveMusic}/>
       </MenubarContent>
     </MenubarMenu>
   );

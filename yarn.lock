@@ -223,40 +223,15 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.7.tgz#d0ece53ce99ab5a8e37ebdfe5e32452a2bfc073e"
   integrity sha512-X8R8Oj771YRl/w+c1HqAC1szL8zWQRwFvgDwT129k9ACdBoud/+/rX9V0qiMl6LWUdP9voC2nDVZYPMQQsb6eA==
 
-"@fontsource/chocolate-classical-sans@^5.1.0":
+"@fontsource/geologica@^5.1.0":
   version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/chocolate-classical-sans/-/chocolate-classical-sans-5.1.0.tgz#d18e853c7f1321591350c4b08fbfa4a24af96c7e"
-  integrity sha512-2BRbZm37/JhEYEVylEiBOOne4jBHjONFadZ5EO3T0FonLXf2TyDqcaGia7jQBEo1hDlUawa4TJduh2a3vFXb4Q==
-
-"@fontsource/commissioner@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/commissioner/-/commissioner-5.1.0.tgz#97991720ea340615652f10421bf8b939684183c9"
-  integrity sha512-brqUq7Cw26dSSnCwOgxWBqMma26EgoZYoWoIojqa1cSAK9QhLEdvgF6y9b7k54ht9cj4epKB8nRIY4lm2QSHjA==
-
-"@fontsource/cousine@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/cousine/-/cousine-5.1.0.tgz#a8090ec99a139b51ef865feac44e02bbb083eb52"
-  integrity sha512-KI9/QOBvJ5e3GiiLPXxpB9aR6qy8of2uukDeKHYJLxd1ZvuvlatQoJXxKBd1ELXUhlGYyjxA71gic45EIP/J3Q==
-
-"@fontsource/lunasima@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/lunasima/-/lunasima-5.1.0.tgz#3674ba948256011d63d2e31218d88be3c0eddba4"
-  integrity sha512-RdIAwG1lThDYrLzZ21Y3nSZRUHZIz5ClwDpQu6ekHf+UFJVaZPaNIHRog1K4A2aroucJAPY3XJccGxfos0RsOw==
-
-"@fontsource/pt-sans-caption@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/pt-sans-caption/-/pt-sans-caption-5.1.0.tgz#a7d28b6c13bc5fa5c1ed8e52ec62644bd6bc2670"
-  integrity sha512-+xR7AczbkJQKEktdZt4uuxePoOyRYAxCwn9ZH+8MUmNyHy7SOAYEkmg8iPdiRZYP0Gis2pCp1NaA+f00+IwwHQ==
+  resolved "https://registry.yarnpkg.com/@fontsource/geologica/-/geologica-5.1.0.tgz#a51e12518f8771c776a11d10445ab54cffd18c69"
+  integrity sha512-+aR1f6CS80gJTq5UqfUm8U8zbLnnCee//4k5X4/JYYxZdhJYJrYQlv0dhPS9/LzjL5iuJ8uRAaOJy8bnOj+D0w==
 
 "@fontsource/spectral@^5.1.0":
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/@fontsource/spectral/-/spectral-5.1.0.tgz#1e5b7ae319d67fb4cfdfed3bfe07a1ab382304f0"
   integrity sha512-9bvrjPRAZMvRq9aihAuFNomISoRRKtUUPgim+NZIXxPZ6CwDquo9C8SAcNhVQ0g4S7cavcw9uFThl1fbSfihxw==
-
-"@fontsource/ubuntu-sans@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/ubuntu-sans/-/ubuntu-sans-5.1.0.tgz#accad0dca2109d704b99afe7845affc167991e87"
-  integrity sha512-bAaA3toeM7oWK6y9ljcYkAVF2GGXgBNVC/AKRxJvPlmxwPzcwNLFDVPJ8/+9MajpzgASxgJYaUv+8o+8rbiDWg==
 
 "@humanwhocodes/config-array@^0.11.14":
   version "0.11.14"

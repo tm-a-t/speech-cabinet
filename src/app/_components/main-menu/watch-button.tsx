@@ -9,7 +9,7 @@ import {Dialog, DialogContent, DialogTrigger} from '~/app/_components/ui/dialog'
 import {useIsDesktop} from '~/app/_lib/hooks/use-media-query';
 import {RenderStatusContext} from '~/app/_components/render-status-provider';
 
-export function WatchButton({data, onMouseOver}: {data: DiscoData, onMouseOver: () => void}) {
+export function WatchButton({data}: {data: DiscoData}) {
   const isDesktop = useIsDesktop();
   const [status, _] = useContext(RenderStatusContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -20,15 +20,19 @@ export function WatchButton({data, onMouseOver}: {data: DiscoData, onMouseOver: 
     }
   }, [status]);
 
-  const button = <Button variant="default" className="text-zinc-400 pl-3 ml-auto" onMouseOver={onMouseOver}>
+  const bigButton = <Button variant="default" className="text-zinc-400 pl-3 ml-4">
     <Play className="h-4 w-4 mr-1.5"/>
     Watch
+  </Button>
+
+  const smallButton = <Button variant="default" size="icon" className="mr-2">
+    <Play className="h-4 w-4"/>
   </Button>
 
   if (isDesktop) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>{button}</DialogTrigger>
+        <DialogTrigger asChild>{bigButton}</DialogTrigger>
         <DialogContent className="w-[26rem] p-0 dark:bg-opacity-0 border-0">
           <PlayerWrapper data={data} setIsOpen={setIsOpen}/>
         </DialogContent>
@@ -38,7 +42,7 @@ export function WatchButton({data, onMouseOver}: {data: DiscoData, onMouseOver: 
 
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerTrigger asChild>{button}</DrawerTrigger>
+      <DrawerTrigger asChild>{smallButton}</DrawerTrigger>
       <DrawerContent>
         <PlayerWrapper data={data} setIsOpen={setIsOpen}/>
       </DrawerContent>

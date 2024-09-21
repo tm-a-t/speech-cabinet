@@ -5,6 +5,7 @@
     :root {
         --radius: 0.5rem;
         font-size: 16px;
+        font-weight: 300;
     }
 
     ::selection {

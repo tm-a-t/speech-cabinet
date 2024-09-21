@@ -45,17 +45,19 @@ export default function EditorPage() {
   return (
     <div className="w-full h-full">
       <div
-        className="fixed z-20 top-0 left-0 right-0 py-2 px-3 flex flex-wrap gap-1 items-center bg-zinc-950 xl:bg-transparent border-b xl:border-0">
-        <Menubar className="border-0 dark:bg-transparent" value={menuValue} onValueChange={setMenuValue}
+        className="fixed z-20 top-0 left-0 right-0 py-2 px-1 sm:px-3 flex flex-wrap gap-x-1 gap-y-4 items-center bg-zinc-950 xl:bg-transparent border-b xl:border-0">
+        <Menubar className="border-0 dark:bg-transparent mr-auto"
+                 value={menuValue}
+                 onValueChange={setMenuValue}
                  id="menubar">
           <SiteSubmenu/>
           {data && <>
-            <FileSubmenu data={data} saveData={saveData}/>
-            <VideoSubmenu data={data} saveData={saveData}/>
+            <FileSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
+            <VideoSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
           </>}
         </Menubar>
         {data &&
-          <WatchButton data={data} onMouseOver={() => setMenuValue('empty')}/>
+          <WatchButton data={data}/>
         }
       </div>
 
