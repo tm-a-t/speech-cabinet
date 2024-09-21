@@ -41,7 +41,7 @@ export function Player({data, waitForLoading = false}: { data: DiscoData, waitFo
       }, delay);
       return () => clearTimeout(timer);
     }
-  }, [shownMessages, messagePortraits, data]);
+  }, [shownMessages, messagePortraits, initialDelay, data]);
 
   useEffect(() => {
     void Promise.all(
@@ -63,7 +63,7 @@ export function Player({data, waitForLoading = false}: { data: DiscoData, waitFo
       clearTimeout(timeout);
       if (music) stopMusic(music)
     };
-  }, [data]);
+  }, [data, waitForLoading]);
 
   return (
     <div className="relative w-[1080px] h-[1920px] overflow-hidden font-disco">

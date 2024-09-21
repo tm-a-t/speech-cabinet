@@ -11,7 +11,7 @@ import {RenderStatusContext} from '~/app/_components/render-status-provider';
 
 export function WatchButton({data}: {data: DiscoData}) {
   const isDesktop = useIsDesktop();
-  const [status, _] = useContext(RenderStatusContext);
+  const [status] = useContext(RenderStatusContext);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {

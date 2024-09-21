@@ -1,11 +1,11 @@
 import {MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger} from '~/app/_components/ui/menubar';
 import React from 'react';
-import {getDefaultData, type DiscoData, serialize, toDiscoData} from '~/app/_lib/data-types';
+import {type DiscoData, getDefaultData, serialize, toDiscoData} from '~/app/_lib/data-types';
 import {downloadFile, formatTime} from '~/app/_lib/utils';
 import {
   Dialog,
-  DialogClose,
-  DialogContent, DialogDescription,
+  DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,

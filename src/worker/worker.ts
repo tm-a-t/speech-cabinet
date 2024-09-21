@@ -8,7 +8,7 @@ import {type DiscoData, serialize} from '~/app/_lib/data-types';
 import {getVideoPath} from '~/app/_lib/utils';
 import {beforeDelay, totalDuration, totalTimeLimit} from '~/app/_lib/time';
 import {db} from '~/server/db';
-// @ts-expect-error
+// @ts-expect-error untyped lib :(
 import WebVideoCreator, {VIDEO_ENCODER, logger} from 'web-video-creator';
 
 const wvc = new WebVideoCreator();

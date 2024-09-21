@@ -77,9 +77,9 @@ export const getDefaultData = () => discoData.parse({
 
 export function toDiscoData(input: string): DiscoData | null {
   try {
-    const object: any = JSON.parse(input);
+    const object: unknown = JSON.parse(input);
     return discoData.parse(object);
-  } catch (_) {
+  } catch (_error) {
     // Parsing JSON or parsing the object failed
     return null;
   }
@@ -89,7 +89,7 @@ export function serialize(data: DiscoData): string {
   return JSON.stringify(
     {
       ...data,
-      messages: data.messages.map(({id, ...rest}) => rest)
+      messages: data.messages.map(({id: _, ...rest}) => rest)
     }
   )
 }
