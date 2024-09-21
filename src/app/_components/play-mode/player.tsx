@@ -8,7 +8,7 @@ import {getPortraitUrl} from "~/app/_lib/utils";
 import {Skeleton} from '~/app/_components/ui/skeleton';
 import {playCharacterSound, playMusic, stopMusic} from '~/app/_lib/music';
 import Image from 'next/image'
-import portraitFrame from '~/../public/frame.png'
+import portraitFrame from '~/../public/layout/frame.png'
 
 export function Player({data, waitForLoading = false}: { data: DiscoData, waitForLoading?: boolean }) {
   const playerHeight = 1920;

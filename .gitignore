@@ -46,9 +46,9 @@ yarn-error.log*
 .idea
 
 # Disco!
-public/music/
-public/sounds/
-temp/
+/public/music/
+/public/sounds/
+/temp/
 
 # nix nix nix nix
 .direnv/

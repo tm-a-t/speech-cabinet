@@ -46,21 +46,19 @@ export type DiscoData = z.infer<typeof discoData>
 
 /* Default data */
 
-export const defaultData: DiscoData = {
+export const getDefaultData = discoData.parse({
   messages: [
     {
-      name: 'Kim Kitsuragi',
-      text: '"The boots are ceramic, vitreous enamel. They\'re fused to his skin from blood flowing downward postmortem. Removal of the boots is left for Processing."',
-      id: 1,
+      name: 'Garte, the Cafeteria Manager',
+      text: '"No, I\'m not the *bartender*. I\'m the cafeteria manager."',
     },
     {
-      name: 'Drama',
-      text: 'It would be *clever* of you to omit the boots altogether, sire. If you are to *keep* them for yourself -- as you ought to. You have deserved them more than anyone else!',
+      name: 'Empathy',
+      text: 'He\'s very animated all of a sudden. This is clearly a touchy subject for him.',
       check: {
-        difficulty: 'Easy',
+        difficulty: 'Medium',
         result: 'Success',
       },
-      id: 2,
     },
   ],
   overrides: {
@@ -72,8 +70,7 @@ export const defaultData: DiscoData = {
   music: null,
   skipMusicIntro: true,
   version: '0.1',
-};
-
+});
 
 
 /* Convertion */
@@ -82,8 +79,7 @@ export function toDiscoData(input: string): DiscoData | null {
   try {
     const object: any = JSON.parse(input);
     return discoData.parse(object);
-  }
-  catch (_) {
+  } catch (_) {
     // Parsing JSON or parsing the object failed
     return null;
   }

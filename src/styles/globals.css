@@ -16,7 +16,7 @@
 
 @layer utilities {
     .tape-background {
-        background: url('/bg.png') repeat-y top center;
+        background: url('/layout/bg.png') repeat-y top center;
         background-size: 100% auto;
     }
 

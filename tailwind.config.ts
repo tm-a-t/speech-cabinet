@@ -23,7 +23,7 @@ export default {
 				speech: '#CFD5BF',
 			},
 			backgroundImage: {
-				frame: "url('/frame.png')",
+				frame: "url('/layout/frame.png')",
 			},
   	},
   },
