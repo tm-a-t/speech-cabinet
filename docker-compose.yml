@@ -1,0 +1,39 @@
+services:
+  web:
+    build: .
+    command: web
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://user:password@db/speech-cabinet
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=http://localhost:3000
+    ports:
+      - 127.0.0.1:${PORT:-3000}:3000
+
+  worker:
+    build: .
+    command: worker
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://user:password@db/speech-cabinet
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=http://localhost:3000
+      - WEB_URL=http://web:3000
+    volumes:
+      - ./.bin:/app/.bin
+  
+  db:
+    image: postgres:16
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=speech-cabinet
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
