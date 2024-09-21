@@ -3,14 +3,14 @@
 import type {DiscoData, Message} from "../../_lib/data-types";
 import {MessageView} from '~/app/_components/play-mode/message-view';
 import React, {useEffect, useState} from 'react';
-import {getMessageDuration, startDelay} from "../../_lib/time";
+import {beforeDelay, getMessageDuration, startDelay} from "../../_lib/time";
 import {getPortraitUrl} from "~/app/_lib/utils";
 import {Skeleton} from '~/app/_components/ui/skeleton';
 import {playCharacterSound, playMusic, stopMusic} from '~/app/_lib/music';
 import Image from 'next/image'
 import portraitFrame from '~/../public/frame.png'
 
-export function Player({data}: { data: DiscoData }) {
+export function Player({data, waitForLoading = false}: { data: DiscoData, waitForLoading?: boolean }) {
   const playerHeight = 1920;
 
   const [shownMessages, setShownMessages] = useState<Message[]>([]);
@@ -21,13 +21,15 @@ export function Player({data}: { data: DiscoData }) {
   const [messagePortraits, setMessagePortraits] = useState<Array<string | null>>([]);
   const [shownPortrait, setShownPortrait] = useState<string | null>(null);
 
+  const initialDelay = waitForLoading ? beforeDelay + startDelay : startDelay;
+
   useEffect(() => {
     setYPosition(playerHeight - (document.getElementById('messages')?.clientHeight ?? 0));
     setShownPortrait(messagePortraits[shownMessages.length - 1] ?? null);
 
     if (shownMessages.length < data.messages.length) {
       const lastMessage = shownMessages[shownMessages.length - 1];
-      const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
+      const delay = lastMessage ? getMessageDuration(lastMessage) : initialDelay;
       const timer = setTimeout(() => {
         playCharacterSound(data.messages[shownMessages.length]!.name, data);
         setShownMessages([
@@ -49,8 +51,18 @@ export function Player({data}: { data: DiscoData }) {
       }),
     ).then(result => setMessagePortraits(result));
 
-    const music = playMusic(data.music, data.skipMusicIntro);
-    return () => stopMusic(music);
+    let music: HTMLAudioElement;
+    let timeout: NodeJS.Timeout;
+    if (waitForLoading) {
+      timeout = setTimeout(() => music = playMusic(data.music, data.skipMusicIntro), beforeDelay);
+    }
+    else {
+      music = playMusic(data.music, data.skipMusicIntro);
+    }
+    return () => {
+      clearTimeout(timeout);
+      if (music) stopMusic(music)
+    };
   }, [data]);
 
   return (

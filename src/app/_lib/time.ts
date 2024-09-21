@@ -3,6 +3,7 @@ import type {Message, DiscoData} from '~/app/_lib/data-types';
 
 export const totalTimeLimit = 20 * 1000;
 
+export const beforeDelay = 2000;
 export const startDelay = 500;
 const endDelay = 1000;
 

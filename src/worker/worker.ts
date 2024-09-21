@@ -6,7 +6,7 @@
 import {boss, queue, type RenderVideoJob} from '~/server/queue';
 import type {DiscoData} from '~/app/_lib/data-types';
 import {getVideoPath} from '~/app/_lib/utils';
-import {totalDuration} from '~/app/_lib/time';
+import {beforeDelay, totalDuration} from '~/app/_lib/time';
 import {db} from '~/server/db';
 // @ts-expect-error
 import WebVideoCreator, {VIDEO_ENCODER, logger} from 'web-video-creator';
@@ -33,6 +33,7 @@ async function renderVideo(data: DiscoData, id: string) {
     height: 1920,
     fps: 30,
     duration: totalDuration(data),
+    startTime: beforeDelay,
     outputPath: filename,
   });
   video.on("progress", async (progress: number) => {
