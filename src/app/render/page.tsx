@@ -5,6 +5,6 @@ export default function Page({searchParams}: { searchParams: Record<string, stri
   const data = JSON.parse((searchParams.data as string | null) ?? 'null') as DiscoData || null;
 
   return (
-    <Player data={data} waitForLoading/>
+    <Player data={data}/>
   );
 }

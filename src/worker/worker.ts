@@ -10,16 +10,16 @@ import {beforeDelay, totalDuration, totalTimeLimit} from '~/app/_lib/time';
 import {db} from '~/server/db';
 // @ts-expect-error untyped lib :(
 import WebVideoCreator, {VIDEO_ENCODER, logger} from 'web-video-creator';
+// @ts-expect-error untyped lib :(
+import { type Page } from "web-video-creator/core";
 
 const wvc = new WebVideoCreator();
 wvc.config({
   // mp4Encoder: VIDEO_ENCODER.NVIDIA.H264,
   debug: true,
   browserDebug: true,
-  compatibleRenderingMode: true,
   ffmpegDebug: true,
   ffmpegExecutablePath: 'ffmpeg',
-  frameFormat: 'png',
   browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
   allowUnsafeContext: true,
   browserUseGPU: false,
@@ -39,6 +39,10 @@ async function renderVideo(data: DiscoData, id: string) {
     duration: Math.min(totalDuration(data), totalTimeLimit),
     startTime: beforeDelay,
     outputPath: filename,
+    pagePrepareFn: async (page: Page) => {
+      const target = page.target;
+      await target.tap('body');
+    }
   });
   video.on("progress", async (progress: number) => {
     await db.video.update({where: {id}, data: {progress: Math.floor(progress)}}).catch(console.error);
