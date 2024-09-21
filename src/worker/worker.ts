@@ -23,6 +23,7 @@ wvc.config({
   browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
   allowUnsafeContext: true,
   browserUseGPU: false,
+  compatibleRenderingMode: true,
 });
 
 const WEB_URL = process.env.WEB_URL ?? 'http://localhost:3000'
@@ -37,7 +38,6 @@ async function renderVideo(data: DiscoData, id: string) {
     height: 1920,
     fps: 30,
     duration: Math.min(totalDuration(data), totalTimeLimit),
-    startTime: beforeDelay,
     outputPath: filename,
     pagePrepareFn: async (page: Page) => {
       const target = page.target;
