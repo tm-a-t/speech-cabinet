@@ -46,7 +46,7 @@ export type DiscoData = z.infer<typeof discoData>
 
 /* Default data */
 
-export const getDefaultData = discoData.parse({
+export const getDefaultData = () => discoData.parse({
   messages: [
     {
       name: 'Garte, the Cafeteria Manager',
@@ -83,4 +83,13 @@ export function toDiscoData(input: string): DiscoData | null {
     // Parsing JSON or parsing the object failed
     return null;
   }
+}
+
+export function serialize(data: DiscoData): string {
+  return JSON.stringify(
+    {
+      ...data,
+      messages: data.messages.map(({id, ...rest}) => rest)
+    }
+  )
 }

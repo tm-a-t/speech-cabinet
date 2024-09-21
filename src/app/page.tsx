@@ -2,7 +2,7 @@
 
 
 import React, {useEffect, useState} from 'react';
-import {defaultData, type DiscoData, toDiscoData} from '~/app/_lib/data-types';
+import {getDefaultData, type DiscoData, serialize, toDiscoData} from '~/app/_lib/data-types';
 import {Editor} from '~/app/_components/edit-mode/editor';
 import {Menubar} from '~/app/_components/ui/menubar';
 import {SiteSubmenu} from '~/app/_components/main-menu/site-submenu';
@@ -18,8 +18,8 @@ export default function EditorPage() {
   useEffect(() => {
     if (data !== null) return;
     const dataSaveString = localStorage.getItem('data');
-    if (!dataSaveString) {
-      setData(defaultData);
+    if (!dataSaveString || dataSaveString === 'undefined' || dataSaveString === 'null') {
+      setData(getDefaultData());
       return;
     }
     const dataSave = toDiscoData(dataSaveString);
@@ -35,8 +35,9 @@ export default function EditorPage() {
   }
 
   useEffect(() => {
+    if (!data) return;
     const timer = setTimeout(() => {
-      localStorage.setItem('data', JSON.stringify(data));
+      localStorage.setItem('data', serialize(data));
       console.log('saved');
     }, 500);
     return () => clearTimeout(timer);

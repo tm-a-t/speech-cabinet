@@ -1,6 +1,6 @@
 import {MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger} from '~/app/_components/ui/menubar';
 import React from 'react';
-import {defaultData, type DiscoData, toDiscoData} from '~/app/_lib/data-types';
+import {getDefaultData, type DiscoData, serialize, toDiscoData} from '~/app/_lib/data-types';
 import {downloadFile, formatTime} from '~/app/_lib/utils';
 import {
   Dialog,
@@ -17,7 +17,7 @@ export function FileSubmenu({data, saveData, close}: { data: DiscoData, saveData
   const {toast} = useToast();
 
   function exportData() {
-    const base64 = btoa(JSON.stringify(data));
+    const base64 = btoa(serialize(data));
     downloadFile('data:application/json;base64,' + base64, `Disco Download ${formatTime()}.disco`);
   }
 
@@ -42,7 +42,7 @@ export function FileSubmenu({data, saveData, close}: { data: DiscoData, saveData
   }
 
   function handleStartNew() {
-    saveData(defaultData);
+    saveData(getDefaultData());
     close();
   }
 

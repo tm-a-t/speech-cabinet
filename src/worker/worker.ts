@@ -4,9 +4,9 @@
 
 
 import {boss, queue, type RenderVideoJob} from '~/server/queue';
-import type {DiscoData} from '~/app/_lib/data-types';
+import {type DiscoData, serialize} from '~/app/_lib/data-types';
 import {getVideoPath} from '~/app/_lib/utils';
-import {beforeDelay, totalDuration} from '~/app/_lib/time';
+import {beforeDelay, totalDuration, totalTimeLimit} from '~/app/_lib/time';
 import {db} from '~/server/db';
 // @ts-expect-error
 import WebVideoCreator, {VIDEO_ENCODER, logger} from 'web-video-creator';
@@ -23,7 +23,7 @@ wvc.config({
 });
 
 async function renderVideo(data: DiscoData, id: string) {
-  const params = new URLSearchParams({data: JSON.stringify(data)}).toString();
+  const params = new URLSearchParams({data: serialize(data)}).toString();
   const filename = getVideoPath(id);
 
   const video = wvc.createSingleVideo({
@@ -31,7 +31,7 @@ async function renderVideo(data: DiscoData, id: string) {
     width: 1080,
     height: 1920,
     fps: 30,
-    duration: totalDuration(data),
+    duration: Math.min(totalDuration(data), totalTimeLimit),
     startTime: beforeDelay,
     outputPath: filename,
   });
