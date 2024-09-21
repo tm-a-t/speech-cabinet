@@ -80,7 +80,7 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
           key={message.id}/>,
       )}
       <Button variant="ghost" onClick={addMessage}
-              className="mt-4 -ml-2 opacity-30 hover:opacity-100 transition-opacity block sm:pl-3">+ Add line</Button>
+              className="mt-4 -ml-1 opacity-30 hover:opacity-100 transition-opacity block sm:pl-3">+ Add line</Button>
 
       {totalDuration(data) > totalTimeLimit &&
         <div className="mt-12 opacity-60 px-2 sm:px-0">

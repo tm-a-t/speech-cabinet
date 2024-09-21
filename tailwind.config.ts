@@ -7,7 +7,8 @@ export default {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ["'Spectral'", ...fontFamily.sans]
+  			sans: ["'Commissioner'", ...fontFamily.sans],
+				disco: ["'Spectral'", ...fontFamily.serif],
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

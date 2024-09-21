@@ -46,7 +46,10 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
           setStatus({state: 'in-queue', videoId: status.videoId, position, maxPosition});
           if (position === 0) {
             clearInterval(timer);
-            setStatus({state: 'in-progress', videoId: status.videoId, progress: minDisplayedProgress});
+            setStatus({state: 'in-queue', videoId: status.videoId, position: 0, maxPosition});
+            setTimeout(() => {
+              setStatus({state: 'in-progress', videoId: status.videoId, progress: minDisplayedProgress});
+            }, 200);
           }
         }
         : async () => {
@@ -71,7 +74,7 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
       {children}
 
       {status.state !== 'not-started' &&
-        <div className="fixed bottom-4 left-2 right-2 p-4 max-w-96 sm:left-4 rounded-xl bg-zinc-950 border transition">
+        <div className="fixed bottom-4 left-2 right-2 p-4 max-w-96 sm:left-4 rounded-xl bg-zinc-950 border transition leading-6">
           <div>
             {status.state === 'in-queue' &&
               <>
@@ -93,7 +96,7 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
           </div>
 
           {(status.state === 'in-queue' || status.state === 'in-progress') &&
-            <Progress value={displayedProgress} className="mt-2"/>
+            <Progress value={displayedProgress} className="mt-3"/>
           }
 
           {status.state === 'finished' &&

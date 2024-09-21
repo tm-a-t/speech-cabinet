@@ -7,6 +7,8 @@ import {Toaster} from "~/app/_components/ui/toaster";
 
 import '@fontsource/spectral/400.css';
 import '@fontsource/spectral/700.css';
+import '@fontsource/commissioner/400.css';
+import '@fontsource/commissioner/600.css';
 import {RenderStatusProvider} from '~/app/_components/render-status-provider';
 
 export const metadata: Metadata = {

@@ -28,7 +28,7 @@ export function VideoSubmenu({data, saveData}: { data: DiscoData, saveData: (dat
 
   return (
     <MenubarMenu>
-      <MenubarTrigger className="text-zinc-400">Options</MenubarTrigger>
+      <MenubarTrigger>Options</MenubarTrigger>
       <MenubarContent>
         <MenubarCheckboxItem checked={data.showPortraits} onCheckedChange={saveShowPortraits}>
           Portraits in video

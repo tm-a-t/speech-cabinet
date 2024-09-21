@@ -21,7 +21,7 @@ export function WatchButton({data, onMouseOver}: {data: DiscoData, onMouseOver: 
   }, [status]);
 
   const button = <Button variant="default" className="text-zinc-400 pl-3 ml-auto" onMouseOver={onMouseOver}>
-    <Play className="h-3 w-3 mr-1.5"/>
+    <Play className="h-4 w-4 mr-1.5"/>
     Watch
   </Button>
 

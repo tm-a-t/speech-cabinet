@@ -6,7 +6,7 @@ export function SiteSubmenu() {
 
   return (
     <MenubarMenu>
-      <MenubarTrigger>Speech Cabinet</MenubarTrigger>
+      <MenubarTrigger className="font-semibold">Speech Cabinet</MenubarTrigger>
       <MenubarContent>
         <Dialog>
           <DialogTrigger asChild>
@@ -18,7 +18,7 @@ export function SiteSubmenu() {
             <DialogHeader>
               <DialogTitle>Speech Cabinet</DialogTitle>
             </DialogHeader>
-            <p>
+            <p className="font-disco">
               Every combination of words has been played out.
               The atoms don&apos;t form us anymore: us, our love, our unborn daughters.
             </p>

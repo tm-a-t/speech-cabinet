@@ -54,7 +54,7 @@ export function Player({data}: { data: DiscoData }) {
   }, [data]);
 
   return (
-    <div className="relative w-[1080px] h-[1920px] overflow-hidden">
+    <div className="relative w-[1080px] h-[1920px] overflow-hidden font-disco">
       <div id="tape-background" className="tape-background absolute left-0 right-0 bottom-0"
            style={{top: yPosition - playerHeight, transition: 'top .3s cubic-bezier(.1, .3, .7, .9)'}}></div>
       {data.showPortraits && shownMessages.length && shownPortrait &&

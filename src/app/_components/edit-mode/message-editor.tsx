@@ -71,7 +71,7 @@ export function MessageEditor(
 
   return (
     <div
-      className="sm:pl-6 leading-7 [&:not(:first-child)]:mt-8 sm:[&:not(:first-child)]:mt-5 sm:[&:not(:hover)_.message-menu-button]:opacity-0">
+      className="font-disco sm:pl-6 leading-7 [&:not(:first-child)]:mt-8 sm:[&:not(:first-child)]:mt-5 sm:[&:not(:hover)_.message-menu-button]:opacity-0">
       <span className="inline-block sm:h-0 sm:-ml-6 -ml-1 -mr-1 w-full sm:w-auto">
         <span className="relative sm:h-0 flex sm:-ml-3 w-full sm:w-auto">
           <span>

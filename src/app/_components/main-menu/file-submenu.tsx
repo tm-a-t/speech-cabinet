@@ -43,7 +43,7 @@ export function FileSubmenu({data, saveData}: { data: DiscoData, saveData: (data
 
   return (
     <MenubarMenu>
-      <MenubarTrigger className="text-zinc-400">File</MenubarTrigger>
+      <MenubarTrigger>File</MenubarTrigger>
       <MenubarContent>
         <Dialog>
           <DialogTrigger asChild>

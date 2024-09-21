@@ -36,7 +36,7 @@ export function NameSelect(
 
   const colorClass = getColorClass(props.message.name, props.data);
   const button = <Button variant="ghost"
-                         className={cn("h-8 px-3 sm:px-3 sm:text-base uppercase tracking-wider", colorClass)}>
+                         className={cn("h-8 px-3 sm:px-3 sm:text-base uppercase tracking-wider font-disco", colorClass)}>
     {props.message.name}
   </Button>;
 
@@ -155,7 +155,7 @@ function NameOptionItem({option, category, onSelect, data}: {
       key={option}
       value={category + ' / ' + option}
       onSelect={onSelect}
-      className={cn("uppercase tracking-wider", getColorClass(option, data))}
+      className={cn("uppercase tracking-wider font-disco", getColorClass(option, data))}
     >
       {option}
     </CommandItem>
