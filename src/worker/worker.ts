@@ -19,15 +19,20 @@ wvc.config({
   compatibleRenderingMode: true,
   ffmpegDebug: true,
   ffmpegExecutablePath: 'ffmpeg',
+  frameFormat: 'png',
   browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
+  allowUnsafeContext: true,
+  browserUseGPU: false,
 });
+
+const WEB_URL = process.env.WEB_URL ?? 'http://localhost:3000'
 
 async function renderVideo(data: DiscoData, id: string) {
   const params = new URLSearchParams({data: serialize(data)}).toString();
   const filename = getVideoPath(id);
 
   const video = wvc.createSingleVideo({
-    url: 'http://localhost:3000/render?' + params,
+    url: WEB_URL + '/render?' + params,
     width: 1080,
     height: 1920,
     fps: 30,

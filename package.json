@@ -14,7 +14,8 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "start": "next start",
-    "work": "tsx --env-file=.env src/worker/worker.ts"
+    "work": "tsx --env-file=.env src/worker/worker.ts",
+    "worker:prod": "tsx src/worker/worker.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.6.0",
