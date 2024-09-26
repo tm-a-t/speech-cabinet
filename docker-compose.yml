@@ -9,6 +9,8 @@ services:
       - NEXTAUTH_URL=http://localhost:3000
     ports:
       - 127.0.0.1:${PORT:-3000}:3000
+    volumes:
+      - temp:/app/temp
 
   worker:
     build: .
@@ -21,13 +23,12 @@ services:
       - WEB_URL=http://web:3000
     volumes:
       - ./.bin:/app/.bin
+      - temp:/app/temp
   
   db:
     image: postgres:16
     restart: always
     shm_size: 128mb
-    ports:
-      - 127.0.0.1:5432:5432
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
@@ -37,3 +38,4 @@ services:
 
 volumes:
   pgdata:
+  temp:

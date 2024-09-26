@@ -1,5 +1,4 @@
 FROM node:20-slim AS base
-RUN echo "it doesn't work" && exit 1
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN apt-get update -y && apt-get install -y openssl wget gnupg dbus dbus-x11 ffmpeg && rm -rf /var/lib/apt/lists/*
@@ -10,8 +9,9 @@ RUN --mount=type=cache,target=/root/.yarn \
     yarn --frozen-lockfile \
     && rm -rf node_modules/{ffprobe-static,ffmpeg-static,@next/swc-linux-x64-musl,@next/swc-linux-x64-gnu}
 
-RUN apt-get update -y \
-    && apt-get install -y ca-certificates fonts-liberation libasound2 libatk-bridge2.0-0 libatk1.0-0 libatspi2.0-0 libc6 libcairo2 libcups2 libcurl4 libdbus-1-3 libdrm2 libexpat1 libgbm1 libglib2.0-0 libgtk-3-0 libnss3 libpango-1.0-0 libudev1 libvulkan1 libx11-6 libxcb1 libxcomposite1 libxdamage1 libxext6 libxfixes3 libxkbcommon0 libxrandr2 wget xdg-utils \
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | tee /etc/apt/trusted.gpg.d/google.asc \
+    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+    && apt-get update && apt-get -y install google-chrome-stable \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . .
@@ -22,8 +22,10 @@ USER nextjs
 ENV NODE_ENV=production
 ENV HOSTNAME="0.0.0.0"
 ENV PORT=3000
+ENV CHROME_PATH=/usr/bin/google-chrome-stable
 EXPOSE 3000
 
-ENV DBUS_SESSION_BUS_ADDRESS autolaunch:
+VOLUME /app/temp
+RUN mkdir /app/temp
 
 ENTRYPOINT ["./entrypoint.sh"]
