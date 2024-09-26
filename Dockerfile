@@ -10,8 +10,7 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | tee /etc/ap
 COPY package.json yarn.lock prisma/ ./
 RUN --mount=type=cache,target=/root/.yarn \
     YARN_CACHE_FOLDER=/root/.yarn \
-    yarn --frozen-lockfile \
-    && rm -rf node_modules/{ffprobe-static,ffmpeg-static,@next/swc-linux-x64-musl,@next/swc-linux-x64-gnu}
+    yarn --frozen-lockfile
 
 
 COPY . .
