@@ -15,7 +15,7 @@ export function Player({data, waitForLoading = false}: { data: DiscoData, waitFo
 
   const [shownMessages, setShownMessages] = useState<Message[]>([]);
   const [isLastMessageShown, setIsLastMessageShown] = useState(false);
-  // can't figure out the math, this is the position when the background doesn't scroll
+  // can't figure out the math, but this is the position when the background doesn't scroll
   const [yPosition, setYPosition] = useState(1540);
 
   const [messagePortraits, setMessagePortraits] = useState<Array<string | null>>([]);
@@ -30,14 +30,14 @@ export function Player({data, waitForLoading = false}: { data: DiscoData, waitFo
     if (shownMessages.length < data.messages.length) {
       const lastMessage = shownMessages[shownMessages.length - 1];
       const delay = lastMessage ? getMessageDuration(lastMessage) : initialDelay;
-      const timer = setTimeout(() => {
+      let timer = setTimeout(() => {
         playCharacterSound(data.messages[shownMessages.length]!.name, data);
         setShownMessages([
           ...shownMessages,
           data.messages[shownMessages.length]!,
         ]);
         setIsLastMessageShown(false);
-        setTimeout(() => setIsLastMessageShown(true), 100);
+        timer = setTimeout(() => setIsLastMessageShown(true), 100);
       }, delay);
       return () => clearTimeout(timer);
     }
