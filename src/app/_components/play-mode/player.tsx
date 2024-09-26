@@ -16,7 +16,7 @@ export function Player({data, waitForLoading = false}: { data: DiscoData, waitFo
   const [shownMessages, setShownMessages] = useState<Message[]>([]);
   const [isLastMessageShown, setIsLastMessageShown] = useState(false);
   // can't figure out the math, but this is the position when the background doesn't scroll
-  const [yPosition, setYPosition] = useState(0);
+  const [yPosition, setYPosition] = useState(1536);
 
   const [messagePortraits, setMessagePortraits] = useState<Array<string | null>>([]);
   const [shownPortrait, setShownPortrait] = useState<string | null>(null);
