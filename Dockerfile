@@ -2,6 +2,10 @@ FROM node:20-slim AS base
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN apt-get update -y && apt-get install -y openssl wget gnupg dbus dbus-x11 ffmpeg && rm -rf /var/lib/apt/lists/*
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | tee /etc/apt/trusted.gpg.d/google.asc \
+    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+    && apt-get update && apt-get -y install google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY package.json yarn.lock prisma/ ./
 RUN --mount=type=cache,target=/root/.yarn \
@@ -9,10 +13,6 @@ RUN --mount=type=cache,target=/root/.yarn \
     yarn --frozen-lockfile \
     && rm -rf node_modules/{ffprobe-static,ffmpeg-static,@next/swc-linux-x64-musl,@next/swc-linux-x64-gnu}
 
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | tee /etc/apt/trusted.gpg.d/google.asc \
-    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
-    && apt-get update && apt-get -y install google-chrome-stable \
-    && rm -rf /var/lib/apt/lists/*
 
 COPY . .
 RUN adduser --uid 1001 nextjs
@@ -24,6 +24,8 @@ ENV HOSTNAME="0.0.0.0"
 ENV PORT=3000
 ENV CHROME_PATH=/usr/bin/google-chrome-stable
 EXPOSE 3000
+
+RUN yarn build
 
 VOLUME /app/temp
 RUN mkdir /app/temp
