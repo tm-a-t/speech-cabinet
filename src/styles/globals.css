@@ -12,6 +12,10 @@
         background-color: rgba(255, 255, 255, 40%);
         color: white;
     }
+
+    *, ::before, ::after {
+        @apply border-zinc-800;
+    }
 }
 
 @layer utilities {
@@ -25,53 +29,23 @@
     }
 }
 
-/*@font-face {*/
-/*    font-family: 'Sina Nova';*/
-/*    src: url('/Sina Nova W01 Medium.ttf') format('truetype');*/
-/*}*/
-
-*, ::before, ::after {
-    border-color: #27272a;
-}
-
-.tiptap:focus {
-    outline: none;
-}
-
-.tiptap p.is-editor-empty:first-child {
-    display: inline-block;
-}
-
-/* Editor placeholder */
-.tiptap p.is-empty::before {
-    @apply text-white text-opacity-50;
-    opacity: .4;
-    content: attr(data-placeholder);
-    display: inline;
-    float: left;
-    height: 0;
-    pointer-events: none;
-}
-
-.editor-quotation p:first-child:not(.is-editor-empty)::before,
-.editor-quotation p:last-child:not(.is-empty)::after,
-.editor-quotation p:last-child.is-empty:not(.is-editor-empty)::before {
-    content: '"';
-}
-
-@keyframes fadeInWhenAppear {
-    0% {
-        opacity: 0;
-        display: none;
+@layer components {
+    /* Editor tweaks */
+    .tiptap:focus {
+        outline: none;
+    }
+    .tiptap p.is-editor-empty:first-child {
+        display: inline-block;
     }
 
-    1% {
-        opacity: 0;
-        display: block;
-    }
-
-    100% {
-        opacity: 1;
-        display: block;
+    /* Editor placeholder */
+    .tiptap p.is-empty::before {
+        @apply text-white text-opacity-50;
+        opacity: .4;
+        content: attr(data-placeholder);
+        display: inline;
+        float: left;
+        height: 0;
+        pointer-events: none;
     }
 }

@@ -42,7 +42,7 @@ export function WatchButton({data}: {data: DiscoData}) {
 
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerTrigger asChild>{smallButton}</DrawerTrigger>
+      <DrawerTrigger asChild>{bigButton}</DrawerTrigger>
       <DrawerContent>
         <PlayerWrapper data={data} setIsOpen={setIsOpen}/>
       </DrawerContent>

@@ -71,14 +71,14 @@ export function MessageEditor(
 
   return (
     <div
-      className="font-disco sm:pl-6 leading-7 [&:not(:first-child)]:mt-8 sm:[&:not(:first-child)]:mt-5 sm:[&:not(:hover)_.message-menu-button]:opacity-0">
+      className="font-disco sm:pl-6 leading-7 [&:not(:first-child)]:mt-3 sm:[&:not(:first-child)]:mt-5 sm:[&:not(:hover)_.message-menu-button]:opacity-0">
       <span className="inline-block sm:h-0 sm:-ml-6 -ml-1 -mr-1 w-full sm:w-auto">
         <span className="relative sm:h-0 flex sm:-ml-3 w-full sm:w-auto">
           <span>
             <NameSelect message={message} saveMessage={saveMessage} usedNames={usedNames} data={data}/>
 
             {showCheck &&
-              <span className="inline-block">
+              <span className="inline-block ml-2">
                   <Select onValueChange={handleCheckDifficultySelect} value={message.check?.difficulty ?? 'none'}>
                     <SelectTrigger
                       className="h-8 px-1 sm:px-1 sm:text-base text-zinc-400 dark:bg-transparent dark:border-0 hover:dark:bg-zinc-800 hover:text-white transition">
@@ -119,7 +119,7 @@ export function MessageEditor(
       </span>
 
       <span className="text-zinc-300 hidden sm:inline"> &ndash; </span>
-      <span className="text-zinc-300 block sm:inline border-b sm:border-0 px-2 sm:p-0 mt-2 sm:m-0 rounded">
+      <span className="text-zinc-300 block sm:inline border-b sm:border-0 px-2 pb-3 sm:p-0 rounded">
         <MessageTextEditor content={message.text} onUpdate={handleTextUpdate}/>
       </span>
     </div>

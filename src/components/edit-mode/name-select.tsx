@@ -36,7 +36,7 @@ export function NameSelect(
 
   const colorClass = getColorClass(props.message.name, props.data);
   const button = <Button variant="ghost"
-                         className={cn("h-8 px-3 sm:px-3 sm:text-base uppercase tracking-wider font-disco", colorClass)}>
+                         className={cn("h-8 px-3 -mr-2 sm:px-3 sm:text-base uppercase tracking-wider font-disco", colorClass)}>
     {props.message.name}
   </Button>;
 
