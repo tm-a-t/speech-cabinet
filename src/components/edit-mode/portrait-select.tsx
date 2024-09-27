@@ -115,7 +115,7 @@ function PortraitOptionList({message, data, onSelectPortraitUrl}: {
                                 value={url} className="w-1/4" key={name}>
               <Tooltip>
                 <TooltipTrigger>
-                  <SkeletonImage src={url} alt={name} className="min-w-[54px] min-h-[75px]" width={720} height={1000}/>
+                  <SkeletonImage src={url} alt={name} className="min-w-[54px] min-h-[75px]" width={0} height={0}/>
                 </TooltipTrigger>
                 <TooltipContent className="uppercase tracking-wider font-disco">{name}</TooltipContent>
               </Tooltip>
