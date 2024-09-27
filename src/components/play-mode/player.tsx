@@ -70,7 +70,7 @@ export function Player({ data }: { data: DiscoData }) {
     return () => {
       if (music) stopMusic(music);
     };
-  }, [data.music, data.skipMusicIntro, messagePortraits, messageSounds]);
+  }, [data, messagePortraits, messageSounds]);
 
   return (
     <div className="relative h-[1920px] w-[1080px] overflow-hidden font-disco">
