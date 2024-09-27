@@ -20,7 +20,7 @@ wvc.config({
   browserDebug: true,
   ffmpegDebug: true,
   ffmpegExecutablePath: 'ffmpeg',
-  // browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
+  browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
   allowUnsafeContext: true,
   browserUseGPU: false,
   compatibleRenderingMode: true,
@@ -41,7 +41,7 @@ async function renderVideo(data: DiscoData, id: string) {
     outputPath: filename,
     pagePrepareFn: async (page: Page) => {
       const target = page.target;
-      setTimeout(() => void target.tap('body'), 200);
+      setTimeout(() => void target.tap('#messages'), 200);
     }
   });
   video.on("progress", async (progress: number) => {
