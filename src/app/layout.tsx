@@ -14,7 +14,7 @@ import {RenderStatusProvider} from '~/components/render-status-provider';
 
 export const metadata: Metadata = {
   title: 'Speech Cabinet',
-  description: 'Disco Elysium video generator',
+  description: 'Disco Elysium dialogue generator',
   icons: [{rel: "icon", url: "/favicon.ico"}],
 };
 

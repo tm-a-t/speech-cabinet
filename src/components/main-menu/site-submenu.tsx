@@ -24,9 +24,10 @@ export function SiteSubmenu() {
             </p>
             <hr/>
             <p>
-              This site generates Disco Elysum dialogues.
-              See <a href="https://www.reddit.com/r/DiscoElysium/comments/1fgkudy/im_building_a_site_for_animating_discostyle/" className="underline underline-offset-4" target="_blank">the reddit posts.</a> Author: tmat
+              This site generates dialogue videos in the style of Disco Elysium;
+              see <a href="https://www.reddit.com/r/DiscoElysium/comments/1fgkudy/im_building_a_site_for_animating_discostyle/" className="underline underline-offset-4" target="_blank">the reddit posts.</a>
             </p>
+            <p>Created by tmat.</p>
           </DialogContent>
         </Dialog>
       </MenubarContent>
