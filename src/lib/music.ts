@@ -41,15 +41,7 @@ export const ost: OstItem[] = [
   {name: 'ZA/UM', url: '/music/Sea Power - ZA/UM.m4a'},
 ];
 
-
-export function playCharacterSound(name: string, data: DiscoData) {
-  const sound = getCharacterSoundName(name, data);
-  if (sound) {
-    playSound(sound);
-  }
-}
-
-function getCharacterSoundName(name: string, data: DiscoData): string | null {
+export function getCharacterSoundName(name: string, data: DiscoData): string | null {
   const colorClass = getColorClass(name, data);
   switch (colorClass) {
     case 'text-intellect':
@@ -65,7 +57,8 @@ function getCharacterSoundName(name: string, data: DiscoData): string | null {
   }
 }
 
-function playSound(path: string) {
+export function playSound(path: string | null | undefined) {
+  if (!path) return;
   const audio = document.createElement('audio');
   audio.src = path;
   document.body.appendChild(audio);
