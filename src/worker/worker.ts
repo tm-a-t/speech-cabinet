@@ -41,7 +41,7 @@ async function renderVideo(data: DiscoData, id: string) {
     outputPath: filename,
     pagePrepareFn: async (page: Page) => {
       const target = page.target;
-      await target.tap('body');
+      setTimeout(() => target.tap('body'), 200);
     }
   });
   video.on("progress", async (progress: number) => {
