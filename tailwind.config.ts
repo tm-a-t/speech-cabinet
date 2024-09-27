@@ -10,6 +10,9 @@ export default {
   			sans: ["'Geologica'", ...fontFamily.sans],
 				disco: ["'Spectral'", ...fontFamily.serif],
   		},
+			aspectRatio: {
+				portrait: '18 / 25',
+			},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

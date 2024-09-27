@@ -23,29 +23,23 @@
         background: url('/layout/bg.png') repeat-y top center;
         background-size: 100% auto;
     }
-
-    .aspect-portrait {
-        aspect-ratio: 18 / 25;
-    }
 }
 
-@layer components {
-    /* Editor tweaks */
-    .tiptap:focus {
-        outline: none;
-    }
-    .tiptap p.is-editor-empty:first-child {
-        display: inline-block;
-    }
+/* Editor tweaks */
+.tiptap:focus {
+    outline: none;
+}
+.tiptap p.is-editor-empty:first-child {
+    display: inline-block;
+}
 
-    /* Editor placeholder */
-    .tiptap p.is-empty::before {
-        @apply text-white text-opacity-50;
-        opacity: .4;
-        content: attr(data-placeholder);
-        display: inline;
-        float: left;
-        height: 0;
-        pointer-events: none;
-    }
+/* Editor placeholder */
+.tiptap p.is-empty::before {
+    @apply text-white text-opacity-50;
+    opacity: .4;
+    content: attr(data-placeholder);
+    display: inline;
+    float: left;
+    height: 0;
+    pointer-events: none;
 }
