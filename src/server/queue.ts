@@ -32,7 +32,8 @@ export async function getJobPosition(id: string): Promise<number> {
         AND state IN ('active', 'created')
         AND created_on < (SELECT created_on FROM pgboss.job WHERE id = $2)`;
 
-  // @ts-expect-error
+  // @ts-expect-error untyped method
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   const db = await boss.getDb() as Db;
   const result = await db.executeSql(sql, [queue, id]) as { rows: { count: string }[] };
   return parseFloat(result.rows[0]!.count);
