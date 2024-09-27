@@ -82,7 +82,7 @@ export function Player({ data }: { data: DiscoData }) {
           transition: "top .3s cubic-bezier(.1, .3, .7, .9)",
         }}
       ></div>
-      {data.showPortraits && shownMessages.length && shownPortrait && (
+      {data.showPortraits && shownMessages.length && shownPortrait != "" && (
         <div className="aspect-portrait absolute left-4 top-32 z-20 flex h-auto w-[27rem] items-center justify-center">
           <NextImage
             src={portraitFrame}
