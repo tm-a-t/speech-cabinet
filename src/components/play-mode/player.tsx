@@ -43,13 +43,13 @@ export function Player({ data }: { data: DiscoData }) {
       const lastMessage = shownMessages[shownMessages.length - 1];
       const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
       const timer = setTimeout(() => {
+        setIsLastMessageShown(false);
+        setTimeout(() => setIsLastMessageShown(true), 100);
         playSound(messageSounds[shownMessages.length]);
         setShownMessages([
           ...shownMessages,
           data.messages[shownMessages.length]!,
         ]);
-        setIsLastMessageShown(false);
-        setTimeout(() => setIsLastMessageShown(true), 100);
       }, delay);
       return () => clearTimeout(timer);
     }
