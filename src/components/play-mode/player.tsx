@@ -18,8 +18,10 @@ import portraitFrame from "../../../public/layout/frame.png";
 export function Player({ data }: { data: DiscoData }) {
   const playerHeight = 1920;
 
-  const [shownMessages, setShownMessages] = useState<Message[]>([]);
-  const [isLastMessageShown, setIsLastMessageShown] = useState(false);
+  const [shownMessages, setShownMessages] = useState<{
+    all: Message[];
+    lastShown: boolean;
+  }>({ all: [], lastShown: true });
   const [yPosition, setYPosition] = useState(1536); // 1536 = playerHeight - 2x padding
 
   const messageSounds = useMemo(
@@ -37,19 +39,17 @@ export function Player({ data }: { data: DiscoData }) {
     setYPosition(
       playerHeight - (document.getElementById("messages")?.clientHeight ?? 0),
     );
-    setShownPortrait(messagePortraits[shownMessages.length - 1] ?? null);
+    const index = shownMessages.all.length;
+    setShownPortrait(messagePortraits[index - 1] ?? null);
 
-    if (shownMessages.length < data.messages.length) {
-      const lastMessage = shownMessages[shownMessages.length - 1];
+    if (index < data.messages.length) {
+      const lastMessage = shownMessages.all[index - 1];
       const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
       const timer = setTimeout(() => {
-        setIsLastMessageShown(false);
-        setTimeout(() => setIsLastMessageShown(true), 100);
-        playSound(messageSounds[shownMessages.length]);
-        setShownMessages([
-          ...shownMessages,
-          data.messages[shownMessages.length]!,
-        ]);
+        const all = [...shownMessages.all, data.messages[index]!];
+        setShownMessages({ all, lastShown: false });
+        setTimeout(() => setShownMessages({ all, lastShown: true }), 100);
+        playSound(messageSounds[index]);
       }, delay);
       return () => clearTimeout(timer);
     }
@@ -82,26 +82,28 @@ export function Player({ data }: { data: DiscoData }) {
           transition: "top .3s cubic-bezier(.1, .3, .7, .9)",
         }}
       ></div>
-      {data.showPortraits && shownMessages.length && shownPortrait != "" && (
-        <div className="aspect-portrait absolute left-4 top-32 z-20 flex h-auto w-[27rem] items-center justify-center">
-          <NextImage
-            src={portraitFrame}
-            className="absolute top-1/2 -translate-y-1/2"
-            alt=""
-          />
-          {shownPortrait ? (
+      {data.showPortraits &&
+        shownMessages.all.length &&
+        shownPortrait != "" && (
+          <div className="aspect-portrait absolute left-4 top-32 z-20 flex h-auto w-[27rem] items-center justify-center">
             <NextImage
-              src={shownPortrait}
+              src={portraitFrame}
+              className="absolute top-1/2 -translate-y-1/2"
               alt=""
-              className="absolute w-full px-6"
-              width={720}
-              height={1000}
             />
-          ) : (
-            <Skeleton className="aspect-portrait" />
-          )}
-        </div>
-      )}
+            {shownPortrait ? (
+              <NextImage
+                src={shownPortrait}
+                alt=""
+                className="absolute w-full px-6"
+                width={720}
+                height={1000}
+              />
+            ) : (
+              <Skeleton className="aspect-portrait" />
+            )}
+          </div>
+        )}
 
       <div
         id="messages"
@@ -111,16 +113,16 @@ export function Player({ data }: { data: DiscoData }) {
           transition: "top .3s cubic-bezier(.1, .4, .6, .9)",
         }}
       >
-        {shownMessages.map((message, index) => (
+        {shownMessages.all.map((message, index) => (
           <MessageView
             message={message}
             data={data}
             className={
-              !isLastMessageShown && index + 1 === shownMessages.length
+              !shownMessages.lastShown && index + 1 === shownMessages.all.length
                 ? "opacity-0"
                 : ""
             }
-            key={index + message.name + message.text}
+            key={message.id}
           />
         ))}
       </div>
