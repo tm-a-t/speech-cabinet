@@ -1,19 +1,17 @@
-import {db} from '~/server/db';
-import {type NextRequest, NextResponse} from 'next/server';
-import * as fs from 'fs';
-import {getVideoPath} from '~/lib/utils';
+import { NextResponse } from "next/server";
+import * as fs from "fs";
+import { getVideoPath } from "~/lib/utils";
 
-// cache this route
-// export const dynamic = 'force-static';
+export const dynamic = "force-static";
 
-export async function GET(
-  request: NextRequest,
-  {params}: { params: { id: string } },
-) {
-  const video = await db.video.findFirst({where: {id: params.id}});
-  if (!video?.isReady) {
-    return new NextResponse(null, {status: 400});
+export async function GET({ params }: { params: { id: string } }) {
+  if (!/^[0-9A-F\-]+$/i.test(params.id)) {
+    return new NextResponse(null, { status: 400 });
   }
-  const file = fs.readFileSync(getVideoPath(params.id));
-  return new NextResponse(file, {headers: {'content-type': 'video/mp4'}});
+  const videoPath = getVideoPath(params.id);
+  if (!fs.existsSync(videoPath)) {
+    return new NextResponse(null, { status: 400 });
+  }
+  const file = fs.readFileSync(videoPath);
+  return new NextResponse(file, { headers: { "content-type": "video/mp4" } });
 }
