@@ -4,9 +4,9 @@
 
 
 import {boss, queue, type RenderVideoJob} from '~/server/queue';
-import {type DiscoData, serialize} from '~/app/_lib/data-types';
-import {getVideoPath} from '~/app/_lib/utils';
-import {beforeDelay, totalDuration, totalTimeLimit} from '~/app/_lib/time';
+import {type DiscoData, serialize} from '~/lib/disco-data';
+import {getVideoPath} from '~/lib/utils';
+import {beforeDelay, totalDuration, totalTimeLimit} from '~/lib/time';
 import {db} from '~/server/db';
 // @ts-expect-error untyped lib :(
 import WebVideoCreator, {VIDEO_ENCODER, logger} from 'web-video-creator';

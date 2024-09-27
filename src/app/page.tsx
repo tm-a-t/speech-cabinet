@@ -2,13 +2,13 @@
 
 
 import React, {useEffect, useState} from 'react';
-import {getDefaultData, type DiscoData, serialize, toDiscoData} from '~/app/_lib/data-types';
-import {Editor} from '~/app/_components/edit-mode/editor';
-import {Menubar} from '~/app/_components/ui/menubar';
-import {SiteSubmenu} from '~/app/_components/main-menu/site-submenu';
-import {FileSubmenu} from '~/app/_components/main-menu/file-submenu';
-import {VideoSubmenu} from '~/app/_components/main-menu/video-submenu';
-import {WatchButton} from '~/app/_components/main-menu/watch-button';
+import {getDefaultData, type DiscoData, serialize, toDiscoData} from '~/lib/disco-data';
+import {Editor} from '~/components/edit-mode/editor';
+import {Menubar} from '~/components/ui/menubar';
+import {SiteSubmenu} from '~/components/main-menu/site-submenu';
+import {FileSubmenu} from '~/components/main-menu/file-submenu';
+import {VideoSubmenu} from '~/components/main-menu/video-submenu';
+import {WatchButton} from '~/components/main-menu/watch-button';
 import {redirect} from 'next/navigation';
 
 export default function EditorPage() {

@@ -1,6 +1,6 @@
 import PgBoss, {type Db, type Job} from 'pg-boss';
 import {env} from '~/env';
-import type {DiscoData} from '~/app/_lib/data-types';
+import type {DiscoData} from '~/lib/disco-data';
 
 export const boss = new PgBoss(env.DATABASE_URL);
 boss.on('error', console.error);

@@ -1,0 +1,94 @@
+'use client';
+
+import type {DiscoData, Message} from "~/lib/disco-data";
+import {MessageView} from '~/components/play-mode/message-view';
+import React, {useEffect, useState} from 'react';
+import {beforeDelay, getMessageDuration, startDelay} from "~/lib/time";
+import {getPortraitUrl} from "~/lib/utils";
+import {Skeleton} from '~/components/ui/skeleton';
+import {playCharacterSound, playMusic, stopMusic} from '~/lib/music';
+import Image from 'next/image'
+import portraitFrame from '../../../public/layout/frame.png'
+
+export function Player({data, waitForLoading = false}: { data: DiscoData, waitForLoading?: boolean }) {
+  const playerHeight = 1920;
+
+  const [shownMessages, setShownMessages] = useState<Message[]>([]);
+  const [isLastMessageShown, setIsLastMessageShown] = useState(false);
+  // can't figure out the math, but this is the position when the background doesn't scroll
+  const [yPosition, setYPosition] = useState(1536);
+
+  const [messagePortraits, setMessagePortraits] = useState<Array<string | null>>([]);
+  const [shownPortrait, setShownPortrait] = useState<string | null>(null);
+
+  const initialDelay = waitForLoading ? beforeDelay + startDelay : startDelay;
+
+  useEffect(() => {
+    setYPosition(playerHeight - (document.getElementById('messages')?.clientHeight ?? 0));
+    setShownPortrait(messagePortraits[shownMessages.length - 1] ?? null);
+
+    if (shownMessages.length < data.messages.length) {
+      const lastMessage = shownMessages[shownMessages.length - 1];
+      const delay = lastMessage ? getMessageDuration(lastMessage) : initialDelay;
+      const timer = setTimeout(() => {
+        playCharacterSound(data.messages[shownMessages.length]!.name, data);
+        setShownMessages([
+          ...shownMessages,
+          data.messages[shownMessages.length]!,
+        ]);
+        setIsLastMessageShown(false);
+        setTimeout(() => setIsLastMessageShown(true), 100);
+      }, delay);
+      return () => clearTimeout(timer);
+    }
+  }, [shownMessages, messagePortraits, initialDelay, data]);
+
+  useEffect(() => {
+    void Promise.all(
+      data.messages.map(async message => {
+        const url = getPortraitUrl(message.name, data);
+        return (await fetch(url)).status === 200 ? url : null;
+      }),
+    ).then(result => setMessagePortraits(result));
+
+    let music: HTMLAudioElement;
+    let timeout: NodeJS.Timeout;
+    if (waitForLoading) {
+      timeout = setTimeout(() => music = playMusic(data.music, data.skipMusicIntro), beforeDelay);
+    }
+    else {
+      music = playMusic(data.music, data.skipMusicIntro);
+    }
+    return () => {
+      clearTimeout(timeout);
+      if (music) stopMusic(music)
+    };
+  }, [data, waitForLoading]);
+
+  return (
+    <div className="relative w-[1080px] h-[1920px] overflow-hidden font-disco">
+      <div id="tape-background" className="tape-background absolute left-0 right-0 bottom-0"
+           style={{top: yPosition - playerHeight, transition: 'top .3s cubic-bezier(.1, .3, .7, .9)'}}></div>
+      {data.showPortraits && shownMessages.length && shownPortrait &&
+        <div className="absolute aspect-portrait z-20 w-[27rem] h-auto top-32 left-4 flex items-center justify-center">
+          <Image src={portraitFrame} className="absolute top-1/2 -translate-y-1/2" alt=""/>
+          {shownPortrait
+            ? <Image src={shownPortrait} alt="" className="absolute px-6 w-full" width={720} height={1000}/>
+            : <Skeleton className="aspect-portrait"/>
+          }
+        </div>}
+
+      <div id="messages" className={"absolute px-20 py-48 text-[2.75rem] leading-[4.5rem]"}
+           style={{top: yPosition + 'px', transition: 'top .3s cubic-bezier(.1, .4, .6, .9)'}}>
+        {shownMessages.map((message, index) =>
+          <MessageView
+            message={message}
+            data={data}
+            className={!isLastMessageShown && index + 1 === shownMessages.length ? "opacity-0" : ""}
+            key={index + message.name + message.text}/>,
+        )}
+      </div>
+    </div>
+  );
+}
+

@@ -1,16 +1,16 @@
 import "~/styles/globals.css";
 
 import {type Metadata} from "next";
-import {ThemeProvider} from '~/app/_components/ui/theme-provider';
-import {TooltipProvider} from '~/app/_components/ui/tooltip';
-import {Toaster} from "~/app/_components/ui/toaster";
+import {ThemeProvider} from '~/components/ui/theme-provider';
+import {TooltipProvider} from '~/components/ui/tooltip';
+import {Toaster} from "~/components/ui/toaster";
 
 import '@fontsource/spectral/400.css';
 import '@fontsource/geologica/300.css';
 import '@fontsource/geologica/400.css';
 import '@fontsource/geologica/500.css';
 import '@fontsource/geologica/600.css';
-import {RenderStatusProvider} from '~/app/_components/render-status-provider';
+import {RenderStatusProvider} from '~/components/render-status-provider';
 
 export const metadata: Metadata = {
   title: 'Speech Cabinet',

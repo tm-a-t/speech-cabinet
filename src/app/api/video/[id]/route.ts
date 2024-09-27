@@ -1,7 +1,7 @@
 import {db} from '~/server/db';
 import {type NextRequest, NextResponse} from 'next/server';
 import * as fs from 'fs';
-import {getVideoPath} from '~/app/_lib/utils';
+import {getVideoPath} from '~/lib/utils';
 
 // cache this route
 // export const dynamic = 'force-static';

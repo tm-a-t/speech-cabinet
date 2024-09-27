@@ -1,7 +1,7 @@
 'use client';
 
-import {getDefaultData, serialize} from '../_lib/data-types';
-import {Button} from '~/app/_components/ui/button';
+import {getDefaultData, serialize} from '~/lib/disco-data';
+import {Button} from '~/components/ui/button';
 import { useRouter } from 'next/navigation';
 
 export default function ResetPage() {
