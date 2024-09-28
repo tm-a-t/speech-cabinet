@@ -84,7 +84,7 @@ export function Player({ data }: { data: DiscoData }) {
       ></div>
       {data.showPortraits &&
         shownMessages.all.length &&
-        shownPortrait != "" && (
+        shownPortrait !== "" && (
           <div className="aspect-portrait absolute left-4 top-32 z-20 flex h-auto w-[27rem] items-center justify-center">
             <NextImage
               src={portraitFrame}
@@ -100,7 +100,7 @@ export function Player({ data }: { data: DiscoData }) {
                 height={1000}
               />
             ) : (
-              <Skeleton className="aspect-portrait" />
+              <Skeleton className="aspect-portrait w-full" />
             )}
           </div>
         )}
