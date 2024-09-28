@@ -20,7 +20,7 @@ wvc.config({
   browserDebug: true,
   ffmpegDebug: true,
   ffmpegExecutablePath: 'ffmpeg',
-  browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
+  // browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
   allowUnsafeContext: true,
   browserUseGPU: false,
   compatibleRenderingMode: true,
@@ -50,7 +50,7 @@ async function renderVideo(data: DiscoData, id: string) {
   // Constants copied from music.ts#playMusic, should refactor this later.
   if (data.music) {
     video.addAudio({
-      url: data.music,
+      url: WEB_URL + data.music,
       volume: .2,
       loop: true,
       startTime: data.skipMusicIntro ? 37 : 0,
