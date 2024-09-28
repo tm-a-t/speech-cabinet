@@ -50,7 +50,7 @@ async function renderVideo(data: DiscoData, id: string) {
   // Constants copied from music.ts#playMusic, should refactor this later.
   if (data.music) {
     video.addAudio({
-      url: data.messages,
+      url: data.music,
       volume: .2,
       loop: true,
       startTime: data.skipMusicIntro ? 37 : 0,
