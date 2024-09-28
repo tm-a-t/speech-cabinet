@@ -41,9 +41,22 @@ async function renderVideo(data: DiscoData, id: string) {
     outputPath: filename,
     pagePrepareFn: async (page: Page) => {
       const target = page.target;
-      setTimeout(() => void target.tap('#messages'), 200);
-    }
+      void target.tap('body');
+    },
   });
+
+  // Add music here because music added with <audio> in Player
+  // does not work for some reason.
+  // Constants copied from music.ts#playMusic, should refactor this later.
+  if (data.music) {
+    video.addAudio({
+      url: data.messages,
+      volume: .2,
+      loop: true,
+      startTime: data.skipMusicIntro ? 37 : 0,
+    });
+  }
+
   video.on("progress", async (progress: number) => {
     await db.video.update({where: {id}, data: {progress: Math.floor(progress)}}).catch(console.error);
   });

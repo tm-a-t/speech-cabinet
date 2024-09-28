@@ -74,9 +74,7 @@ export function playMusic(path: string | null, skipIntro: boolean): HTMLAudioEle
     audio.currentTime = 37;  // a random default, seems to work ok in general
   }
   document.body.appendChild(audio);
-  audio.play().catch(() => {
-    document.body.addEventListener('click', () => void audio.play());
-  });
+  void audio.play();
   return audio;
 }
 
