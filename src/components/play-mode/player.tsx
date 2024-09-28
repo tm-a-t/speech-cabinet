@@ -33,14 +33,13 @@ export function Player({ data }: { data: DiscoData }) {
     () => data.messages.map((message) => getPortraitUrl(message.name, data)),
     [data],
   );
-  const [shownPortrait, setShownPortrait] = useState<string | null>(null);
+  const shownPortrait = messagePortraits[shownMessages.all.length - 1] ?? null;
 
   useEffect(() => {
     setYPosition(
       playerHeight - (document.getElementById("messages")?.clientHeight ?? 0),
     );
     const index = shownMessages.all.length;
-    setShownPortrait(messagePortraits[index - 1] ?? null);
 
     if (index < data.messages.length) {
       const lastMessage = shownMessages.all[index - 1];
@@ -82,29 +81,27 @@ export function Player({ data }: { data: DiscoData }) {
           transition: "top .3s cubic-bezier(.1, .3, .7, .9)",
         }}
       ></div>
-      {data.showPortraits &&
-        shownMessages.all.length &&
-        shownPortrait !== "" && (
-          <div className="aspect-portrait absolute left-4 top-32 z-20 flex h-auto w-[27rem] items-center justify-center">
+      {data.showPortraits && shownPortrait !== null && (
+        <div className="aspect-portrait absolute left-4 top-32 z-20 flex h-auto w-[27rem] items-center justify-center">
+          <NextImage
+            src={portraitFrame}
+            className="absolute top-1/2 -translate-y-1/2"
+            alt=""
+          />
+          {shownPortrait ? (
             <NextImage
-              src={portraitFrame}
-              className="absolute top-1/2 -translate-y-1/2"
+              key={shownPortrait}
+              src={shownPortrait}
               alt=""
+              className="absolute w-full px-6"
+              width={720}
+              height={1000}
             />
-            {shownPortrait ? (
-              <NextImage
-                key={shownPortrait}
-                src={shownPortrait}
-                alt=""
-                className="absolute w-full px-6"
-                width={720}
-                height={1000}
-              />
-            ) : (
-              <Skeleton className="aspect-portrait w-full" />
-            )}
-          </div>
-        )}
+          ) : (
+            <Skeleton className="aspect-portrait w-full" />
+          )}
+        </div>
+      )}
 
       <div
         id="messages"
