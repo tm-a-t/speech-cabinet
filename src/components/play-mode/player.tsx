@@ -93,6 +93,7 @@ export function Player({ data }: { data: DiscoData }) {
             />
             {shownPortrait ? (
               <NextImage
+                key={shownPortrait}
                 src={shownPortrait}
                 alt=""
                 className="absolute w-full px-6"
