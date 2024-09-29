@@ -20,8 +20,8 @@ export function Player({ data }: { data: DiscoData }) {
 
   const [shownMessages, setShownMessages] = useState<{
     all: Message[];
-    lastShown: boolean;
-  }>({ all: [], lastShown: true });
+    lastIsShown: boolean;
+  }>({ all: [], lastIsShown: true });
   const [yPosition, setYPosition] = useState(1536); // 1536 = playerHeight - 2x padding
 
   const messageSounds = useMemo(
@@ -35,7 +35,12 @@ export function Player({ data }: { data: DiscoData }) {
   );
   const shownPortrait = messagePortraits[shownMessages.all.length - 1] ?? null;
 
+  const [portraitsArePreloaded, setPortraitsArePreloaded] = useState(false);
+  const [soundsArePreloaded, setSoundsArePreloaded] = useState(false);
+
   useEffect(() => {
+    if (!portraitsArePreloaded || !soundsArePreloaded) return;
+
     setYPosition(
       playerHeight - (document.getElementById("messages")?.clientHeight ?? 0),
     );
@@ -46,24 +51,21 @@ export function Player({ data }: { data: DiscoData }) {
       const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
       const timer = setTimeout(() => {
         const all = [...shownMessages.all, data.messages[index]!];
-        setShownMessages({ all, lastShown: false });
-        setTimeout(() => setShownMessages({ all, lastShown: true }), 150);
+        setShownMessages({ all, lastIsShown: false });
+        setTimeout(() => setShownMessages({ all, lastIsShown: true }), 150);
         playSound(messageSounds[index]);
       }, delay);
       return () => clearTimeout(timer);
     }
-  }, [shownMessages, messagePortraits, messageSounds, data]);
+  }, [soundsArePreloaded, portraitsArePreloaded, shownMessages, data, messageSounds]);
 
   useEffect(() => {
-    // Preload images
-    uniqueValues(messagePortraits).forEach((url) => {
-      if (url) new Image().src = url;
-    });
-
-    // Preload sounds
-    uniqueValues(messageSounds).forEach((url) => {
-      if (url) new Audio().src = url;
-    });
+    const uniquePortraits = uniqueValues(messagePortraits);
+    void Promise.all(uniquePortraits.map(preloadImage))
+      .then(() => setPortraitsArePreloaded(true));
+    const uniqueSounds = uniqueValues(messageSounds).filter(v => v !== null);
+    void Promise.all(uniqueSounds.map(preloadAudio))
+      .then(() => setSoundsArePreloaded(true));
 
     const music = playMusic(data.music, data.skipMusicIntro);
     return () => {
@@ -116,7 +118,7 @@ export function Player({ data }: { data: DiscoData }) {
             message={message}
             data={data}
             className={
-              !shownMessages.lastShown && index + 1 === shownMessages.all.length
+              !shownMessages.lastIsShown && index + 1 === shownMessages.all.length
                 ? "opacity-0"
                 : ""
             }
@@ -126,4 +128,24 @@ export function Player({ data }: { data: DiscoData }) {
       </div>
     </div>
   );
+}
+
+function preloadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+
+    image.onload = () => resolve(image);
+    image.onerror = image.onabort = () => reject(Error());
+    image.src = src;
+  });
+}
+
+function preloadAudio(src: string): Promise<HTMLAudioElement> {
+  return new Promise((resolve, reject) => {
+    const audio = new Audio();
+
+    audio.onloadeddata = () => resolve(audio);
+    audio.onerror = audio.onabort = () => reject(Error());
+    audio.src = src;
+  });
 }
