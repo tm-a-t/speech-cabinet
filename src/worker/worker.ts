@@ -47,13 +47,13 @@ async function renderVideo(data: DiscoData, id: string) {
 
   // Add music here because music added with <audio> in Player
   // does not work for some reason.
-  // Constants copied from music.ts#playMusic, should refactor this later.
+  // Constants derived from music.ts#playMusic, should refactor this later.
   if (data.music) {
     video.addAudio({
       url: WEB_URL + data.music,
-      volume: .2,
+      volume: 20,
       loop: true,
-      startTime: data.skipMusicIntro ? 37 : 0,
+      seekStart: data.skipMusicIntro ? 37000 : 0,
     });
   }
 
