@@ -61,10 +61,10 @@ export function Player({ data }: { data: DiscoData }) {
 
   useEffect(() => {
     const uniquePortraits = uniqueValues(messagePortraits);
-    void Promise.all(uniquePortraits.map(preloadImage))
+    void Promise.allSettled(uniquePortraits.map(preloadImage))
       .then(() => setPortraitsArePreloaded(true));
     const uniqueSounds = uniqueValues(messageSounds).filter(v => v !== null);
-    void Promise.all(uniqueSounds.map(preloadAudio))
+    void Promise.allSettled(uniqueSounds.map(preloadAudio))
       .then(() => setSoundsArePreloaded(true));
 
     const music = playMusic(data.music, data.skipMusicIntro);

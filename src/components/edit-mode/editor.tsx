@@ -3,7 +3,7 @@ import {Button} from '~/components/ui/button';
 import React from 'react';
 import {MessageEditor} from "./message-editor";
 import {uniqueValues} from '~/lib/utils';
-import {totalDuration, totalTimeLimit} from '~/lib/time';
+import { totalDuration, totalTimeLimit } from "~/lib/time";
 
 export function Editor({data, saveData}: { data: DiscoData, saveData: (data: DiscoData) => void }) {
   const usedNames = uniqueValues(data?.messages.map(message => message.name)) ?? [];

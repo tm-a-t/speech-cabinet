@@ -35,7 +35,13 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
   const displayedProgress = Math.max(getPercentage(status), minDisplayedProgress)
 
   useEffect(() => {
-    if (status.state === 'not-started' || status.state === 'finished') return;
+    if (status.state === 'not-started') {
+      return;
+    }
+    else if (status.state === 'finished') {
+      void downloadFile('/api/video/' + status.videoId, `Disco ${formatTime()}.mp4`);
+      return
+    }
 
     const fetchFunction =
       status.state === 'in-queue'
@@ -59,7 +65,6 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
           if (progress >= 100) {
             clearInterval(timer);
             setStatus({state: 'finished', videoId: status.videoId});
-            void downloadFile('/api/video/' + status.videoId, `Disco ${formatTime()}.mp4`);
           }
         };
 

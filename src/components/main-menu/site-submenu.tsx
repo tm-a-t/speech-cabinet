@@ -18,16 +18,18 @@ export function SiteSubmenu() {
             <DialogHeader>
               <DialogTitle>Speech Cabinet</DialogTitle>
             </DialogHeader>
-            <p className="-mt-2 font-disco">
-              Every combination of words has been played out.
-              The atoms don&apos;t form us anymore: us, our love, our unborn daughters.
-            </p>
-            <hr/>
-            <p>
-              This site generates dialogue videos in the style of Disco Elysium;
-              see <a href="https://www.reddit.com/r/DiscoElysium/comments/1fgkudy/im_building_a_site_for_animating_discostyle/" className="underline underline-offset-4" target="_blank">the reddit posts.</a>
-            </p>
-            <p>Created by tmat.</p>
+            <div className="-mt-2">
+              <p className="font-disco">
+                Every combination of words has been played out.
+                The atoms don&apos;t form us anymore: us, our love, our unborn daughters.
+              </p>
+              <hr className="my-4"/>
+              <p>
+                This site generates dialogue videos in the style of Disco Elysium;
+                see <a href="https://www.reddit.com/r/DiscoElysium/comments/1fs5gsk/i_made_a_site_that_animates_disco_elysium/" className="underline underline-offset-4" target="_blank">the reddit posts.</a>
+              </p>
+              <p className="mt-3">Created by tmat.</p>
+            </div>
           </DialogContent>
         </Dialog>
       </MenubarContent>
