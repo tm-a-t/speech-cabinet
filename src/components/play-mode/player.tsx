@@ -120,7 +120,7 @@ export function Player({ data }: { data: DiscoData }) {
                 ? "!opacity-100"
                 : ""
             }
-            key={message.id + (shownMessages.lastIsShown ? 't' : 'f')}
+            key={message.id}
           />
         ))}
       </div>
