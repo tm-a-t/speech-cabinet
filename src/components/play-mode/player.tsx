@@ -91,13 +91,11 @@ export function Player({ data }: { data: DiscoData }) {
             alt=""
           />
           {shownPortrait ? (
-            <NextImage
+            <img
               key={shownPortrait}
               src={shownPortrait}
               alt=""
               className="absolute w-full px-6"
-              width={720}
-              height={1000}
             />
           ) : (
             <Skeleton className="aspect-portrait w-full" />
@@ -144,7 +142,7 @@ function preloadAudio(src: string): Promise<HTMLAudioElement> {
   return new Promise((resolve, reject) => {
     const audio = new Audio();
 
-    audio.onloadeddata = () => resolve(audio);
+    audio.oncanplaythrough = () => resolve(audio);
     audio.onerror = audio.onabort = () => reject(Error());
     audio.src = src;
   });
