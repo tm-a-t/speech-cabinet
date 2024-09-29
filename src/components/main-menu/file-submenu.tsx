@@ -65,9 +65,9 @@ export function FileSubmenu({data, saveData, close}: { data: DiscoData, saveData
                 You will lose your current lines if you don&apos;t download them first.
               </DialogDescription>
             </DialogHeader>
-            <div className="flex flex-wrap gap-1 mt-5 w-full justify-center sm:justify-start">
-              <Button variant="default" onClick={handleStartNew}>Start new</Button>
+            <div className="flex flex-wrap gap-1 mt-5 w-full justify-center sm:justify-end">
               <Button variant="secondary" onClick={exportData}>Download current</Button>
+              <Button variant="default" onClick={handleStartNew}>Start new</Button>
             </div>
           </DialogContent>
         </Dialog>
