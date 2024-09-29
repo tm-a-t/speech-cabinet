@@ -3,7 +3,7 @@ import type {Message, DiscoData} from '~/lib/disco-data';
 
 export const totalTimeLimit = 20 * 1000;
 
-export const startDelay = 500;
+export const startDelay = 0;
 const endDelay = 1000;
 
 export function totalDuration(data: DiscoData): number {
