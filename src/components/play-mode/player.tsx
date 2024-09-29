@@ -51,9 +51,9 @@ export function Player({ data }: { data: DiscoData }) {
       const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
       const timer = setTimeout(() => {
         const all = [...shownMessages.all, data.messages[index]!];
-        setShownMessages({ all, lastIsShown: false });
-        setTimeout(() => setShownMessages({ all, lastIsShown: true }), 1000);
         playSound(messageSounds[index]);
+        setShownMessages({ all, lastIsShown: false });
+        setTimeout(() => setShownMessages({ all, lastIsShown: true }), 100);
       }, delay);
       return () => clearTimeout(timer);
     }
