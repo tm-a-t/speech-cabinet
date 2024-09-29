@@ -52,7 +52,7 @@ export function Player({ data }: { data: DiscoData }) {
       const timer = setTimeout(() => {
         const all = [...shownMessages.all, data.messages[index]!];
         setShownMessages({ all, lastIsShown: false });
-        setTimeout(() => setShownMessages({ all, lastIsShown: true }), 150);
+        setTimeout(() => setShownMessages({ all, lastIsShown: true }), 1000);
         playSound(messageSounds[index]);
       }, delay);
       return () => clearTimeout(timer);
