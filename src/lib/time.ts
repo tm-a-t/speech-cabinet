@@ -4,7 +4,7 @@ import type {Message, DiscoData} from '~/lib/disco-data';
 export const totalTimeLimit = 20 * 1000;
 
 export const startDelay = 0;
-const endDelay = 2000;
+const endDelay = 1500;
 
 export function totalDuration(data: DiscoData): number {
   const messageDurationSum = data.messages.map(getMessageDuration).reduce((a, b) => a + b, 0);
