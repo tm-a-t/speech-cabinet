@@ -20,7 +20,7 @@ wvc.config({
   browserDebug: true,
   ffmpegDebug: true,
   ffmpegExecutablePath: 'ffmpeg',
-  // browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
+  browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
   allowUnsafeContext: true,
   browserUseGPU: false,
   compatibleRenderingMode: true,
