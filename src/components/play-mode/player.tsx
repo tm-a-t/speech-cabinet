@@ -116,11 +116,11 @@ export function Player({ data }: { data: DiscoData }) {
             message={message}
             data={data}
             className={
-              !shownMessages.lastIsShown && index + 1 === shownMessages.all.length
-                ? "opacity-0"
+              shownMessages.lastIsShown || index + 1 !== shownMessages.all.length
+                ? "!opacity-100"
                 : ""
             }
-            key={message.id}
+            key={message.id + (shownMessages.lastIsShown ? 't' : 'f')}
           />
         ))}
       </div>

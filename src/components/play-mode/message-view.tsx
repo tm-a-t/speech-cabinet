@@ -7,7 +7,7 @@ export function MessageView({message, data, className}: { message: Message, data
   const showCheck = data.overrides.checks[message.name] ?? skills.includes(message.name);
 
   return (
-    <div className={cn("pl-12 mt-14 [&:not(:last-child)]:opacity-60 transition", className)}
+    <div className={cn("pl-12 mt-14 [&:not(:last-child)]:opacity-60 transition opacity-0", className)}
          style={{transition: ".2s opacity linear"}}
       >
       <span className={cn("-ml-12 uppercase tracking-wider", getColorClass(message.name, data))}>{message.name}</span>
