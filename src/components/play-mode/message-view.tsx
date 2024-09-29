@@ -8,7 +8,7 @@ export function MessageView({message, data, className}: { message: Message, data
 
   return (
     <div className={cn("pl-12 mt-14 [&:not(:last-child)]:opacity-60 transition", className)}
-         // style={{transition: ".2s opacity linear"}}
+         style={{transition: ".2s opacity linear"}}
       >
       <span className={cn("-ml-12 uppercase tracking-wider", getColorClass(message.name, data))}>{message.name}</span>
       {showCheck && message.check &&

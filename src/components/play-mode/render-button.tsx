@@ -11,6 +11,7 @@ export function RenderButton({data, setIsOpen}: { data: DiscoData, setIsOpen: (i
   const [status, setStatus] = useContext(RenderStatusContext);
 
   async function send() {
+    setIsOpen(false);
     const {id, queuePosition} = await startRender(data);
     if (queuePosition > 0) {
       setStatus({state: 'in-queue', videoId: id, position: queuePosition, maxPosition: queuePosition});
@@ -18,7 +19,6 @@ export function RenderButton({data, setIsOpen}: { data: DiscoData, setIsOpen: (i
     else {
       setStatus({state: 'in-progress', videoId: id, progress: 0})
     }
-    setIsOpen(false);
   }
 
   return (
