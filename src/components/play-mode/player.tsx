@@ -117,7 +117,7 @@ export function Player({ data }: { data: DiscoData }) {
             data={data}
             className={
               shownMessages.lastIsShown || index + 1 !== shownMessages.all.length
-                ? "!opacity-100"
+                ? "opacity-100 [&:not(:last-child)]:opacity-60"
                 : ""
             }
             key={message.id}
