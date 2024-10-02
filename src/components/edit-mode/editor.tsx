@@ -85,14 +85,8 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
       {totalDuration(data) > totalTimeLimit &&
         <div className="mt-12 opacity-60 px-2 sm:px-0 font-serif leading-6">
           <p>
-            Sorry, your dialogue is {Math.ceil(totalDuration(data) / 1000)} seconds long.
-            The site only renders up to {totalTimeLimit / 1000} seconds of mp4 video:
-            it has just launched and I&apos;m not sure it will handle the load.
-          </p>
-          <p className="mt-2">
-            You can edit the dialogue and preview the video as usual.
-            I will increase the rendering limit if the site doesn&apos;t crash in the first few days.
-            The lines are cached in your browser, but you can download the file if you want to keep them safely.
+            Sorry, Speech Cabinet only renders up to {totalTimeLimit / 1000} seconds of mp4 video.
+            Your dialogue is {Math.ceil(totalDuration(data) / 1000)} seconds long.
           </p>
         </div>
       }
