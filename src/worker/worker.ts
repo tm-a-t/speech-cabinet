@@ -65,7 +65,6 @@ async function renderVideo(data: DiscoData, id: string) {
 }
 
 async function runWorker() {
-  await boss.start();
   await boss.createQueue(queue);
 
   await boss.work(queue, async (jobs: RenderVideoJob[]) => {

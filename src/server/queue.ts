@@ -4,6 +4,7 @@ import type {DiscoData} from '~/lib/disco-data';
 
 export const boss = new PgBoss(env.DATABASE_URL);
 boss.on('error', console.error);
+await boss.start();
 
 export const queue = 'render-video';
 type RenderVideoData = {
@@ -13,12 +14,10 @@ type RenderVideoData = {
 export type RenderVideoJob = Job<RenderVideoData>
 
 export async function startJob(data: RenderVideoData): Promise<void> {
-  await boss.start();
   await boss.send(queue, data, {id: data.videoId});
 }
 
 export async function jobIsPending(id: string): Promise<boolean> {
-  await boss.start();
   const job = await boss.getJobById(queue, id);
   return job!.state === 'created';
 }
