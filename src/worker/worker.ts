@@ -12,21 +12,21 @@ import {db} from '~/server/db';
 import WebVideoCreator, {VIDEO_ENCODER, logger} from 'web-video-creator';
 // @ts-expect-error untyped lib :(
 import { type Page } from "web-video-creator/core";
+import { env } from "~/env";
 
 const wvc = new WebVideoCreator();
 wvc.config({
-  // mp4Encoder: VIDEO_ENCODER.NVIDIA.H264,
   debug: true,
   browserDebug: true,
   ffmpegDebug: true,
   ffmpegExecutablePath: 'ffmpeg',
-  browserExecutablePath: process.env.CHROME_PATH ?? (() => {throw new Error('plz set CHROME_PATH 👉👈🥺')})(),
+  browserExecutablePath: env.CHROME_PATH === "auto" ? undefined : env.CHROME_PATH,
   allowUnsafeContext: true,
   browserUseGPU: false,
   compatibleRenderingMode: true,
 });
 
-const WEB_URL = process.env.WEB_URL ?? 'http://localhost:3000'
+const WEB_URL = env.WEB_URL ?? 'http://localhost:3000'
 
 async function renderVideo(data: DiscoData, id: string) {
   const params = new URLSearchParams({data: serialize(data)}).toString();
