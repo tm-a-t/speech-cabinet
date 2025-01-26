@@ -7,14 +7,14 @@ export function SiteSubmenu() {
 
   return (
     <MenubarMenu>
-      <MenubarTrigger>About</MenubarTrigger>
+      <MenubarTrigger>Explore</MenubarTrigger>
       <MenubarContent>
-        <MenubarItem>
-          <Link href="https://www.reddit.com/r/DiscoElysium/comments/1fs5gsk/i_made_a_site_that_animates_disco_elysium/" target="_blank">Reddit post →</Link>
-        </MenubarItem>
-        <MenubarItem>
-          <Link href="https://github.com/tm-a-t/speech-cabinet" target="_blank">Code on GitHub →</Link>
-        </MenubarItem>
+        <Link href="https://www.reddit.com/r/DiscoElysium/comments/1fs5gsk/i_made_a_site_that_animates_disco_elysium/" target="_blank">
+          <MenubarItem>Guide</MenubarItem>
+        </Link>
+        <Link href="https://github.com/tm-a-t/speech-cabinet" target="_blank">
+          <MenubarItem>GitHub</MenubarItem>
+        </Link>
       </MenubarContent>
     </MenubarMenu>
   )

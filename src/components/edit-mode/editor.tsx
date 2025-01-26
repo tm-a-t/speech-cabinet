@@ -78,14 +78,17 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
           data={data}
           saveData={saveData}
           usedNames={usedNames}
-          key={message.id}/>,
+          key={message.id} />,
       )}
-      <div className="flex justify-between mt-4 sm:mt-8 -ml-1">
+
+      <hr className="border-transparent sm:border-zinc-800 sm:mt-6 mb-1" />
+
+      <div className="flex justify-between -ml-1">
         <Button variant="ghost" onClick={addMessage}
                 className="opacity-30 hover:opacity-100 transition-opacity block sm:pl-3">+ Add line</Button>
 
         {data &&
-          <WatchButton data={data}/>
+          <WatchButton data={data} />
         }
       </div>
 

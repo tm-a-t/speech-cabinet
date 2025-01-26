@@ -11,6 +11,7 @@ import '@fontsource/geologica/300.css';
 import '@fontsource/geologica/400.css';
 import '@fontsource/geologica/500.css';
 import '@fontsource/geologica/600.css';
+import '@fontsource/geologica/700.css';
 import {RenderStatusProvider} from '~/components/render-status-provider';
 
 export const metadata: Metadata = {

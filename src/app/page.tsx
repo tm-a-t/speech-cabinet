@@ -59,15 +59,19 @@ export default function EditorPage() {
       </div>
 
       {data &&
-        <div className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 pt-[4.5rem] xl:pt-5 h-full min-h-dvh tape-background">
-          <div className="leading-7">
-            <h1 className="text-center text-sm font-bold mb-1">Speech Cabinet</h1>
+        <div
+          className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 h-full min-h-dvh tape-background">
+          <div className="mx-4 text-center">
+            <h1 className="text-sm font-bold pt-20 xl:pt-6 mb-2">Speech Cabinet</h1>
           </div>
 
-          <p className="font-disco text-zinc-300 leading-7 italic text-center max-w-96 px-4 mx-auto mb-12">
-            Here, you can animate Disco&nbsp;Elysium dialogues.
-            Click on&nbsp;a&nbsp;line to&nbsp;edit it. Click on&nbsp;a&nbsp;name to&nbsp;change the&nbsp;character.
+          <p className="text-zinc-300 font-disco italic">
+            Welcome to the place where you can create your own Disco&nbsp;Elysium-style dialogues.
+            To get started, try editing some lines. Click on&nbsp;a&nbsp;name
+            to&nbsp;change the&nbsp;character.
           </p>
+
+          {/*<hr className="border-transparent sm:border-zinc-800 mt-4 mb-4" />*/}
 
           <Editor data={data} saveData={saveData} />
         </div>
