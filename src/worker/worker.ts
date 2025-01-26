@@ -5,7 +5,7 @@
 
 import {boss, queue, type RenderVideoJob} from '~/server/queue';
 import {type DiscoData, serialize} from '~/lib/disco-data';
-import {getVideoPath} from '~/lib/utils';
+import { getGifPath, getVideoPath } from '~/lib/utils';
 import {totalDuration, totalTimeLimit} from '~/lib/time';
 import {db} from '~/server/db';
 // @ts-expect-error untyped lib :(
@@ -13,8 +13,7 @@ import WebVideoCreator from 'web-video-creator';
 // @ts-expect-error untyped lib :(
 import { type Page } from "web-video-creator/core";
 import { env } from "~/env";
-import { promisify } from 'util';
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 
 const wvc = new WebVideoCreator();
 wvc.config({
@@ -30,9 +29,7 @@ wvc.config({
 
 const WEB_URL = env.WEB_URL ?? 'http://localhost:3000'
 const GIF_FPS = 15
-const GIF_WIDTH = 480
-
-const execAsync = promisify(exec);
+const GIF_WIDTH = 720
 
 async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
   const params = new URLSearchParams({data: serialize(data)}).toString();
@@ -69,11 +66,26 @@ async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
   await video.startAndWait();
 
   if (convertToGif) {
-    await execAsync(`ffmpeg -i ${filename} -vf "fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos,palettegen" ${filename}.palette.png`);
-    await execAsync(`ffmpeg -i ${filename} -i ${filename}.palette.png -lavfi "fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos [x]; [x][1:v] paletteuse" ${getVideoPath(id)}`)
+    await run(`ffmpeg`, `-i`, filename, `-vf`, `fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos,palettegen`, `${filename}.palette.png`);
+    await run(`ffmpeg`, `-i`, filename, `-i`, `${filename}.palette.png`, `-lavfi`, `fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos [x]; [x][1:v] paletteuse`, getGifPath(id));
   }
 
   await db.video.update({where: {id}, data: {isReady: true}});
+}
+
+function run(...command: string[]): Promise<number | null> {
+  const p = spawn(command[0]!, command.slice(1));
+  return new Promise((resolve) => {
+    p.stdout.on('data', (x: string | Uint8Array) => {
+      process.stdout.write(x.toString());
+    });
+    p.stderr.on('data', (x: string | Uint8Array) => {
+      process.stderr.write(x.toString());
+    });
+    p.on('exit', (code) => {
+      resolve(code);
+    });
+  });
 }
 
 async function runWorker() {
