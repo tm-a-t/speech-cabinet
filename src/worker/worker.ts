@@ -70,7 +70,7 @@ async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
 
   if (convertToGif) {
     await execAsync(`ffmpeg -i ${filename} -vf "fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos,palettegen" ${filename}.palette.png`);
-    await execAsync(`ffmpeg -i ${filename} -i ${filename}.palette.png -lavfi "fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos [x]; [x][1:v] paletteuse" ${filename}.gif`)
+    await execAsync(`ffmpeg -i ${filename} -i ${filename}.palette.png -lavfi "fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos [x]; [x][1:v] paletteuse" ${getVideoPath(id)}`)
   }
 
   await db.video.update({where: {id}, data: {isReady: true}});

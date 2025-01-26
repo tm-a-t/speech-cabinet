@@ -6,6 +6,7 @@ import {downloadFile, formatTime} from '~/lib/utils';
 import {Progress} from '~/components/ui/progress';
 import {Button} from './ui/button';
 import {X} from 'lucide-react';
+import * as assert from "node:assert";
 
 type RenderNotStarted = { state: 'not-started' }
 type RenderInQueue = { state: 'in-queue', videoId: string, isGif: boolean, position: number, maxPosition: number }
@@ -30,6 +31,11 @@ function getPercentage(status: RenderStatus): number {
   return 0;
 }
 
+function getPath(status: RenderFinished): string {
+  const path = status.isGif ? 'gif' : 'video'
+  return `/api/${path}/${status.videoId}`
+}
+
 export function RenderStatusProvider({children}: { children: ReactNode }) {
   const [status, setStatus] = useState<RenderStatus>({state: 'not-started'});
   const displayedProgress = Math.max(getPercentage(status), minDisplayedProgress)
@@ -39,7 +45,7 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
       return;
     }
     else if (status.state === 'finished') {
-      void downloadFile('/api/video/' + status.videoId, `Disco ${formatTime()}.mp4`);
+      void downloadFile(getPath(status), `Disco ${formatTime()}.mp4`);
       return
     }
 
@@ -95,7 +101,7 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
             }
             {status.state === 'finished' &&
               <>
-                Download started! You can also use <a className="underline underline-offset-4" href={'/api/video/' + status.videoId} target="_blank">the temporary link.</a>
+                Download started! You can also use <a className="underline underline-offset-4" href={getPath(status)} target="_blank">the temporary link.</a>
               </>
             }
           </div>
