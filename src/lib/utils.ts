@@ -27,6 +27,10 @@ export function getVideoPath(videoId: string): string {
   return 'temp/' + videoId + '.mp4';
 }
 
+export function getGifPath(videoId: string): string {
+  return getVideoPath(videoId) + '.gif';
+}
+
 export function downloadFile(path: string, name: string): void {
   const link = document.createElement("a");
   link.setAttribute('download', name);

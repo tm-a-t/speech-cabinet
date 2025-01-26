@@ -17,11 +17,12 @@ export function RenderButton({data, setIsOpen}: { data: DiscoData, setIsOpen: (i
       setStatus({
         state: "in-queue",
         videoId: id,
+        isGif: options.convertToGif,
         position: queuePosition,
         maxPosition: queuePosition,
       });
     } else {
-      setStatus({ state: "in-progress", videoId: id, progress: 0 });
+      setStatus({ state: "in-progress", videoId: id, isGif: options.convertToGif, progress: 0 });
     }
   }
 

@@ -8,9 +8,9 @@ import {Button} from './ui/button';
 import {X} from 'lucide-react';
 
 type RenderNotStarted = { state: 'not-started' }
-type RenderInQueue = { state: 'in-queue', videoId: string, position: number, maxPosition: number }
-type RenderInProgress = { state: 'in-progress', videoId: string, progress: number }
-type RenderFinished = { state: 'finished', videoId: string }
+type RenderInQueue = { state: 'in-queue', videoId: string, isGif: boolean, position: number, maxPosition: number }
+type RenderInProgress = { state: 'in-progress', videoId: string, isGif: boolean, progress: number }
+type RenderFinished = { state: 'finished', videoId: string, isGif: boolean }
 export type RenderStatus = RenderNotStarted | RenderInQueue | RenderInProgress | RenderFinished
 
 export const RenderStatusContext = createContext<[RenderStatus, (status: RenderStatus) => void]>(
@@ -49,22 +49,22 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
           // State is in-queue
           const position = await getVideoQueuePosition(status.videoId);
           const maxPosition = Math.max(position, status.maxPosition);
-          setStatus({state: 'in-queue', videoId: status.videoId, position, maxPosition});
+          setStatus({state: 'in-queue', videoId: status.videoId, isGif: status.isGif, position, maxPosition});
           if (position === 0) {
             clearInterval(timer);
-            setStatus({state: 'in-queue', videoId: status.videoId, position: 0, maxPosition});
+            setStatus({state: 'in-queue', videoId: status.videoId, isGif: status.isGif, position: 0, maxPosition});
             setTimeout(() => {
-              setStatus({state: 'in-progress', videoId: status.videoId, progress: minDisplayedProgress});
+              setStatus({state: 'in-progress', videoId: status.videoId, isGif: status.isGif, progress: minDisplayedProgress});
             }, 200);
           }
         }
         : async () => {
           // State is in-progress
           const progress = await getVideoProgress(status.videoId);
-          setStatus({state: 'in-progress', videoId: status.videoId, progress});
+          setStatus({state: 'in-progress', videoId: status.videoId, isGif: status.isGif, progress});
           if (progress >= 100) {
             clearInterval(timer);
-            setStatus({state: 'finished', videoId: status.videoId});
+            setStatus({state: 'finished', videoId: status.videoId, isGif: status.isGif,});
           }
         };
 
