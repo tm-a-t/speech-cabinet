@@ -2,11 +2,15 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   main:
     runs-on: ubuntu-latest
     permissions: write-all
+    environment:
+      name: ${{ fromJson('{"main":"production","dev":"dev"}')[github.ref_name] }}
+      url: ${{ fromJson('{"main":"https://speech-cabinet.com","dev":"https://dev.speech-cabinet.com"}')[github.ref_name] }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/${{ github.repository }}:${{ fromJson('{"main":"latest","dev":"dev"}')[github.ref_name] }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Deploy
@@ -30,7 +34,7 @@ jobs:
           UPDATE_POST_KEY: ${{ secrets.UPDATE_POST_KEY }}
         run: |
           curl --request POST \
-               --url https://vhap-update.vanutp.dev/update \
+               --url https://vhap-update-collective.vanutp.dev/update \
                --header "Content-Type: application/json" \
                --data '{"key":"'$UPDATE_POST_KEY'"}' \
                --fail
