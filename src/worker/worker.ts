@@ -9,10 +9,12 @@ import {getVideoPath} from '~/lib/utils';
 import {totalDuration, totalTimeLimit} from '~/lib/time';
 import {db} from '~/server/db';
 // @ts-expect-error untyped lib :(
-import WebVideoCreator, {VIDEO_ENCODER, logger} from 'web-video-creator';
+import WebVideoCreator from 'web-video-creator';
 // @ts-expect-error untyped lib :(
 import { type Page } from "web-video-creator/core";
 import { env } from "~/env";
+import { promisify } from 'util';
+import { exec } from 'child_process';
 
 const wvc = new WebVideoCreator();
 wvc.config({
@@ -27,8 +29,12 @@ wvc.config({
 });
 
 const WEB_URL = env.WEB_URL ?? 'http://localhost:3000'
+const GIF_FPS = 15
+const GIF_WIDTH = 480
 
-async function renderVideo(data: DiscoData, id: string) {
+const execAsync = promisify(exec);
+
+async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
   const params = new URLSearchParams({data: serialize(data)}).toString();
   const filename = getVideoPath(id);
 
@@ -60,7 +66,13 @@ async function renderVideo(data: DiscoData, id: string) {
   video.on("progress", async (progress: number) => {
     await db.video.update({where: {id}, data: {progress: Math.floor(progress)}}).catch(console.error);
   });
-  await video.startAndWait()
+  await video.startAndWait();
+
+  if (convertToGif) {
+    await execAsync(`ffmpeg -i ${filename} -vf "fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos,palettegen" ${filename}.palette.png`);
+    await execAsync(`ffmpeg -i ${filename} -i ${filename}.palette.png -lavfi "fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos [x]; [x][1:v] paletteuse" ${filename}.gif`)
+  }
+
   await db.video.update({where: {id}, data: {isReady: true}});
 }
 
@@ -70,7 +82,7 @@ async function runWorker() {
   await boss.work(queue, async (jobs: RenderVideoJob[]) => {
     const job = jobs[0]!;  // Only one job by default
     console.log(`received job ${job.id} with data ${JSON.stringify(job.data)}`);
-    await renderVideo(job.data.discoData, job.data.videoId);
+    await renderVideo(job.data.discoData, job.data.videoId, job.data.convertToGif ?? false);
   });
 }
 

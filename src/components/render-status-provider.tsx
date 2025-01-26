@@ -85,8 +85,8 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
               <>
                 Please wait.
                 {status.position === 1
-                  ? <> There is 1 video </>
-                  : <> There are {status.position} videos </>}
+                  ? <> There is 1 dialogue </>
+                  : <> There are {status.position} dialogues </>}
                 in the queue before yours.
               </>
             }
@@ -95,7 +95,7 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
             }
             {status.state === 'finished' &&
               <>
-                Download started! You can also use <a className="underline underline-offset-4" href={'/api/video/' + status.videoId} target="_blank">the link to the video.</a>
+                Download started! You can also use <a className="underline underline-offset-4" href={'/api/video/' + status.videoId} target="_blank">the temporary link.</a>
               </>
             }
           </div>

@@ -10,6 +10,7 @@ export const queue = 'render-video';
 type RenderVideoData = {
   videoId: string
   discoData: DiscoData
+  convertToGif: boolean
 }
 export type RenderVideoJob = Job<RenderVideoData>
 
