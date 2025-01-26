@@ -8,7 +8,6 @@ import {Menubar} from '~/components/ui/menubar';
 import {SiteSubmenu} from '~/components/main-menu/site-submenu';
 import {FileSubmenu} from '~/components/main-menu/file-submenu';
 import {VideoSubmenu} from '~/components/main-menu/video-submenu';
-import {WatchButton} from '~/components/main-menu/watch-button';
 import {redirect} from 'next/navigation';
 
 export default function EditorPage() {
@@ -51,18 +50,28 @@ export default function EditorPage() {
                  value={menuValue}
                  onValueChange={setMenuValue}
                  id="menubar">
-          <SiteSubmenu/>
           {data && <>
             <FileSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
             <VideoSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
           </>}
+          <SiteSubmenu/>
         </Menubar>
-        {data &&
-          <WatchButton data={data}/>
-        }
       </div>
 
-      {data && <Editor data={data} saveData={saveData}/>}
+      {data &&
+        <div className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 pt-[4.5rem] xl:pt-5 h-full min-h-dvh tape-background">
+          <div className="leading-7">
+            <h1 className="text-center text-sm font-bold mb-1">Speech Cabinet</h1>
+          </div>
+
+          <p className="font-disco text-zinc-300 leading-7 italic text-center max-w-96 px-4 mx-auto mb-12">
+            Here, you can animate Disco&nbsp;Elysium dialogues.
+            Click on&nbsp;a&nbsp;line to&nbsp;edit it. Click on&nbsp;a&nbsp;name to&nbsp;change the&nbsp;character.
+          </p>
+
+          <Editor data={data} saveData={saveData} />
+        </div>
+      }
     </div>
   );
 }

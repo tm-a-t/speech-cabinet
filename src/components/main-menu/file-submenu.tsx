@@ -12,7 +12,6 @@ import {
 } from '~/components/ui/dialog';
 import {Button} from '../ui/button';
 import {useToast} from "~/lib/hooks/use-toast";
-import { File } from "lucide-react";
 
 export function FileSubmenu({data, saveData, close}: { data: DiscoData, saveData: (data: DiscoData) => void, close: () => void }) {
   const {toast} = useToast();
@@ -50,8 +49,8 @@ export function FileSubmenu({data, saveData, close}: { data: DiscoData, saveData
   return (
     <MenubarMenu>
       <MenubarTrigger>
-        <File className="w-4 h-4 sm:hidden text-zinc-400"/>
-        <span className="hidden sm:inline">File</span>
+        {/*<File className="w-4 h-4 sm:hidden text-zinc-400"/>*/}
+        File
       </MenubarTrigger>
       <MenubarContent>
         <Dialog>

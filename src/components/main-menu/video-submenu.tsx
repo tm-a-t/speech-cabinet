@@ -8,7 +8,6 @@ import {
 import {MusicSelect} from '~/components/main-menu/music-select';
 import React from 'react';
 import type {DiscoData} from '~/lib/disco-data';
-import { Settings2 } from "lucide-react";
 
 export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveData: (data: DiscoData) => void, close: () => void }) {
   function saveShowPortraits(value: boolean) {
@@ -35,8 +34,8 @@ export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveDat
   return (
     <MenubarMenu>
       <MenubarTrigger>
-        <Settings2 className="w-4 h-4 sm:hidden text-zinc-400"/>
-        <span className="hidden sm:inline">Options</span>
+        {/*<Settings2 className="w-4 h-4 sm:hidden text-zinc-400"/>*/}
+        Options
       </MenubarTrigger>
       <MenubarContent>
         <MenubarCheckboxItem checked={data.showPortraits} onCheckedChange={saveShowPortraits}>

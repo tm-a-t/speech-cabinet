@@ -6,6 +6,7 @@ import {TooltipProvider} from '~/components/ui/tooltip';
 import {Toaster} from "~/components/ui/toaster";
 
 import '@fontsource/spectral/400.css';
+import '@fontsource/spectral/400-italic.css';
 import '@fontsource/geologica/300.css';
 import '@fontsource/geologica/400.css';
 import '@fontsource/geologica/500.css';

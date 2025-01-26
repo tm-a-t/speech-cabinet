@@ -4,6 +4,7 @@ import React from 'react';
 import {MessageEditor} from "./message-editor";
 import {uniqueValues} from '~/lib/utils';
 import { totalDuration, totalTimeLimit } from "~/lib/time";
+import { WatchButton } from "~/components/main-menu/watch-button";
 
 export function Editor({data, saveData}: { data: DiscoData, saveData: (data: DiscoData) => void }) {
   const usedNames = uniqueValues(data?.messages.map(message => message.name)) ?? [];
@@ -66,7 +67,7 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
   }
 
   return (
-    <div className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 pt-24 xl:pt-12 h-full min-h-dvh tape-background">
+    <>
       {data?.messages.map((message, index) =>
         <MessageEditor
           message={message}
@@ -79,8 +80,14 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
           usedNames={usedNames}
           key={message.id}/>,
       )}
-      <Button variant="ghost" onClick={addMessage}
-              className="mt-4 -ml-1 opacity-30 hover:opacity-100 transition-opacity block sm:pl-3">+ Add line</Button>
+      <div className="flex justify-between mt-4 sm:mt-8 -ml-1">
+        <Button variant="ghost" onClick={addMessage}
+                className="opacity-30 hover:opacity-100 transition-opacity block sm:pl-3">+ Add line</Button>
+
+        {data &&
+          <WatchButton data={data}/>
+        }
+      </div>
 
       {totalDuration(data) > totalTimeLimit &&
         <div className="mt-12 opacity-60 px-2 sm:px-0 font-serif leading-6">
@@ -90,6 +97,6 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
           </p>
         </div>
       }
-    </div>
+    </>
   );
 }

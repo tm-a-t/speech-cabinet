@@ -20,7 +20,7 @@ export function WatchButton({data}: {data: DiscoData}) {
     }
   }, [status]);
 
-  const button = <Button variant="default" className="text-zinc-400 pl-3 ml-4">
+  const button = <Button variant="default" className="text-zinc-400 mt-0.5">
     <Play className="h-4 w-4 mr-1.5"/>
     Watch
   </Button>
