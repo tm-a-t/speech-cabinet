@@ -28,7 +28,7 @@ wvc.config({
 });
 
 const WEB_URL = env.WEB_URL ?? 'http://localhost:3000'
-const GIF_FPS = 15
+const GIF_FPS = 10
 const GIF_WIDTH = 720
 
 async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
@@ -73,16 +73,19 @@ async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
   await db.video.update({where: {id}, data: {isReady: true}});
 }
 
-function run(...command: string[]): Promise<number | null> {
-  const p = spawn(command[0]!, command.slice(1));
-  return new Promise((resolve) => {
+function run(command: string, ...args: string[]): Promise<number | null> {
+  const p = spawn(command, args);
+  return new Promise((resolve, reject) => {
     p.stdout.on('data', (x: string | Uint8Array) => {
       process.stdout.write(x.toString());
     });
     p.stderr.on('data', (x: string | Uint8Array) => {
       process.stderr.write(x.toString());
     });
-    p.on('exit', (code) => {
+    p.on('error', (err) => {
+      reject(err);
+    });
+    p.on('close', (code) => {
       resolve(code);
     });
   });
