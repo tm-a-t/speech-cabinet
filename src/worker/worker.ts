@@ -5,7 +5,7 @@
 
 import {boss, queue, type RenderVideoJob} from '~/server/queue';
 import {type DiscoData, serialize} from '~/lib/disco-data';
-import { getGifPath, getVideoPath } from '~/lib/utils';
+import { getGifPath, getVideoPath, sleep } from "~/lib/utils";
 import {totalDuration, totalTimeLimit} from '~/lib/time';
 import {db} from '~/server/db';
 // @ts-expect-error untyped lib :(
@@ -66,27 +66,46 @@ async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
   await video.startAndWait();
 
   if (convertToGif) {
-    await run(`ffmpeg`, `-i`, filename, `-vf`, `fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos,palettegen`, `${filename}.palette.png`);
-    await run(`ffmpeg`, `-i`, filename, `-i`, `${filename}.palette.png`, `-lavfi`, `fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos [x]; [x][1:v] paletteuse`, getGifPath(id));
+    await run(
+      `ffmpeg`,
+      `-i`, filename,
+      `-vf`, `fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos,palettegen`,
+      `${filename}.palette.png`,
+      `-update`, `true`,
+      `-nostdin`,
+    );
+    await run(
+      `ffmpeg`,
+      `-i`, filename,
+      `-i`, `${filename}.palette.png`,
+      `-lavfi`, `fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos [x]; [x][1:v] paletteuse`,
+      `-nostdin`,
+      getGifPath(id),
+    );
   }
 
   await db.video.update({where: {id}, data: {isReady: true}});
 }
 
-function run(command: string, ...args: string[]): Promise<number | null> {
-  const p = spawn(command, args);
+function run(command: string, ...args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {
+    const p = spawn(command, args);
+
     p.stdout.on('data', (x: string | Uint8Array) => {
       process.stdout.write(x.toString());
     });
     p.stderr.on('data', (x: string | Uint8Array) => {
       process.stderr.write(x.toString());
     });
+    p.on('close', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`Process exited with code ${code}`));
+      }
+    });
     p.on('error', (err) => {
       reject(err);
-    });
-    p.on('close', (code) => {
-      resolve(code);
     });
   });
 }
