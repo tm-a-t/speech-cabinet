@@ -21,7 +21,10 @@ export async function getVideoQueuePosition(id: string): Promise<number> {
   return await getJobPosition(id);
 }
 
-export async function getVideoProgress(id: string): Promise<number> {
+export async function getVideoProgress(id: string): Promise<number | 'finished'> {
   const video = await db.video.findFirst({where: {id}});
+  if (video?.isReady) {
+    return 'finished';
+  }
   return video?.progress ?? 0;
 }

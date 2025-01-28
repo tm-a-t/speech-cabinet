@@ -71,10 +71,11 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
         : async () => {
           // State is in-progress
           const progress = await getVideoProgress(status.videoId);
-          setStatus({state: 'in-progress', videoId: status.videoId, isGif: status.isGif, progress});
-          if (progress >= 100) {
+          if (progress !== 'finished') {
+            setStatus({state: 'in-progress', videoId: status.videoId, isGif: status.isGif, progress});
+          } else {
             clearInterval(timer);
-            setStatus({state: 'finished', videoId: status.videoId, isGif: status.isGif,});
+            setStatus({state: 'finished', videoId: status.videoId, isGif: status.isGif});
           }
         };
 
@@ -101,7 +102,10 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
               </>
             }
             {status.state === 'in-progress' &&
-              <>Rendering...</>
+              (status.isGif && status.progress === 100
+                ? <>Converting to GIF...</>
+                : <>Rendering...</>
+              )
             }
             {status.state === 'finished' &&
               <>
