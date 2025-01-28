@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import type {DiscoData, Message} from "~/lib/disco-data";
-import {TypeSelect} from '~/components/edit-mode/type-select';
+import {TypeSelect} from '~/components/editor/type-select';
 import {PortraitSelect} from "./portrait-select";
 import {characters, skills} from '~/lib/names';
 

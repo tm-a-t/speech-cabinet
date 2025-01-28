@@ -5,7 +5,7 @@ import {
   MenubarSeparator,
   MenubarTrigger,
 } from '~/components/ui/menubar';
-import {MusicSelect} from '~/components/main-menu/music-select';
+import {MusicSelect} from '~/components/site-menu/music-select';
 import React from 'react';
 import type {DiscoData} from '~/lib/disco-data';
 

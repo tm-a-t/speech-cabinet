@@ -3,11 +3,11 @@
 
 import React, {useEffect, useState} from 'react';
 import {getDefaultData, type DiscoData, serialize, toDiscoData} from '~/lib/disco-data';
-import {Editor} from '~/components/edit-mode/editor';
+import {Editor} from '~/components/editor/editor';
 import { Menubar } from "~/components/ui/menubar";
-import {SiteSubmenu} from '~/components/main-menu/site-submenu';
-import {FileSubmenu} from '~/components/main-menu/file-submenu';
-import {VideoSubmenu} from '~/components/main-menu/video-submenu';
+import {SiteSubmenu} from '~/components/site-menu/site-submenu';
+import {FileSubmenu} from '~/components/site-menu/file-submenu';
+import {VideoSubmenu} from '~/components/site-menu/video-submenu';
 import {redirect} from 'next/navigation';
 import { InfoIcon } from "lucide-react";
 

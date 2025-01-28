@@ -1,10 +1,10 @@
-import {MessageExtraMenu} from '~/components/edit-mode/message-extra-menu';
+import {MessageExtraMenu} from '~/components/editor/message-extra-menu';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/components/ui/select';
-import {MessageTextEditor} from '~/components/edit-mode/message-text-editor';
+import {MessageTextEditor} from '~/components/editor/message-text-editor';
 import React from 'react';
 import {difficulties, type Difficulty, type DiscoData, type Message, type Result} from '~/lib/disco-data';
 import {skills} from '~/lib/names';
-import {NameSelect} from '~/components/edit-mode/name-select';
+import {NameSelect} from '~/components/editor/name-select';
 
 export function MessageEditor(
   {

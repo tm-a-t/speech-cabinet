@@ -1,7 +1,7 @@
 "use client";
 
 import { type DiscoData, type Message } from "~/lib/disco-data";
-import { MessageView } from "~/components/play-mode/message-view";
+import { MessageView } from "~/components/player/message-view";
 import React, { useEffect, useMemo, useState } from "react";
 import { getMessageDuration, startDelay } from "~/lib/time";
 import { getPortraitUrl, uniqueValues } from "~/lib/utils";
