@@ -53,36 +53,38 @@ export function AshesBackground() {
 
 class Ash {
   canvasContext: CanvasRenderingContext2D;
-  x: number = 0;
-  y: number = 0;
-  size: number = 0;
-  speedX: number = 0;
-  speedY: number = 0;
-  alpha: number = 0;
+  x = 0;
+  y = 0;
+  size = 0;
+  speedX = 0;
+  speedY = 0;
+  alpha = 0;
 
   constructor(canvasContext: CanvasRenderingContext2D) {
     this.canvasContext = canvasContext;
     this.reset();
+    this.y = Math.random() * canvasHeight;
   }
 
   reset() {
-    this.x = Math.random() * canvasWidth;
-    this.y = Math.random() * canvasHeight;
-    this.size = Math.random() * 3 + 1;
-    this.speedX = (Math.random() - 0.5) * 1;
-    this.speedY = Math.random() * -0.5 - 0.25;
-    this.alpha = Math.random() * 0.5 + 0.2;
+    this.x = Math.random() * 2 * canvasWidth - 0.5 * canvasWidth;
+    this.y = canvasHeight;
+    this.size = Math.random() * 3 + 4;
+    this.speedX = (Math.random() - 0.5) * 1.25;
+    this.speedY = Math.random() * -0.75 - 0.25;
+    this.alpha = Math.random() * 0.2 + 0.7;
   }
 
   update() {
     this.x += this.speedX + Math.sin(performance.now() / 1000) * 0.2;
     this.y += this.speedY;
-    this.alpha -= 0.0008;
+    // this.alpha -= 0.0008;
     if (this.alpha <= 0 || this.y < 0) this.reset();
   }
 
   draw() {
-    this.canvasContext.fillStyle = `rgba(177, ${150}, 125, ${this.alpha})`;
+    const alpha = this.alpha * this.y / canvasHeight;
+    this.canvasContext.fillStyle = `rgba(100, ${Math.random() * 20 + 70}, 90, ${alpha})`;
     this.canvasContext.beginPath();
     this.canvasContext.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     this.canvasContext.fill();
