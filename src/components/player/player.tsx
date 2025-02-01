@@ -14,6 +14,7 @@ import {
 } from "~/lib/music";
 import NextImage from "next/image";
 import portraitFrame from "../../../public/layout/frame.png";
+import { AshesBackground } from "~/components/player/ashes-background";
 
 export function Player({ data }: { data: DiscoData }) {
   const playerHeight = 1920;
@@ -83,6 +84,9 @@ export function Player({ data }: { data: DiscoData }) {
           transition: "top .3s cubic-bezier(.1, .3, .7, .9)",
         }}
       ></div>
+
+      <AshesBackground/>
+
       {data.showPortraits && shownMessages.all.length && shownPortrait !== '' && (
         <div className="aspect-portrait absolute left-4 top-32 z-20 flex h-auto w-[27rem] items-center justify-center">
           <NextImage
