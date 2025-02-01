@@ -53,7 +53,7 @@ export const characters = [
   'Eugene',
   'Evrart Claire',
   'Fat Angus',
-  'Fritte clerk',
+  'Frittte Clerk',
   'Fuck the World',
   'Garte, the Cafeteria Manager',
   'Gary, the Cryptofascist',
