@@ -15,8 +15,7 @@ export default function EditorPage() {
   const [data, setData] = useState<DiscoData | null>(null);
   const [menuValue, setMenuValue] = useState('');
 
-  useEffect(() => {
-    if (data !== null) return;
+  function restoreSavedData() {
     const dataSaveString = localStorage.getItem('data');
     if (!dataSaveString || dataSaveString === 'undefined' || dataSaveString === 'null') {
       setData(getDefaultData());
@@ -28,7 +27,12 @@ export default function EditorPage() {
     } else {
       redirect('/invalid-data');
     }
-  });
+  }
+
+  useEffect(() => {
+    if (data !== null) return;
+    restoreSavedData();
+  }, []);
 
   function saveData(newData: DiscoData) {
     setData(newData);
@@ -37,8 +41,14 @@ export default function EditorPage() {
   useEffect(() => {
     if (!data) return;
     const timer = setTimeout(() => {
-      localStorage.setItem('data', serialize(data));
-      console.log('saved');
+      try {
+        localStorage.setItem('data', serialize(data));
+        console.log('saved');
+      } catch (e) {
+        alert("Sorry, can't store this. Looks like the dialogue gets too large.");
+        console.error('Could not save:', e);
+        restoreSavedData();
+      }
     }, 500);
     return () => clearTimeout(timer);
   }, [data]);
@@ -64,7 +74,7 @@ export default function EditorPage() {
           className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 h-full min-h-dvh tape-background">
           <p className="text-zinc-300 font-disco italic mx-2 sm:mx-0 pt-24 xl:pt-16">
             <InfoIcon className="inline h-4 w-4 mb-1"/> Welcome to the place where you can create your own Disco&nbsp;Elysium-style dialogues.
-            Click on a line to edit it; click on&nbsp;a&nbsp;name to&nbsp;change the&nbsp;character.
+            Click on&nbsp;a&nbsp;name to&nbsp;change the&nbsp;character.
             Your changes are saved automatically.
           </p>
 

@@ -18,7 +18,7 @@ export function MessageView({message, data, className}: { message: Message, data
       }
 
       <span className="text-zinc-300"> &ndash; </span>
-      <span className="text-zinc-300 [&>p]:mt-14 [&>p:first-child]:inline" dangerouslySetInnerHTML={{__html: message.text}}></span>
+      <span className="text-zinc-300 [&>p]:mt-14 [&>p:first-child]:inline [&>img]:w-full [&>img]:mt-2" dangerouslySetInnerHTML={{__html: message.text}}></span>
     </div>
   );
 }

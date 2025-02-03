@@ -1,4 +1,4 @@
-import type {Message, DiscoData} from '~/lib/disco-data';
+import { type Message, type DiscoData, message } from "~/lib/disco-data";
 
 
 export const totalTimeLimit = 4 * 60 * 1000;
@@ -12,5 +12,14 @@ export function totalDuration(data: DiscoData): number {
 }
 
 export function getMessageDuration(message: Message): number {
-  return 20 * (message.text.length + message.name.length) + 1000;
+  // The message may contain complex tags, so we count pure text length with browser methods
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = message.text;
+  const textLength = message.name.length + tempDiv.innerText.length;
+  const containsImages = tempDiv.querySelector('img') !== null;
+  tempDiv.remove();
+
+  return 1000
+    + 20 * textLength
+    + (containsImages ? 1500 : 0);
 }

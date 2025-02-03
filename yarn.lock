@@ -1053,6 +1053,11 @@
   dependencies:
     "@t3-oss/env-core" "0.10.1"
 
+"@tiptap-pro/extension-file-handler@^2.17.3":
+  version "2.17.3"
+  resolved "https://registry.tiptap.dev/@tiptap-pro%2fextension-file-handler/-/extension-file-handler-2.17.3.tgz#f544960e3cf31070f5ed65944c3d4fc56fce4dac"
+  integrity sha512-SBT2l9RpnBzJXfMNChpR2HLkxKZ6Rbk+zTACOdHSt2Dto9czmPsZEI5qiiaxmXH5sgILqj76JH6XWC/B0x5bYg==
+
 "@tiptap/core@^2.11.4":
   version "2.11.4"
   resolved "https://registry.yarnpkg.com/@tiptap/core/-/core-2.11.4.tgz#3b39230db071016b15efd54edf938f4bfd3687e2"
@@ -1100,12 +1105,22 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-dropcursor/-/extension-dropcursor-2.11.4.tgz#632b33b64a2aa17f64859869db819411c40f9ea8"
   integrity sha512-eg1gcg1rgKJNqz9QIRLG+1f7ST/cTIgtQyVmawAHcH9zqNw+3H/YSn35QoWXZChPy86NabitOnJ1iKUOIxJyXw==
 
+"@tiptap/extension-dropcursor@^2.11.5":
+  version "2.11.5"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-dropcursor/-/extension-dropcursor-2.11.5.tgz#a1d6fad3379551449534bdb8135da2577a8ec8fb"
+  integrity sha512-uIN7L3FU0904ec7FFFbndO7RQE/yiON4VzAMhNn587LFMyWO8US139HXIL4O8dpZeYwYL3d1FnDTflZl6CwLlg==
+
 "@tiptap/extension-floating-menu@^2.11.4":
   version "2.11.4"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-floating-menu/-/extension-floating-menu-2.11.4.tgz#0e4f89631cf4ab1c311cd6c6ac680a2b9357f7e2"
   integrity sha512-ct9gaRrxvKh12bE57831g6QbY0pv78/HkDF0pJne75kdmhxdr1NJEhzuJF3BSGJyW+aJy5duoT8jf7xtkLcIdg==
   dependencies:
     tippy.js "^6.3.7"
+
+"@tiptap/extension-focus@^2.11.5":
+  version "2.11.5"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-focus/-/extension-focus-2.11.5.tgz#445071b8a2bbffd8b02deca516fc35306dfe31dd"
+  integrity sha512-syXFVCaXKOeSkMMozurM5y7clIXqGt2xbi7q2Fnkrm7PqACeZU6Ybv+r6uxeAvP0s3dCQLwS2KT8sUmB3i7vsw==
 
 "@tiptap/extension-gapcursor@^2.11.4":
   version "2.11.4"
@@ -1131,6 +1146,11 @@
   version "2.11.4"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-horizontal-rule/-/extension-horizontal-rule-2.11.4.tgz#b66b4072bd02ba1cbd8e9ea4b7ae3281668575ac"
   integrity sha512-hrKieMV4KwicAqFJdUTm+wRcsnKTpyPLeBCH8b0+Ywbcf4/MMDP3CX99R3B+nonDQv75QM5mxhmioXHkSvs2EA==
+
+"@tiptap/extension-image@^2.11.5":
+  version "2.11.5"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-image/-/extension-image-2.11.5.tgz#f16d05c8045dc7d84d85efdbb946a2a8713fb2d3"
+  integrity sha512-HbUq9AL8gb8eSuQfY/QKkvMc66ZFN/b6jvQAILGArNOgalUfGizoC6baKTJShaExMSPjBZlaAHtJiQKPaGRHaA==
 
 "@tiptap/extension-italic@^2.11.4":
   version "2.11.4"

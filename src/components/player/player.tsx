@@ -109,7 +109,7 @@ export function Player({ data }: { data: DiscoData }) {
 
       <div
         id="messages"
-        className={"absolute px-20 py-48 text-[2.75rem] leading-[4.5rem]"}
+        className={"absolute px-20 py-48 text-[2.75rem] leading-[4.5rem] w-full"}
         style={{
           top: yPosition + "px",
           transition: "top .3s cubic-bezier(.1, .4, .6, .9)",
