@@ -85,7 +85,7 @@ export function Player({ data }: { data: DiscoData }) {
         }}
       ></div>
 
-      <AshesBackground/>
+      {data.showParticles && <AshesBackground/>}
 
       {data.showPortraits && shownMessages.all.length && shownPortrait !== '' && (
         <div className="aspect-portrait absolute left-4 top-32 z-20 flex h-auto w-[27rem] items-center justify-center">

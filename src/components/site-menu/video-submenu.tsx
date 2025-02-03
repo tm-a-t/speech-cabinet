@@ -10,19 +10,11 @@ import React from 'react';
 import type {DiscoData} from '~/lib/disco-data';
 
 export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveData: (data: DiscoData) => void, close: () => void }) {
-  function saveShowPortraits(value: boolean) {
+  function setBooleanValue(name: 'showPortraits' | 'skipMusicIntro' | 'showParticles', value: boolean) {
     if (data === null) return;
     saveData({
       ...data,
-      showPortraits: value,
-    });
-  }
-
-  function saveSkipMusicIntro(value: boolean) {
-    if (data === null) return;
-    saveData({
-      ...data,
-      skipMusicIntro: value,
+      [name]: value,
     });
   }
 
@@ -38,14 +30,18 @@ export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveDat
         Options
       </MenubarTrigger>
       <MenubarContent>
-        <MenubarCheckboxItem checked={data.showPortraits} onCheckedChange={saveShowPortraits}>
-          Portraits in video
+        <MenubarCheckboxItem checked={data.showPortraits} onCheckedChange={v => setBooleanValue('showPortraits', v)}>
+          Portraits
         </MenubarCheckboxItem>
-        <MenubarCheckboxItem checked={data.skipMusicIntro} onCheckedChange={saveSkipMusicIntro} disabled={data.music === null}>
-          Skip music intro
+        <MenubarCheckboxItem checked={data.showParticles} onCheckedChange={v => setBooleanValue('showParticles', v)}>
+          Animated particles
         </MenubarCheckboxItem>
         <MenubarSeparator/>
         <MusicSelect value={data.music} saveValue={handleSaveMusic}/>
+        <MenubarSeparator/>
+        <MenubarCheckboxItem checked={data.skipMusicIntro} onCheckedChange={v => setBooleanValue('skipMusicIntro', v)} disabled={data.music === null}>
+          Skip music intro
+        </MenubarCheckboxItem>
       </MenubarContent>
     </MenubarMenu>
   );
