@@ -1,12 +1,14 @@
 import {MessageExtraMenu} from '~/components/editor/message-extra-menu';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/components/ui/select';
-import {MessageTextEditor} from '~/components/editor/message-text-editor';
-import React from 'react';
+import React, { useContext } from "react";
 import {difficulties, type Difficulty, type DiscoData, type Message, type Result} from '~/lib/disco-data';
 import {skills} from '~/lib/names';
 import {NameSelect} from '~/components/editor/name-select';
+import { TextEditorContext, TextEditorProvider } from "~/components/editor/text-editor-provider";
+import { EditorContent } from "@tiptap/react";
+import { cn } from "~/lib/utils";
 
-export function MessageEditor(
+export function MessageView(
   {
     message,
     saveMessage,
@@ -27,6 +29,7 @@ export function MessageEditor(
     usedNames: string[],
   },
 ) {
+  const editor = useContext(TextEditorContext);
   const showCheck = data.overrides.checks[message.name] ?? skills.includes(message.name);
 
   function handleCheckToggle(value: boolean) {
@@ -62,16 +65,8 @@ export function MessageEditor(
     });
   }
 
-  function handleTextUpdate(content: string) {
-    saveMessage({
-      ...message,
-      text: content,
-    });
-  }
-
   return (
-    <div
-      className="font-disco sm:pl-6 leading-7 [&:not(:first-child)]:mt-3 sm:[&:not(:first-child)]:mt-5 sm:[&:not(:hover)_.message-menu-button]:opacity-0">
+    <div className="font-disco sm:pl-6 leading-7 [&:not(:first-child)]:mt-3 sm:[&:not(:first-child)]:mt-5 sm:[&:not(:hover)_.message-menu-button]:opacity-0">
       <span className="inline-block sm:h-0 sm:-ml-6 -ml-1 -mr-1 w-full sm:w-auto">
         <span className="relative sm:h-0 flex sm:-ml-3 w-full sm:w-auto">
           <span>
@@ -120,7 +115,7 @@ export function MessageEditor(
 
       <span className="text-zinc-300 hidden sm:inline"> &ndash; </span>
       <span className="text-zinc-300 block sm:inline border-b sm:border-0 px-2 pb-3 sm:p-0 rounded">
-        <MessageTextEditor content={message.text} onUpdate={handleTextUpdate}/>
+          <EditorContent editor={editor} className={cn("sm:inline [&_p:not(:first-child)]:mt-4 sm:[&_p:first-child]:inline [&_img]:w-full [&_img]:mt-1")}/>
       </span>
     </div>
   );

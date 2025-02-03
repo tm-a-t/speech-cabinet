@@ -1,10 +1,11 @@
 import {type DiscoData, type Message, message} from "~/lib/disco-data";
 import {Button} from '~/components/ui/button';
 import React from 'react';
-import {MessageEditor} from "./message-editor";
+import {MessageView} from "./message-view";
 import {uniqueValues} from '~/lib/utils';
 import { totalDuration, totalTimeLimit } from "~/lib/time";
 import { WatchButton } from "~/components/editor/watch-button";
+import { TextEditorProvider } from "./text-editor-provider";
 
 export function Editor({data, saveData}: { data: DiscoData, saveData: (data: DiscoData) => void }) {
   const usedNames = uniqueValues(data?.messages.map(message => message.name)) ?? [];
@@ -69,16 +70,17 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
   return (
     <>
       {data?.messages.map((message, index) =>
-        <MessageEditor
-          message={message}
-          saveMessage={m => saveMessage(index, m)}
-          removeMessage={() => removeMessage(index)}
-          moveMessageUp={() => moveMessageDown(index - 1)}
-          moveMessageDown={() => moveMessageDown(index)}
-          data={data}
-          saveData={saveData}
-          usedNames={usedNames}
-          key={message.id} />,
+        <TextEditorProvider key={message.id} content={message.text} onUpdate={text => saveMessage(index, {...message, text})}>
+          <MessageView
+            message={message}
+            saveMessage={m => saveMessage(index, m)}
+            removeMessage={() => removeMessage(index)}
+            moveMessageUp={() => moveMessageDown(index - 1)}
+            moveMessageDown={() => moveMessageDown(index)}
+            data={data}
+            saveData={saveData}
+            usedNames={usedNames} />
+        </TextEditorProvider>,
       )}
 
       <hr className="border-transparent sm:border-zinc-800 sm:mt-6 mb-1" />

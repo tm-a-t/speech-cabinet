@@ -74,7 +74,7 @@ export default function EditorPage() {
           className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 h-full min-h-dvh tape-background">
           <p className="text-zinc-300 font-disco italic mx-2 sm:mx-0 pt-24 xl:pt-16">
             <InfoIcon className="inline h-4 w-4 mb-1"/> Welcome to the place where you can create your own Disco&nbsp;Elysium-style dialogues.
-            Click on&nbsp;a&nbsp;name to&nbsp;change the&nbsp;character.
+            Click on&nbsp;a&nbsp;name to&nbsp;set the&nbsp;character.
             Your changes are saved automatically.
           </p>
 

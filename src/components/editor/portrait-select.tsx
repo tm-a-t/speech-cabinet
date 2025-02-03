@@ -5,7 +5,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from '~/components/ui/dropdown-menu';
-import {SquareUser} from 'lucide-react';
+import {User} from 'lucide-react';
 import {
   Command,
   CommandGroup,
@@ -49,7 +49,7 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
   }
 
   const label = <>
-    <SquareUser className="mr-2 h-4 w-4"/>
+    <User className="mr-2 h-4 w-4"/>
     Set portrait
   </>;
 
