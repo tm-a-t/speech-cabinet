@@ -28,16 +28,16 @@ export function RenderButton({data, setIsOpen}: { data: DiscoData, setIsOpen: (i
 
   return (
     <>
-      <div className="text-center inline-flex justify-center content-center min-h-12 w-full relative">
+      <div className="text-center inline-flex flex-wrap justify-center content-center min-h-12 w-full relative">
         {(status.state === 'not-started' || status.state === 'finished')
           ? <>
-            <Button onClick={() => send({ convertToGif: false })} variant="ghost">
-              <Download className="w-4 h-4 mr-2"/>
-              Render video
-            </Button>
             <Button onClick={() => send({ convertToGif: true })} variant="ghost">
               <Download className="w-4 h-4 mr-2"/>
               Render GIF
+            </Button>
+            <Button onClick={() => send({ convertToGif: false })} variant="ghost">
+              <Download className="w-4 h-4 mr-2"/>
+              Render video
             </Button>
           </>
           : <>Render in progress</>
