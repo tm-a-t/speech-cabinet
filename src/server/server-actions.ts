@@ -4,10 +4,10 @@ import type {DiscoData} from "~/lib/disco-data";
 import {db} from "~/server/db";
 import {getJobPosition, jobIsPending, startJob} from '~/server/queue';
 
-export async function startRender(data: DiscoData): Promise<{ id: string, queuePosition: number }> {
+export async function startRender(data: DiscoData, convertToGif: boolean): Promise<{ id: string, queuePosition: number }> {
   const dbModel = await db.video.create({data: {}});
   const id = dbModel.id;
-  await startJob({videoId: id, discoData: data});
+  await startJob({videoId: id, discoData: data, convertToGif: convertToGif});
   const queuePosition = await getVideoQueuePosition(id);
   console.log('something beautiful created', id)
   return {id, queuePosition};
@@ -21,7 +21,10 @@ export async function getVideoQueuePosition(id: string): Promise<number> {
   return await getJobPosition(id);
 }
 
-export async function getVideoProgress(id: string): Promise<number> {
+export async function getVideoProgress(id: string): Promise<number | 'finished'> {
   const video = await db.video.findFirst({where: {id}});
+  if (video?.isReady) {
+    return 'finished';
+  }
   return video?.progress ?? 0;
 }

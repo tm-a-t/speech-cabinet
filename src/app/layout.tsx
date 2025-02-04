@@ -6,15 +6,17 @@ import {TooltipProvider} from '~/components/ui/tooltip';
 import {Toaster} from "~/components/ui/toaster";
 
 import '@fontsource/spectral/400.css';
+import '@fontsource/spectral/400-italic.css';
 import '@fontsource/geologica/300.css';
 import '@fontsource/geologica/400.css';
 import '@fontsource/geologica/500.css';
 import '@fontsource/geologica/600.css';
+import '@fontsource/geologica/700.css';
 import {RenderStatusProvider} from '~/components/render-status-provider';
 
 export const metadata: Metadata = {
   title: 'Speech Cabinet',
-  description: 'Disco Elysium dialogue generator',
+  description: 'Create vertical videos in the style of Disco Elysium dialogues',
   icons: [{rel: "icon", url: "/favicon.ico"}],
 };
 

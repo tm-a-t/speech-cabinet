@@ -43,3 +43,7 @@
     height: 0;
     pointer-events: none;
 }
+
+.tiptap img.is-active {
+    @apply outline outline-white;
+}

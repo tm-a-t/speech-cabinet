@@ -37,6 +37,7 @@ const discoData = z.object({
     portraitUrl: z.record(z.string(), z.string()),
   }),
   showPortraits: z.boolean(),
+  showParticles: z.boolean().default(true),
   music: z.string().nullable(),
   skipMusicIntro: z.boolean(),
   version: z.literal('0.1'),
@@ -48,18 +49,22 @@ export type DiscoData = z.infer<typeof discoData>
 
 export const getDefaultData = () => discoData.parse({
   messages: [
+    // {
+    //   name: 'Garte, the Cafeteria Manager',
+    //   text: '"No, I\'m not the *bartender*. I\'m the cafeteria manager."',
+    // },
+    // {
+    //   name: 'Empathy',
+    //   text: 'He\'s very animated all of a sudden. This is clearly a touchy subject for him.',
+    //   check: {
+    //     difficulty: 'Medium',
+    //     result: 'Success',
+    //   },
+    // },
     {
-      name: 'Garte, the Cafeteria Manager',
-      text: '"No, I\'m not the *bartender*. I\'m the cafeteria manager."',
-    },
-    {
-      name: 'Empathy',
-      text: 'He\'s very animated all of a sudden. This is clearly a touchy subject for him.',
-      check: {
-        difficulty: 'Medium',
-        result: 'Success',
-      },
-    },
+      name: 'You',
+      text: '',
+    }
   ],
   overrides: {
     checks: {},
@@ -67,7 +72,7 @@ export const getDefaultData = () => discoData.parse({
     portraitUrl: {},
   },
   showPortraits: true,
-  music: null,
+  music: '/music/Sea Power - Instrument of Surrender.m4a',
   skipMusicIntro: true,
   version: '0.1',
 });

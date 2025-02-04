@@ -1,10 +1,21 @@
-import {Player} from '~/components/play-mode/player';
-import type {DiscoData} from '~/lib/disco-data';
+'use client';
 
-export default function Page({searchParams}: { searchParams: Record<string, string | string[] | undefined> }) {
-  const data = JSON.parse((searchParams.data as string | null) ?? 'null') as DiscoData || null;
+import {Player} from "~/components/player/player";
+import { restoreSavedData, sleep } from "~/lib/utils";
+import { useEffect, useState } from "react";
+import type { DiscoData } from "~/lib/disco-data";
 
-  return (
-    <Player data={data}/>
-  );
+export default function Page() {
+  const [data, setData] = useState<DiscoData | null>(null);
+
+  useEffect(() => {
+    window.addEventListener('disco', handleData)
+    return () => window.removeEventListener('disco', handleData)
+  }, []);
+
+  function handleData() {
+    setData(restoreSavedData);
+  }
+
+  return data && <Player data={data} />;
 }

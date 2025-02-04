@@ -2,14 +2,14 @@
 
 
 import React, {useEffect, useState} from 'react';
-import {getDefaultData, type DiscoData, serialize, toDiscoData} from '~/lib/disco-data';
-import {Editor} from '~/components/edit-mode/editor';
-import {Menubar} from '~/components/ui/menubar';
-import {SiteSubmenu} from '~/components/main-menu/site-submenu';
-import {FileSubmenu} from '~/components/main-menu/file-submenu';
-import {VideoSubmenu} from '~/components/main-menu/video-submenu';
-import {WatchButton} from '~/components/main-menu/watch-button';
-import {redirect} from 'next/navigation';
+import {type DiscoData, serialize} from '~/lib/disco-data';
+import {Editor} from '~/components/editor/editor';
+import { Menubar } from "~/components/ui/menubar";
+import {SiteSubmenu} from '~/components/site-menu/site-submenu';
+import {FileSubmenu} from '~/components/site-menu/file-submenu';
+import {VideoSubmenu} from '~/components/site-menu/video-submenu';
+import { InfoIcon } from 'lucide-react';
+import { restoreSavedData } from '~/lib/utils';
 
 export default function EditorPage() {
   const [data, setData] = useState<DiscoData | null>(null);
@@ -17,18 +17,8 @@ export default function EditorPage() {
 
   useEffect(() => {
     if (data !== null) return;
-    const dataSaveString = localStorage.getItem('data');
-    if (!dataSaveString || dataSaveString === 'undefined' || dataSaveString === 'null') {
-      setData(getDefaultData());
-      return;
-    }
-    const dataSave = toDiscoData(dataSaveString);
-    if (dataSave) {
-      setData(dataSave);
-    } else {
-      redirect('/invalid-data');
-    }
-  });
+    setData(restoreSavedData());
+  }, []);
 
   function saveData(newData: DiscoData) {
     setData(newData);
@@ -37,8 +27,14 @@ export default function EditorPage() {
   useEffect(() => {
     if (!data) return;
     const timer = setTimeout(() => {
-      localStorage.setItem('data', serialize(data));
-      console.log('saved');
+      try {
+        localStorage.setItem('data', serialize(data));
+        console.log('saved');
+      } catch (e) {
+        alert("Sorry, can't store this. Looks like the dialogue gets too large.");
+        console.error('Could not save:', e);
+        setData(restoreSavedData());
+      }
     }, 500);
     return () => clearTimeout(timer);
   }, [data]);
@@ -57,12 +53,22 @@ export default function EditorPage() {
             <VideoSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
           </>}
         </Menubar>
-        {data &&
-          <WatchButton data={data}/>
-        }
       </div>
 
-      {data && <Editor data={data} saveData={saveData}/>}
+      {data &&
+        <div
+          className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 h-full min-h-dvh tape-background">
+          <p className="text-zinc-300 font-disco italic mx-2 sm:mx-0 pt-24 xl:pt-16">
+            <InfoIcon className="inline h-4 w-4 mb-1"/> Welcome to the place where you can create your own Disco&nbsp;Elysium-style dialogues.
+            Click on&nbsp;a&nbsp;name to&nbsp;set the&nbsp;character.
+            Your changes are saved automatically.
+          </p>
+
+          <hr className="border-transparent sm:border-zinc-800 mt-4" />
+
+          <Editor data={data} saveData={saveData} />
+        </div>
+      }
     </div>
   );
 }

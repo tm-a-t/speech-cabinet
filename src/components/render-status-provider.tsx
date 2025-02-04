@@ -8,9 +8,9 @@ import {Button} from './ui/button';
 import {X} from 'lucide-react';
 
 type RenderNotStarted = { state: 'not-started' }
-type RenderInQueue = { state: 'in-queue', videoId: string, position: number, maxPosition: number }
-type RenderInProgress = { state: 'in-progress', videoId: string, progress: number }
-type RenderFinished = { state: 'finished', videoId: string }
+type RenderInQueue = { state: 'in-queue', videoId: string, isGif: boolean, position: number, maxPosition: number }
+type RenderInProgress = { state: 'in-progress', videoId: string, isGif: boolean, progress: number }
+type RenderFinished = { state: 'finished', videoId: string, isGif: boolean }
 export type RenderStatus = RenderNotStarted | RenderInQueue | RenderInProgress | RenderFinished
 
 export const RenderStatusContext = createContext<[RenderStatus, (status: RenderStatus) => void]>(
@@ -30,6 +30,16 @@ function getPercentage(status: RenderStatus): number {
   return 0;
 }
 
+function getPath(status: RenderFinished): string {
+  const path = status.isGif ? 'gif' : 'video'
+  return `/api/${path}/${status.videoId}`
+}
+
+function getName(status: RenderFinished): string {
+  const extension = status.isGif ? 'gif' : 'mp4'
+  return `Disco ${formatTime()}.${extension}`
+}
+
 export function RenderStatusProvider({children}: { children: ReactNode }) {
   const [status, setStatus] = useState<RenderStatus>({state: 'not-started'});
   const displayedProgress = Math.max(getPercentage(status), minDisplayedProgress)
@@ -39,7 +49,7 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
       return;
     }
     else if (status.state === 'finished') {
-      void downloadFile('/api/video/' + status.videoId, `Disco ${formatTime()}.mp4`);
+      void downloadFile(getPath(status), getName(status));
       return
     }
 
@@ -49,22 +59,23 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
           // State is in-queue
           const position = await getVideoQueuePosition(status.videoId);
           const maxPosition = Math.max(position, status.maxPosition);
-          setStatus({state: 'in-queue', videoId: status.videoId, position, maxPosition});
+          setStatus({state: 'in-queue', videoId: status.videoId, isGif: status.isGif, position, maxPosition});
           if (position === 0) {
             clearInterval(timer);
-            setStatus({state: 'in-queue', videoId: status.videoId, position: 0, maxPosition});
+            setStatus({state: 'in-queue', videoId: status.videoId, isGif: status.isGif, position: 0, maxPosition});
             setTimeout(() => {
-              setStatus({state: 'in-progress', videoId: status.videoId, progress: minDisplayedProgress});
+              setStatus({state: 'in-progress', videoId: status.videoId, isGif: status.isGif, progress: minDisplayedProgress});
             }, 200);
           }
         }
         : async () => {
           // State is in-progress
           const progress = await getVideoProgress(status.videoId);
-          setStatus({state: 'in-progress', videoId: status.videoId, progress});
-          if (progress >= 100) {
+          if (progress !== 'finished') {
+            setStatus({state: 'in-progress', videoId: status.videoId, isGif: status.isGif, progress});
+          } else {
             clearInterval(timer);
-            setStatus({state: 'finished', videoId: status.videoId});
+            setStatus({state: 'finished', videoId: status.videoId, isGif: status.isGif});
           }
         };
 
@@ -85,17 +96,20 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
               <>
                 Please wait.
                 {status.position === 1
-                  ? <> There is 1 video </>
-                  : <> There are {status.position} videos </>}
+                  ? <> There is 1 dialogue </>
+                  : <> There are {status.position} dialogues </>}
                 in the queue before yours.
               </>
             }
             {status.state === 'in-progress' &&
-              <>Rendering...</>
+              (status.isGif && status.progress === 100
+                ? <>Converting to GIF...</>
+                : <>Rendering...</>
+              )
             }
             {status.state === 'finished' &&
               <>
-                Download started! You can also use <a className="underline underline-offset-4" href={'/api/video/' + status.videoId} target="_blank">the link to the video.</a>
+                Download started! You can also use <a className="underline underline-offset-4" href={getPath(status)} target="_blank">the temporary link.</a>
               </>
             }
           </div>
