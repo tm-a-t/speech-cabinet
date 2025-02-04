@@ -72,7 +72,7 @@ class Ash {
     this.size = Math.random() * 4 + 4;
     this.speedX = (Math.random() - 0.5) * 1.25;
     this.speedY = Math.random() * -0.75 - 0.25;
-    this.alpha = Math.random() * 0.2 + 0.7;
+    this.alpha = Math.random() * 0.4 + 0.2;
   }
 
   update() {
@@ -84,7 +84,7 @@ class Ash {
 
   draw() {
     const alpha = this.alpha * (this.y / canvasHeight + 0.4) / 1.4;
-    this.canvasContext.fillStyle = `rgba(100, ${Math.random() * 20 + 70}, 90, ${alpha})`;
+    this.canvasContext.fillStyle = `rgba(220, 161, 141, ${alpha})`;
     this.canvasContext.beginPath();
     this.canvasContext.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     this.canvasContext.fill();
