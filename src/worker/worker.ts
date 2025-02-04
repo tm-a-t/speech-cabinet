@@ -12,6 +12,7 @@ import {db} from '~/server/db';
 import WebVideoCreator from 'web-video-creator';
 // @ts-expect-error untyped lib :(
 import { type Page } from "web-video-creator/core";
+import { type Page as PuppeteerPage } from "puppeteer-core";
 import { env } from "~/env";
 import { spawn } from 'child_process';
 
@@ -41,10 +42,13 @@ async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
     fps: 30,
     duration: Math.min(totalDuration(data), totalTimeLimit),
     outputPath: filename,
-    pagePrepareFn: async (page: Page) => {;
-      await page.target.evaluate(({serialized}: {serialized: string}) => {
-        window.localStorage.setItem("data", serialized);
-      }, { serialized: serialize(data) });
+    pagePrepareFn: async (page: Page) => {
+      const puppeteerPage = page.target as PuppeteerPage;
+      const serialized = serialize(data);
+      await puppeteerPage.evaluate(({serialized}) => {
+        localStorage.setItem('data', serialized);
+        window.dispatchEvent(new Event('disco', {}));
+      }, { serialized });
     },
   });
 
