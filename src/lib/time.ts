@@ -17,5 +17,5 @@ export function getMessageDuration(message: Message): number {
 
   return 1000
     + 20 * textLength
-    + (containsImages ? 2000 : 0);
+    + (containsImages ? 3000 : 0);
 }
