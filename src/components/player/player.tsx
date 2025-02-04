@@ -12,9 +12,9 @@ import {
   playSound,
   stopMusic,
 } from "~/lib/music";
-import NextImage from "next/image";
-import portraitFrame from "../../../public/layout/frame.png";
 import { AshesBackground } from "~/components/player/ashes-background";
+
+const portraitFrameUrl = '/layout/frame.png'
 
 export function Player({ data }: { data: DiscoData }) {
   const playerHeight = 1920;
@@ -36,11 +36,11 @@ export function Player({ data }: { data: DiscoData }) {
   );
   const shownPortrait = messagePortraits[shownMessages.all.length - 1] ?? null;
 
-  const [portraitsArePreloaded, setPortraitsArePreloaded] = useState(false);
+  const [imagesArePreloaded, setImagesArePreloaded] = useState(false);
   const [soundsArePreloaded, setSoundsArePreloaded] = useState(false);
 
   useEffect(() => {
-    if (!portraitsArePreloaded || !soundsArePreloaded) return;
+    if (!imagesArePreloaded || !soundsArePreloaded) return;
 
     setYPosition(
       playerHeight - (document.getElementById("messages")?.clientHeight ?? 0),
@@ -58,12 +58,12 @@ export function Player({ data }: { data: DiscoData }) {
       }, delay);
       return () => clearTimeout(timer);
     }
-  }, [soundsArePreloaded, portraitsArePreloaded, shownMessages, data, messageSounds]);
+  }, [soundsArePreloaded, imagesArePreloaded, shownMessages, data, messageSounds]);
 
   useEffect(() => {
-    const uniquePortraits = uniqueValues(messagePortraits);
-    void Promise.allSettled(uniquePortraits.map(preloadImage))
-      .then(() => setPortraitsArePreloaded(true));
+    const uniqueImages = [...uniqueValues(messagePortraits), portraitFrameUrl];
+    void Promise.allSettled(uniqueImages.map(preloadImage))
+      .then(() => setImagesArePreloaded(true));
     const uniqueSounds = uniqueValues(messageSounds).filter(v => v !== null);
     void Promise.allSettled(uniqueSounds.map(preloadAudio))
       .then(() => setSoundsArePreloaded(true));
@@ -89,8 +89,8 @@ export function Player({ data }: { data: DiscoData }) {
 
       {data.showPortraits && shownMessages.all.length && shownPortrait !== '' && (
         <div className="aspect-portrait absolute left-4 top-32 z-20 flex h-auto w-[27rem] items-center justify-center">
-          <NextImage
-            src={portraitFrame}
+          <img
+            src={portraitFrameUrl}
             className="absolute top-1/2 -translate-y-1/2"
             alt=""
           />
