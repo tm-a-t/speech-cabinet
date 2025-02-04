@@ -6,6 +6,7 @@ function handler(
   dataTransferItems: DataTransferItemList,
   pos: Range,
 ) {
+  let anyPasted = false;
   for (const item of dataTransferItems) {
     if (item.type == "text/html") {
       // if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
@@ -19,6 +20,7 @@ function handler(
     ) {
       continue;
     }
+    anyPasted = true;
     const file = item.getAsFile()!;
     const fileReader = new FileReader();
     fileReader.readAsDataURL(file);
@@ -35,6 +37,7 @@ function handler(
         .run();
     };
   }
+  return anyPasted;
 }
 
 export const FileHandler = Extension.create({
@@ -56,11 +59,7 @@ export const FileHandler = Extension.create({
             if (!event.dataTransfer) {
               return false;
             }
-            const res = handler(this.editor, event.dataTransfer.items, range);
-            if (res) {
-              event.preventDefault();
-            }
-            return res;
+            return handler(this.editor, event.dataTransfer.items, range);
           },
           handlePaste: (view, event) => {
             if (!event.clipboardData) {
