@@ -1,7 +1,8 @@
 import {type ClassValue, clsx} from 'clsx';
-import type {DiscoData} from './disco-data';
+import { type DiscoData, getDefaultData, toDiscoData } from "./disco-data";
 import {allPortraitNames, skillColorClass} from '~/lib/names';
 import {twMerge} from 'tailwind-merge';
+import { redirect } from "next/navigation";
 
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
@@ -61,4 +62,16 @@ export function getPortraitUrl(name: string, data: DiscoData): string {
 
 export function getColorClass(name: string, data: DiscoData): string {
   return data.overrides.colorClass[name] ?? skillColorClass[name] ?? '';
+}
+
+export function restoreSavedData(): DiscoData {
+  const dataSaveString = localStorage.getItem('data');
+  if (!dataSaveString || dataSaveString === 'undefined' || dataSaveString === 'null') {
+    return getDefaultData();
+  }
+  const dataSave = toDiscoData(dataSaveString);
+  if (dataSave) {
+    return dataSave;
+  }
+  redirect('/invalid-data');
 }

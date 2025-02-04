@@ -32,19 +32,19 @@ const GIF_FPS = 10
 const GIF_WIDTH = 720
 
 async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
-  const params = new URLSearchParams({data: serialize(data)}).toString();
   const filename = getVideoPath(id);
 
   const video = wvc.createSingleVideo({
-    url: WEB_URL + '/render?' + params,
+    url: WEB_URL + '/render',
     width: 1080,
     height: 1920,
     fps: 30,
     duration: Math.min(totalDuration(data), totalTimeLimit),
     outputPath: filename,
-    pagePrepareFn: async (page: Page) => {
-      const target = page.target;
-      void target.tap('body');
+    pagePrepareFn: async (page: Page) => {;
+      await page.target.evaluate(({serialized}: {serialized: string}) => {
+        window.localStorage.setItem("data", serialized);
+      }, { serialized: serialize(data) });
     },
   });
 

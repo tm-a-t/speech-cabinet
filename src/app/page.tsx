@@ -2,36 +2,22 @@
 
 
 import React, {useEffect, useState} from 'react';
-import {getDefaultData, type DiscoData, serialize, toDiscoData} from '~/lib/disco-data';
+import {type DiscoData, serialize} from '~/lib/disco-data';
 import {Editor} from '~/components/editor/editor';
 import { Menubar } from "~/components/ui/menubar";
 import {SiteSubmenu} from '~/components/site-menu/site-submenu';
 import {FileSubmenu} from '~/components/site-menu/file-submenu';
 import {VideoSubmenu} from '~/components/site-menu/video-submenu';
-import {redirect} from 'next/navigation';
-import { InfoIcon } from "lucide-react";
+import { InfoIcon } from 'lucide-react';
+import { restoreSavedData } from '~/lib/utils';
 
 export default function EditorPage() {
   const [data, setData] = useState<DiscoData | null>(null);
   const [menuValue, setMenuValue] = useState('');
 
-  function restoreSavedData() {
-    const dataSaveString = localStorage.getItem('data');
-    if (!dataSaveString || dataSaveString === 'undefined' || dataSaveString === 'null') {
-      setData(getDefaultData());
-      return;
-    }
-    const dataSave = toDiscoData(dataSaveString);
-    if (dataSave) {
-      setData(dataSave);
-    } else {
-      redirect('/invalid-data');
-    }
-  }
-
   useEffect(() => {
     if (data !== null) return;
-    restoreSavedData();
+    setData(restoreSavedData());
   }, []);
 
   function saveData(newData: DiscoData) {
@@ -47,7 +33,7 @@ export default function EditorPage() {
       } catch (e) {
         alert("Sorry, can't store this. Looks like the dialogue gets too large.");
         console.error('Could not save:', e);
-        restoreSavedData();
+        setData(restoreSavedData());
       }
     }, 500);
     return () => clearTimeout(timer);
