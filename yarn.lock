@@ -1053,11 +1053,6 @@
   dependencies:
     "@t3-oss/env-core" "0.10.1"
 
-"@tiptap-pro/extension-file-handler@^2.17.3":
-  version "2.17.3"
-  resolved "https://registry.tiptap.dev/@tiptap-pro%2fextension-file-handler/-/extension-file-handler-2.17.3.tgz#f544960e3cf31070f5ed65944c3d4fc56fce4dac"
-  integrity sha512-SBT2l9RpnBzJXfMNChpR2HLkxKZ6Rbk+zTACOdHSt2Dto9czmPsZEI5qiiaxmXH5sgILqj76JH6XWC/B0x5bYg==
-
 "@tiptap/core@^2.11.4":
   version "2.11.4"
   resolved "https://registry.yarnpkg.com/@tiptap/core/-/core-2.11.4.tgz#3b39230db071016b15efd54edf938f4bfd3687e2"
