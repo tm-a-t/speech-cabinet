@@ -24,17 +24,25 @@ function handler(
     const file = item.getAsFile()!;
     const fileReader = new FileReader();
     fileReader.readAsDataURL(file);
+
     fileReader.onload = () => {
-      editor
-        .chain()
-        .insertContentAt(pos, {
-          type: "image",
-          attrs: {
-            src: fileReader.result,
-          },
-        })
-        .focus()
-        .run();
+      const src = fileReader.result as string;
+      const image = new Image();
+      image.src = src;
+      image.onload = () => {
+        editor
+          .chain()
+          .insertContentAt(pos, {
+            type: "image",
+            attrs: {
+              src: fileReader.result,
+              width: image.width,
+              height: image.height,
+            },
+          })
+          .focus()
+          .run();
+      }
     };
   }
   return anyPasted;

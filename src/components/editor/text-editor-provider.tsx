@@ -11,6 +11,7 @@ import Focus from "@tiptap/extension-focus";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import { useIsDesktop } from "~/lib/hooks/use-media-query";
 import { FileHandler } from "./file-handler";
+import { mergeAttributes } from "@tiptap/core";
 
 export const TextEditorContext = createContext<Editor | null>(null);
 
@@ -36,7 +37,7 @@ export function TextEditorProvider(props: { children: ReactNode, content: string
       Document,
       Text,
       Paragraph,
-      Image.configure({
+      ExtendedImage.configure({
         allowBase64: true,
       }),
       Focus.configure({
@@ -54,3 +55,20 @@ export function TextEditorProvider(props: { children: ReactNode, content: string
     </TextEditorContext.Provider>
   )
 }
+
+export const ExtendedImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      width: {
+        default: null,
+      },
+      height: {
+        default: null,
+      },
+    }
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ['img', mergeAttributes(HTMLAttributes)]
+  },
+})
