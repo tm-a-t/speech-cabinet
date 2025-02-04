@@ -15,8 +15,8 @@ Create vertical videos in the style of Disco Elysium dialogues.
 
 ## Features
 
-I tried to make an intuitive UI, 
-but you can learn about the features in the [Reddit post.](https://www.reddit.com/r/DiscoElysium/comments/1fs5gsk/i_made_a_site_that_animates_disco_elysium/)
+I aimed to make an intuitive UI, so when you are looking for a feature you will probably find it.
+If you want to read what the app is capable of, check out the [Reddit post.](https://www.reddit.com/r/DiscoElysium/comments/1fs5gsk/i_made_a_site_that_animates_disco_elysium/)
 
 ## Development
 
@@ -30,24 +30,23 @@ Animation is made purely with CSS/JS, but the videos are rendered on server: a w
 
 1. Create a Postgres database.
 2. Copy `.env.example` to `.env` and fill in the variables. (Auth settings are not used for now.)
-3. Register [a free Tiptap account](https://cloud.tiptap.dev/pro-extensions)
-   and create a `.npmrc` file with your private key.
-   This is for text editing features.
-4. If you want to enable background music for videos, save OST music files to `public/music`.
+3. If you want to enable background music for videos, save OST music files to `public/music`.
    They must have a name in form `Sea Power - Instrument of Surrender.m4a`.
    I don’t include the music in the repo to avoid copyright issues.
-5. Install dependencies:
+4. Install dependencies:
    ```shell
    yarn
    ```
-6. Run:
+5. Run:
     ```shell
     yarn dev
     ```
-7. Run the video rendering worker separately:
+6. Run the video rendering worker separately:
     ```shell
     yarn dev:work
     ```
+
+   (The worker requires maximum Node 20 because the library for rendering videos use a deprecated function.)
 
 ### Run with Docker
 
