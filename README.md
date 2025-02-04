@@ -1,6 +1,7 @@
-# Speech Cabinet
-
 <img alt="Dialogue example" src="readme-assets/february.gif" width="240" align="right">
+
+
+# Speech Cabinet
 
 _DOLORES DEI – Every combination of words has been played out. The atoms don't form us anymore: us, our love, our unborn daughters._
 
@@ -9,7 +10,7 @@ Create vertical videos in the style of Disco Elysium dialogues.
 [speech-cabinet.com](https://speech-cabinet.com)
 
 
-<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br>
 
 
 
