@@ -12,12 +12,8 @@ export function totalDuration(data: DiscoData): number {
 }
 
 export function getMessageDuration(message: Message): number {
-  // The message may contain complex tags, so we count pure text length with browser methods
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = message.text;
-  const textLength = message.name.length + tempDiv.innerText.length;
-  const containsImages = tempDiv.querySelector('img') !== null;
-  tempDiv.remove();
+  const textLength = message.name.length + message.text.replace(/<[^>]*>/g, '').length;
+  const containsImages = message.text.includes("<img");  // a quick estimation so we don't use any api
 
   return 1000
     + 20 * textLength
