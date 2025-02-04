@@ -59,8 +59,8 @@ export function MessageExtraMenu({message, removeMessage, data, saveData, moveMe
           <ImagePlus className="mr-2 h-4 w-4"/>
           Add image
         </DropdownMenuItem>
-        <TypeSelect message={message} data={data} saveData={saveData}/>
         <PortraitSelect message={message} data={data} saveData={saveData} setOpen={setOpen}/>
+        <TypeSelect message={message} data={data} saveData={saveData}/>
         <DropdownMenuSeparator/>
         <DropdownMenuItem onSelect={e => {moveMessageUp(); e.preventDefault()}}>
           <ArrowUp className="mr-2 h-4 w-4"/>

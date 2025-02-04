@@ -50,7 +50,7 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
 
   const label = <>
     <User className="mr-2 h-4 w-4"/>
-    Set portrait
+    Portrait
   </>;
 
   if (isDesktop) {

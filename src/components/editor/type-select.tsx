@@ -42,7 +42,7 @@ export function TypeSelect({message, data, saveData}: {
       <DropdownMenuSub>
         <DropdownMenuSubTrigger>
           <Pencil className="mr-2 h-4 w-4"/>
-          Set type
+          Skill type
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
           <DropdownMenuSubContent>

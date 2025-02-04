@@ -105,7 +105,7 @@ function NameOptionList(
     <Command>
       <CommandInput
         autoFocus={isDesktop}
-        placeholder="Name..."
+        placeholder="Search or create..."
         onValueChange={text => setInput(text.trim().toUpperCase())}
         className="[&:not(:placeholder-shown)]:uppercase"/>
       <CommandList data-vaul-no-drag>
