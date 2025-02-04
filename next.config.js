@@ -8,7 +8,12 @@ await import("./src/env.js");
 const config = {
   eslint: {
     // ignoreDuringBuilds: true,
-  }
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10.5mb',  // The approximate maximum size of localstorage
+    },
+  },
 };
 
 export default config;
