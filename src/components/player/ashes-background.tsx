@@ -70,7 +70,7 @@ class Ash {
     this.x = Math.random() * 2 * canvasWidth - 0.5 * canvasWidth;
     this.y = canvasHeight;
     this.size = Math.random() * 4 + 4;
-    this.speedX = (Math.random() - 0.5) * 1.25;
+    this.speedX = (Math.random() + 0.2) * 1.5;
     this.speedY = Math.random() * -0.75 - 0.25;
     this.alpha = Math.random() * 0.4 + 0.2;
   }
