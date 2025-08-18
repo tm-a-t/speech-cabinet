@@ -48,7 +48,7 @@ function MusicSelectList({value, saveValue}: { value: string | null, saveValue: 
             }
             {track.name}
             {track.name === 'Instrument of Surrender' &&
-              <span className="block text-zinc-500 ml-1">(Martinaise theme)</span>
+              <span className="block text-zinc-500 ml-1">Martinaise theme</span>
             }
           </CommandItem>,
         )}

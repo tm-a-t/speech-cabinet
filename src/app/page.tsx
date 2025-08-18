@@ -10,6 +10,7 @@ import {FileSubmenu} from '~/components/site-menu/file-submenu';
 import {VideoSubmenu} from '~/components/site-menu/video-submenu';
 import { InfoIcon } from 'lucide-react';
 import { restoreSavedData } from '~/lib/utils';
+import Image from "next/image";
 
 export default function EditorPage() {
   const [data, setData] = useState<DiscoData | null>(null);
@@ -41,8 +42,10 @@ export default function EditorPage() {
 
   return (
     <div className="w-full h-full">
+      <Image src="/layout/wallpaper.png" alt="" width={1080} height={607} className="w-full h-full object-cover fixed -z-20"/>
+
       <div
-        className="fixed z-20 top-0 left-0 right-0 py-2 px-1 sm:px-3 flex flex-wrap gap-x-1 gap-y-4 items-center bg-zinc-900/50 backdrop-blur-xl xl:bg-transparent xl:backdrop-blur-none border-b xl:border-0">
+        className="fixed z-20 top-0 left-0 right-0 py-2 px-1 sm:px-3 flex flex-wrap gap-x-1 gap-y-4 bg-stone-900 sm:bg-transparent items-center border-b sm:border-0">
         <Menubar className="border-0 dark:bg-transparent mr-auto"
                  value={menuValue}
                  onValueChange={setMenuValue}
@@ -57,14 +60,7 @@ export default function EditorPage() {
 
       {data &&
         <div
-          className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 h-full min-h-dvh tape-background">
-          <p className="text-zinc-300 font-disco italic mx-2 sm:mx-0 pt-24 xl:pt-16">
-            <InfoIcon className="inline h-4 w-4 mb-1"/> Welcome to the place where you can create your own Disco&nbsp;Elysium-style dialogues.
-            Click on&nbsp;a&nbsp;name to&nbsp;set the&nbsp;character.
-            Your changes are saved automatically.
-          </p>
-
-          <hr className="border-transparent sm:border-zinc-800 mt-4" />
+          className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 pt-24 xl:pt-32 h-full min-h-dvh tape-background">
 
           <Editor data={data} saveData={saveData} />
         </div>
