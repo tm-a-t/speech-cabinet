@@ -24,6 +24,7 @@ export const message = z.object({
   check: z.object({
     difficulty: difficulties,
     result: results,
+    active: z.boolean().default(false),
   }).optional(),
   id: z.number().default(() => Math.floor(Math.random() * 1_000_000)),
 });

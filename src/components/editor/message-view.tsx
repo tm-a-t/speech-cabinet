@@ -7,6 +7,7 @@ import {NameSelect} from '~/components/editor/name-select';
 import { TextEditorContext, TextEditorProvider } from "~/components/editor/text-editor-provider";
 import { EditorContent } from "@tiptap/react";
 import { cn } from "~/lib/utils";
+import { Dices } from "lucide-react";
 
 export function MessageView(
   {
@@ -36,7 +37,7 @@ export function MessageView(
     saveMessage({
       ...message,
       check: value
-        ? {difficulty: 'Medium', result: 'Success'}
+        ? {difficulty: 'Medium', result: 'Success', active: false}
         : undefined,
     });
   }
@@ -49,18 +50,20 @@ export function MessageView(
     saveMessage({
       ...message,
       check: {
-        ...(message.check ?? {result: 'Success'}),
+        ...(message.check ?? {result: 'Success', active: false}),
         difficulty: value,
       },
     });
   }
 
-  function handleCheckResultSelect(value: Result) {
+  function handleCheckResultSelect(value: string) {
+    const [result, active] = value.split(' ');
     saveMessage({
       ...message,
       check: message.check && {
         ...message.check,
-        result: value,
+        result: result as Result,
+        active: active === 'true',
       },
     });
   }
@@ -89,14 +92,16 @@ export function MessageView(
                   </Select>
 
                 {showCheck && message.check &&
-                  <Select onValueChange={handleCheckResultSelect} value={message.check.result}>
+                  <Select onValueChange={handleCheckResultSelect} value={`${message.check.result} ${message.check.active}`}>
                     <SelectTrigger
                       className="h-8 px-1 sm:px-1 sm:text-base text-zinc-400 dark:bg-transparent dark:border-0 hover:dark:bg-zinc-800 hover:text-white transition">
                       <SelectValue/>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Failure">Failure</SelectItem>
-                      <SelectItem value="Success">Success</SelectItem>
+                      <SelectItem value="Failure false">Failure</SelectItem>
+                      <SelectItem value="Success false">Success</SelectItem>
+                      <SelectItem value="Failure true">Failure <Dices className="inline h-4" /></SelectItem>
+                      <SelectItem value="Success true">Success <Dices className="inline h-4" /></SelectItem>
                     </SelectContent>
                   </Select>
                 }
