@@ -11,6 +11,7 @@ import {
 import { getPortraitUrl, uniqueValues } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
 import {
+  getActiveCheckSoundName,
   getCharacterSoundName,
   playMusic,
   playSound,
@@ -65,7 +66,7 @@ export function Player({ data }: { data: DiscoData }) {
   useEffect(() => {
     if (!tapeIsRolling) return;
     const timer = setTimeout(() => {
-      setTapeOffset(t => t + 12000);
+      setTapeOffset(t => t + 16000);
     }, 100);  // wait so last message starts fading
     return () => clearTimeout(timer);
   }, [tapeIsRolling]);
@@ -78,43 +79,44 @@ export function Player({ data }: { data: DiscoData }) {
     );
     const index = shownMessages.all.length;
 
-    if (index < data.messages.length) {
-      const lastMessage = shownMessages.all[index - 1];
-      const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
+    if (tapeIsRolling || index >= data.messages.length) return;
 
-      const timer = setTimeout(() => {
-        if (tapeIsRolling) return;
+    const lastMessage = shownMessages.all[index - 1];
+    const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
 
-        const newMessage = data.messages[index]!
+    const timer = setTimeout(() => {
+      const newMessage = data.messages[index]!
 
-        const showNewMessage = () => {
-          const all = [...shownMessages.all, newMessage];
-          playSound(messageSounds[index]);
-          setTapeIsRolling(false);
-          setShownMessages({ all, last: newMessage, lastIsShown: false });
-          setTimeout(() => setShownMessages({ all, last: newMessage, lastIsShown: true }), 100);
-        }
+      const showNewMessage = () => {
+        const all = [...shownMessages.all, newMessage];
+        playSound(messageSounds[index]);
+        setTapeIsRolling(false);
+        setShownMessages({ all, last: newMessage, lastIsShown: false });
+        setTimeout(() => setShownMessages({ all, last: newMessage, lastIsShown: true }), 100);
+      }
 
-        const isActiveCheck = newMessage.check?.active ?? false;
-        if (isActiveCheck) {
-          setTapeIsRolling(true);
-          setTimeout(() => {
-            showNewMessage();
-          }, activeCheckTapeRollDuration);
-          return;
-        }
+      const isActiveCheck = newMessage.check?.active ?? false;
+      if (isActiveCheck) {
+        playSound(getActiveCheckSoundName(newMessage));
+        setTapeIsRolling(true);
+        setTimeout(() => {
+          showNewMessage();
+        }, activeCheckTapeRollDuration);
+        return;
+      }
 
-        showNewMessage();
-      }, delay);
-      return () => clearTimeout(timer);
-    }
-  }, [soundsArePreloaded, imagesArePreloaded, shownMessages, data, messageSounds, tapeOffset]);
+      showNewMessage();
+
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [soundsArePreloaded, imagesArePreloaded, shownMessages, data, messageSounds, tapeOffset, tapeIsRolling]);
 
   useEffect(() => {
     const uniqueImages = [...uniqueValues(messagePortraits), portraitFrameUrl, ...activeCheckUrls];
     void Promise.allSettled(uniqueImages.map(preloadImage))
       .then(() => setImagesArePreloaded(true));
-    const uniqueSounds = uniqueValues(messageSounds).filter(v => v !== null);
+    const uniqueSounds = uniqueValues([...messageSounds, ...data.messages.map(getActiveCheckSoundName)]).filter(v => v !== null);
     void Promise.allSettled(uniqueSounds.map(preloadAudio))
       .then(() => setSoundsArePreloaded(true));
 
@@ -132,7 +134,7 @@ export function Player({ data }: { data: DiscoData }) {
         style={{
           top: yPosition - playerHeight - tapeOffset,
           transition: tapeIsRolling
-            ? 'top .6s cubic-bezier(0, 0, .5, 1)'
+            ? 'top 1s ease-in-out'
             : messageTransition,
         }}
       ></div>
@@ -141,6 +143,7 @@ export function Player({ data }: { data: DiscoData }) {
 
       {data.showPortraits &&
         shownMessages.all.length &&
+        !tapeIsRolling &&
         shownPortrait !== "" && (
           <div className="absolute left-4 top-32 z-20 flex aspect-portrait h-auto w-[27rem] items-center justify-center">
             <img

@@ -6,7 +6,7 @@ export const totalTimeLimit = 4 * 60 * 1000;
 export const startDelay = 0;
 const endDelay = 1500;
 
-export const activeCheckTapeRollDuration = 800;
+export const activeCheckTapeRollDuration = 1100;
 
 export function totalDuration(data: DiscoData): number {
   const messageDurationSum = data.messages.map(getMessageDuration).reduce((a, b) => a + b, 0);
