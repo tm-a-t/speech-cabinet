@@ -1,9 +1,13 @@
 "use client";
 
-import { type DiscoData, type Message } from "~/lib/disco-data";
+import { type DiscoData, message, type Message } from "~/lib/disco-data";
 import { MessageView } from "~/components/player/message-view";
 import React, { useEffect, useMemo, useState } from "react";
-import { getMessageDuration, startDelay } from "~/lib/time";
+import {
+  activeCheckTapeRollDuration,
+  getMessageDuration,
+  startDelay,
+} from "~/lib/time";
 import { getPortraitUrl, uniqueValues } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
 import {
@@ -13,6 +17,8 @@ import {
   stopMusic,
 } from "~/lib/music";
 import { AshesBackground } from "~/components/player/ashes-background";
+
+const messageTransition = "top .3s cubic-bezier(.1, .3, .7, .9)";
 
 const portraitFrameUrl = '/layout/frame.png'
 const activeChecks = {
@@ -27,7 +33,7 @@ const activeChecks = {
     dice: '/effects/check-success-dice.svg',
   },
 }
-const activeCheckUrls = Object.values(activeChecks)
+const activeCheckUrls = Object.values(activeChecks).flatMap(Object.values) as string[];
 
 export function Player({ data }: { data: DiscoData }) {
   const playerHeight = 1920;
@@ -38,6 +44,9 @@ export function Player({ data }: { data: DiscoData }) {
     lastIsShown: boolean;
   }>({ all: [], last: null, lastIsShown: true });
   const [yPosition, setYPosition] = useState(1536); // 1536 = playerHeight - 2x padding
+
+  const [tapeIsRolling, setTapeIsRolling] = useState(false);
+  const [tapeOffset, setTapeOffset] = useState(0);
 
   const messageSounds = useMemo(
     () =>
@@ -54,6 +63,14 @@ export function Player({ data }: { data: DiscoData }) {
   const [soundsArePreloaded, setSoundsArePreloaded] = useState(false);
 
   useEffect(() => {
+    if (!tapeIsRolling) return;
+    const timer = setTimeout(() => {
+      setTapeOffset(t => t + 12000);
+    }, 100);  // wait so last message starts fading
+    return () => clearTimeout(timer);
+  }, [tapeIsRolling]);
+
+  useEffect(() => {
     if (!imagesArePreloaded || !soundsArePreloaded) return;
 
     setYPosition(
@@ -64,16 +81,34 @@ export function Player({ data }: { data: DiscoData }) {
     if (index < data.messages.length) {
       const lastMessage = shownMessages.all[index - 1];
       const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
+
       const timer = setTimeout(() => {
+        if (tapeIsRolling) return;
+
         const newMessage = data.messages[index]!
-        const all = [...shownMessages.all, newMessage];
-        playSound(messageSounds[index]);
-        setShownMessages({ all, last: newMessage, lastIsShown: false });
-        setTimeout(() => setShownMessages({ all, last: newMessage, lastIsShown: true }), 100);
+
+        const showNewMessage = () => {
+          const all = [...shownMessages.all, newMessage];
+          playSound(messageSounds[index]);
+          setTapeIsRolling(false);
+          setShownMessages({ all, last: newMessage, lastIsShown: false });
+          setTimeout(() => setShownMessages({ all, last: newMessage, lastIsShown: true }), 100);
+        }
+
+        const isActiveCheck = newMessage.check?.active ?? false;
+        if (isActiveCheck) {
+          setTapeIsRolling(true);
+          setTimeout(() => {
+            showNewMessage();
+          }, activeCheckTapeRollDuration);
+          return;
+        }
+
+        showNewMessage();
       }, delay);
       return () => clearTimeout(timer);
     }
-  }, [soundsArePreloaded, imagesArePreloaded, shownMessages, data, messageSounds]);
+  }, [soundsArePreloaded, imagesArePreloaded, shownMessages, data, messageSounds, tapeOffset]);
 
   useEffect(() => {
     const uniqueImages = [...uniqueValues(messagePortraits), portraitFrameUrl, ...activeCheckUrls];
@@ -95,8 +130,10 @@ export function Player({ data }: { data: DiscoData }) {
         id="tape-background"
         className="tape-background absolute bottom-0 left-0 right-0"
         style={{
-          top: yPosition - playerHeight,
-          transition: "top .3s cubic-bezier(.1, .3, .7, .9)",
+          top: yPosition - playerHeight - tapeOffset,
+          transition: tapeIsRolling
+            ? 'top .6s cubic-bezier(0, 0, .5, 1)'
+            : messageTransition,
         }}
       ></div>
 
@@ -125,33 +162,33 @@ export function Player({ data }: { data: DiscoData }) {
         )}
 
       {shownMessages.last?.check?.active && (
-          <div className="fixed bottom-0 left-0 right-0 top-0 z-10 flex flex-col items-center justify-end">
-            <img
-              src={activeChecks[shownMessages.last.check.result].background}
-              className={`fixed bottom-0 -z-10 ${shownMessages.lastIsShown ? 'opacity-0' : ''}`}
-              style={{
-                transition: "opacity .7s .4s ease-in",
-              }}
-              alt=""
-            />
-            <img
-              src={activeChecks[shownMessages.last.check.result].dice}
-              className={`h-60 ${shownMessages.lastIsShown ? 'opacity-0' : ''}`}
-              style={{
-                transition: "opacity .4s 1s ease-in",
-              }}
-              alt=""
-            />
-            <img
-              src={activeChecks[shownMessages.last.check.result].text}
-              className={`mb-48 h-20 ${shownMessages.lastIsShown ? 'opacity-0 pl-[60rem]' : ''}`}
-              style={{
-                transition: "all .3s 1s ease-in",
-              }}
-              alt=""
-            />
-          </div>
-        )}
+        <div className="fixed bottom-0 left-0 right-0 top-0 z-10 flex flex-col items-center justify-end">
+          <img
+            src={activeChecks[shownMessages.last.check.result].background}
+            className={`fixed bottom-0 -z-10 ${shownMessages.lastIsShown ? "opacity-0" : ""}`}
+            style={{
+              transition: "opacity .7s .4s ease-in",
+            }}
+            alt=""
+          />
+          <img
+            src={activeChecks[shownMessages.last.check.result].dice}
+            className={`h-60 ${shownMessages.lastIsShown ? "opacity-0" : ""}`}
+            style={{
+              transition: "opacity .4s 1s ease-in",
+            }}
+            alt=""
+          />
+          <img
+            src={activeChecks[shownMessages.last.check.result].text}
+            className={`mb-48 h-20 ${shownMessages.lastIsShown ? "pl-[60rem] opacity-0" : ""}`}
+            style={{
+              transition: "all .3s 1s ease-in",
+            }}
+            alt=""
+          />
+        </div>
+      )}
 
       <div
         id="messages"
@@ -160,7 +197,7 @@ export function Player({ data }: { data: DiscoData }) {
         }
         style={{
           top: yPosition + "px",
-          transition: "top .3s cubic-bezier(.1, .4, .6, .9)",
+          transition: messageTransition,
         }}
       >
         {shownMessages.all.map((message, index) => (
@@ -168,10 +205,12 @@ export function Player({ data }: { data: DiscoData }) {
             message={message}
             data={data}
             className={
-              shownMessages.lastIsShown ||
-              index + 1 !== shownMessages.all.length
-                ? "opacity-100 [&:not(:last-child)]:opacity-60"
-                : ""
+              tapeIsRolling
+                ? "opacity-60"
+                : shownMessages.lastIsShown ||
+                    index + 1 !== shownMessages.all.length
+                  ? "opacity-100 [&:not(:last-child)]:opacity-60"
+                  : ""
             }
             key={message.id}
           />
