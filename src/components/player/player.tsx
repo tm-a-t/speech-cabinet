@@ -164,7 +164,7 @@ export function Player({ data }: { data: DiscoData }) {
           </div>
         )}
 
-      {shownMessages.last?.check?.active && (
+      {!tapeIsRolling && shownMessages.last?.check?.active && (
         <div className="fixed bottom-0 left-0 right-0 top-0 z-10 flex flex-col items-center justify-end">
           <img
             src={activeChecks[shownMessages.last.check.result].background}
