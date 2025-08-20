@@ -15,14 +15,28 @@ import {
 import { AshesBackground } from "~/components/player/ashes-background";
 
 const portraitFrameUrl = '/layout/frame.png'
+const activeChecks = {
+  Failure:  {
+    text: '/effects/check-failure.svg',
+    background: '/effects/check-failure-background.png',
+    dice: '/effects/check-failure-dice.svg',
+  },
+  Success: {
+    text: '/effects/check-success.svg',
+    background: '/effects/check-success-background.png',
+    dice: '/effects/check-success-dice.svg',
+  },
+}
+const activeCheckUrls = Object.values(activeChecks)
 
 export function Player({ data }: { data: DiscoData }) {
   const playerHeight = 1920;
 
   const [shownMessages, setShownMessages] = useState<{
     all: Message[];
+    last: Message | null,
     lastIsShown: boolean;
-  }>({ all: [], lastIsShown: true });
+  }>({ all: [], last: null, lastIsShown: true });
   const [yPosition, setYPosition] = useState(1536); // 1536 = playerHeight - 2x padding
 
   const messageSounds = useMemo(
@@ -51,17 +65,18 @@ export function Player({ data }: { data: DiscoData }) {
       const lastMessage = shownMessages.all[index - 1];
       const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
       const timer = setTimeout(() => {
-        const all = [...shownMessages.all, data.messages[index]!];
+        const newMessage = data.messages[index]!
+        const all = [...shownMessages.all, newMessage];
         playSound(messageSounds[index]);
-        setShownMessages({ all, lastIsShown: false });
-        setTimeout(() => setShownMessages({ all, lastIsShown: true }), 100);
+        setShownMessages({ all, last: newMessage, lastIsShown: false });
+        setTimeout(() => setShownMessages({ all, last: newMessage, lastIsShown: true }), 100);
       }, delay);
       return () => clearTimeout(timer);
     }
   }, [soundsArePreloaded, imagesArePreloaded, shownMessages, data, messageSounds]);
 
   useEffect(() => {
-    const uniqueImages = [...uniqueValues(messagePortraits), portraitFrameUrl];
+    const uniqueImages = [...uniqueValues(messagePortraits), portraitFrameUrl, ...activeCheckUrls];
     void Promise.allSettled(uniqueImages.map(preloadImage))
       .then(() => setImagesArePreloaded(true));
     const uniqueSounds = uniqueValues(messageSounds).filter(v => v !== null);
@@ -85,31 +100,64 @@ export function Player({ data }: { data: DiscoData }) {
         }}
       ></div>
 
-      {data.showParticles && <AshesBackground/>}
+      {data.showParticles && <AshesBackground />}
 
-      {data.showPortraits && shownMessages.all.length && shownPortrait !== '' && (
-        <div className="aspect-portrait absolute left-4 top-32 z-20 flex h-auto w-[27rem] items-center justify-center">
-          <img
-            src={portraitFrameUrl}
-            className="absolute top-1/2 -translate-y-1/2"
-            alt=""
-          />
-          {shownPortrait ? (
+      {data.showPortraits &&
+        shownMessages.all.length &&
+        shownPortrait !== "" && (
+          <div className="absolute left-4 top-32 z-20 flex aspect-portrait h-auto w-[27rem] items-center justify-center">
             <img
-              key={shownPortrait}
-              src={shownPortrait}
+              src={portraitFrameUrl}
+              className="absolute top-1/2 -translate-y-1/2"
               alt=""
-              className="absolute w-full px-6"
             />
-          ) : (
-            <Skeleton className="aspect-portrait w-full" />
-          )}
-        </div>
-      )}
+            {shownPortrait ? (
+              <img
+                key={shownPortrait}
+                src={shownPortrait}
+                alt=""
+                className="absolute w-full px-6"
+              />
+            ) : (
+              <Skeleton className="aspect-portrait w-full" />
+            )}
+          </div>
+        )}
+
+      {shownMessages.last?.check?.active && (
+          <div className="fixed bottom-0 left-0 right-0 top-0 z-10 flex flex-col items-center justify-end">
+            <img
+              src={activeChecks[shownMessages.last.check.result].background}
+              className={`fixed bottom-0 -z-10 ${shownMessages.lastIsShown ? 'opacity-0' : ''}`}
+              style={{
+                transition: "opacity .7s .4s ease-in",
+              }}
+              alt=""
+            />
+            <img
+              src={activeChecks[shownMessages.last.check.result].dice}
+              className={`h-60 ${shownMessages.lastIsShown ? 'opacity-0' : ''}`}
+              style={{
+                transition: "opacity .4s 1s ease-in",
+              }}
+              alt=""
+            />
+            <img
+              src={activeChecks[shownMessages.last.check.result].text}
+              className={`mb-48 h-20 ${shownMessages.lastIsShown ? 'opacity-0 pl-[60rem]' : ''}`}
+              style={{
+                transition: "all .3s 1s ease-in",
+              }}
+              alt=""
+            />
+          </div>
+        )}
 
       <div
         id="messages"
-        className={"absolute px-20 py-48 text-[2.75rem] leading-[4.5rem] w-full"}
+        className={
+          "absolute w-full px-20 py-48 text-[2.75rem] leading-[4.5rem]"
+        }
         style={{
           top: yPosition + "px",
           transition: "top .3s cubic-bezier(.1, .4, .6, .9)",
@@ -120,7 +168,8 @@ export function Player({ data }: { data: DiscoData }) {
             message={message}
             data={data}
             className={
-              shownMessages.lastIsShown || index + 1 !== shownMessages.all.length
+              shownMessages.lastIsShown ||
+              index + 1 !== shownMessages.all.length
                 ? "opacity-100 [&:not(:last-child)]:opacity-60"
                 : ""
             }
