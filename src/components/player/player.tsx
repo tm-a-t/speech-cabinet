@@ -142,7 +142,7 @@ export function Player({ data }: { data: DiscoData }) {
       {data.showParticles && <AshesBackground />}
 
       <div className="absolute top-0 left-0 right-0">
-        <div className="z-10 min-h-64 overflow-hidden">
+        <div className="relative z-10 min-h-64 overflow-hidden">
           {data.cover &&
             <div className="bg-black w-full [&_img]:w-full [&_img]:max-h-[48rem] [&_img]:object-contain" dangerouslySetInnerHTML={{__html: data.cover.content}}></div>
           }
