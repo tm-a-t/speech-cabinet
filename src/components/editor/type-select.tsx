@@ -4,7 +4,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from '~/components/ui/dropdown-menu';
-import {Pencil} from 'lucide-react';
+import { Dices } from "lucide-react";
 import {getColorClass} from '~/lib/utils';
 import * as React from 'react';
 import type {Message, DiscoData} from '~/lib/disco-data';
@@ -41,8 +41,8 @@ export function TypeSelect({message, data, saveData}: {
     <>
       <DropdownMenuSub>
         <DropdownMenuSubTrigger>
-          <Pencil className="mr-2 h-4 w-4"/>
-          Skill type
+          <Dices className="mr-2 h-4 w-4"/>
+          Skill
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
           <DropdownMenuSubContent>

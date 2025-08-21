@@ -27,7 +27,7 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
         <ThemeProvider attribute="class" defaultTheme="dark">
           <TooltipProvider>
             <RenderStatusProvider>
-              <main className="flex bg-zinc-900 sm:bg-transparent text-zinc-50 min-h-dvh" data-vaul-drawer-wrapper>
+              <main className="flex text-zinc-50 min-h-dvh" data-vaul-drawer-wrapper>
                 {children}
               </main>
             </RenderStatusProvider>

@@ -14,9 +14,11 @@ import {
   CoverImageEditorContext,
   TextEditorProvider,
 } from '~/components/editor/text-editor-provider';
+import { useIsDesktop } from "~/lib/hooks/use-media-query";
 
 export default function EditorPage() {
   const [data, setData] = useState<DiscoData | null>(null);
+  const isDesktop = useIsDesktop();
   const [menuValue, setMenuValue] = useState('');
 
   useEffect(() => {
@@ -58,7 +60,7 @@ export default function EditorPage() {
         <Image src="/layout/wallpaper.png" alt="" width={1080} height={607} className="w-full h-full object-cover fixed -z-20"/>
 
         <div
-          className="fixed z-20 top-0 left-0 right-0 py-2 px-1 sm:px-3 flex flex-wrap gap-x-1 gap-y-4 bg-stone-900 sm:bg-transparent items-center border-b sm:border-0">
+          className="fixed z-20 top-0 left-0 right-0 py-3 sm:py-2 sm:px-3 flex flex-wrap gap-x-1 gap-y-4 items-center">
           <Menubar className="border-0 dark:bg-transparent mr-auto"
                    value={menuValue}
                    onValueChange={setMenuValue}
@@ -71,13 +73,14 @@ export default function EditorPage() {
           </Menubar>
         </div>
 
-        {data &&
-          <div
-            className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 pt-24 xl:pt-32 h-full min-h-dvh tape-background">
+        <div className="fixed w-full h-dvh mask" style={{maskImage: isDesktop ? "" : "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.2) 1rem, rgba(0,0,0,0.5) 3rem, rgba(0,0,0,1) 6rem)"}}>
+          <div className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 pt-32 xl:pt-32 h-full min-h-dvh tape-background overflow-y-auto">
 
-            <Editor data={data} saveData={saveData} />
+          {data &&
+              <Editor data={data} saveData={saveData} />
+          }
           </div>
-        }
+        </div>
       </div>
 
     </TextEditorProvider>
