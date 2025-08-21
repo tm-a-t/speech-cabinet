@@ -12,7 +12,7 @@ import type {DiscoData, Message} from "~/lib/disco-data";
 import {TypeSelect} from '~/components/editor/type-select';
 import {PortraitSelect} from "./portrait-select";
 import { useContext } from "react";
-import { TextEditorContext } from "~/components/editor/text-editor-provider";
+import { MessageEditorContext } from "~/components/editor/text-editor-provider";
 import { addImage } from "~/lib/utils";
 
 export function MessageExtraMenu({message, removeMessage, data, saveData, moveMessageUp, moveMessageDown}: {
@@ -24,7 +24,7 @@ export function MessageExtraMenu({message, removeMessage, data, saveData, moveMe
   moveMessageDown: () => void,
 }) {
   const [open, setOpen] = React.useState(false);
-  const editor = useContext(TextEditorContext);
+  const editor = useContext(MessageEditorContext);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>

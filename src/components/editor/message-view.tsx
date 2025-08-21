@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import {difficulties, type Difficulty, type DiscoData, type Message, type Result} from '~/lib/disco-data';
 import {skills} from '~/lib/names';
 import {NameSelect} from '~/components/editor/name-select';
-import { TextEditorContext, TextEditorProvider } from "~/components/editor/text-editor-provider";
+import { MessageEditorContext, TextEditorProvider } from "~/components/editor/text-editor-provider";
 import { EditorContent } from "@tiptap/react";
 import { cn } from "~/lib/utils";
 import { Dices } from "lucide-react";
@@ -30,7 +30,7 @@ export function MessageView(
     usedNames: string[],
   },
 ) {
-  const editor = useContext(TextEditorContext);
+  const editor = useContext(MessageEditorContext);
   const showCheck = data.overrides.checks[message.name] ?? skills.includes(message.name);
 
   function handleCheckToggle(value: boolean) {

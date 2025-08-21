@@ -77,7 +77,7 @@ export function restoreSavedData(): DiscoData {
   redirect('/invalid-data');
 }
 
-export function addImage(editor: Editor | null) {
+export function addImage(editor: Editor | null, options?: {onCancel?: () => void}) {
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.accept = 'image/*';
@@ -93,6 +93,9 @@ export function addImage(editor: Editor | null) {
       const src = typeof source === 'string' ? source : Buffer.from(source).toString();
       editor.chain().focus().setImage({ src: src }).run();
     };
+  };
+  fileInput.oncancel = () => {
+    if (options?.onCancel) options.onCancel();
   };
   fileInput.click();
 }

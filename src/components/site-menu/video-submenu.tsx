@@ -1,15 +1,24 @@
 import {
   MenubarCheckboxItem,
-  MenubarContent,
+  MenubarContent, MenubarItem,
   MenubarMenu,
   MenubarSeparator,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
   MenubarTrigger,
-} from '~/components/ui/menubar';
+} from "~/components/ui/menubar";
 import {MusicSelect} from '~/components/site-menu/music-select';
-import React from 'react';
+import React, { useContext } from 'react';
 import type {DiscoData} from '~/lib/disco-data';
+import { CoverImageEditorContext } from "~/components/editor/text-editor-provider";
+import { addImage } from "~/lib/utils";
+import { EditorContent } from "@tiptap/react";
 
 export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveData: (data: DiscoData) => void, close: () => void }) {
+  const coverEditor = useContext(CoverImageEditorContext);
+  const hasCover = data.cover !== undefined;
+
   function setBooleanValue(name: 'showPortraits' | 'skipMusicIntro' | 'showParticles', value: boolean) {
     if (data === null) return;
     saveData({
@@ -18,11 +27,23 @@ export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveDat
     });
   }
 
-  function setCover(show: boolean) {
-    if (data === null) return;
+  function hideCover() {
     saveData({
       ...data,
-      cover: show ? { content: '' } : undefined,
+      cover: undefined,
+    });
+    coverEditor?.commands.clearContent();
+  }
+
+  function addCover() {
+    saveData({
+      ...data,
+      cover: { content: '' },
+    });
+    addImage(coverEditor, {
+      onCancel() {
+        hideCover();
+      },
     });
   }
 
@@ -38,9 +59,20 @@ export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveDat
         Options
       </MenubarTrigger>
       <MenubarContent>
-        <MenubarCheckboxItem checked={data.cover !== undefined} onCheckedChange={setCover}>
-          Image on top
-        </MenubarCheckboxItem>
+        {hasCover
+          ? <MenubarCheckboxItem checked={true} onCheckedChange={hideCover}>
+            Image on top
+          </MenubarCheckboxItem>
+          : <MenubarSub>
+            <MenubarSubTrigger inset>
+              Image on top
+            </MenubarSubTrigger>
+            <MenubarSubContent>
+              <MenubarItem onClick={addCover}>Choose...</MenubarItem>
+              <EditorContent editor={coverEditor} placeholder="Or paste here" className="text-sm p-2"></EditorContent>
+            </MenubarSubContent>
+          </MenubarSub>
+        }
         <MenubarCheckboxItem checked={data.showPortraits} onCheckedChange={v => setBooleanValue('showPortraits', v)}>
           Portraits
         </MenubarCheckboxItem>

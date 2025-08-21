@@ -5,7 +5,11 @@ import {MessageView} from "./message-view";
 import { addImage, uniqueValues} from '~/lib/utils';
 import { totalDuration, totalTimeLimit } from "~/lib/time";
 import { WatchButton } from "~/components/editor/watch-button";
-import { TextEditorContext, TextEditorProvider } from "./text-editor-provider";
+import {
+  CoverImageEditorContext,
+  MessageEditorContext,
+  TextEditorProvider,
+} from "./text-editor-provider";
 import { EditorContent } from "@tiptap/react";
 import { ImagePlus } from "lucide-react";
 
@@ -71,14 +75,10 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
 
   return (
     <>
-      {data.cover &&
-        <TextEditorProvider content={data.cover.content} placeholder="or paste here" onUpdate={text => saveData({...data, cover: {...data.cover, content: text}})} allowOnlyImage>
-          <CoverEditor/>
-        </TextEditorProvider>
-      }
+      {data.cover && <CoverEditor/>}
 
       {data?.messages.map((message, index) =>
-        <TextEditorProvider key={message.id} content={message.text} placeholder="Type a line" onUpdate={text => saveMessage(index, {...message, text})}>
+        <TextEditorProvider context={MessageEditorContext} key={message.id} content={message.text} placeholder="Type a line" onUpdate={text => saveMessage(index, {...message, text})}>
           <MessageView
             message={message}
             saveMessage={m => saveMessage(index, m)}
@@ -121,16 +121,10 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
 }
 
 function CoverEditor() {
-  const editor = useContext(TextEditorContext);
+  const editor = useContext(CoverImageEditorContext);
 
   return <div className="mx-2 sm:mx-0 border-b sm:border-0 pb-2 sm:pb-0">
-    <div className={`flex items-center ${editor?.isEmpty ? '' : 'mb-8'}`}>
-      {editor?.isEmpty &&
-        <Button onClick={() => addImage(editor)} variant="ghost" className="mr-2 px-0 -my-2">
-          <ImagePlus className="mr-2 h-4 w-4 "/>
-          Choose image
-        </Button>
-      }
+    <div className={`mb-8 ${editor?.isEmpty ? 'hidden' : ''}`}>
       <EditorContent editor={editor} className="text-sm [&_[data-placeholder]]:-mt-4 [&_img]:w-full w-full"></EditorContent>
     </div>
   </div>

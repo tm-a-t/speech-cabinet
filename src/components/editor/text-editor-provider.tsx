@@ -1,5 +1,5 @@
 import { type Editor, type EditorEvents, useEditor } from "@tiptap/react";
-import { createContext, type ReactNode } from 'react';
+import { type Context, createContext, type ReactNode } from "react";
 import { debounce } from "~/lib/utils";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import History from "@tiptap/extension-history";
@@ -14,12 +14,13 @@ import { FileHandler } from "./file-handler";
 import { mergeAttributes } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 
-export const TextEditorContext = createContext<Editor | null>(null);
+export const MessageEditorContext = createContext<Editor | null>(null);
+export const CoverImageEditorContext = createContext<Editor | null>(null);
 
-export function TextEditorProvider(props: { children: ReactNode, content: string, placeholder: string, onUpdate: (value: string) => void, allowOnlyImage?: boolean }) {
+export function TextEditorProvider(props: { children: ReactNode, context: Context<Editor | null>, content: string, placeholder: string, onUpdate: (value: string, isEmpty: boolean) => void, allowOnlyImage?: boolean }) {
   const isDesktop = useIsDesktop();
   const handleUpdate = ({editor}: EditorEvents['update']) => {
-    props.onUpdate(editor.getHTML());
+    props.onUpdate(editor.getHTML(), editor.isEmpty);
   };
 
   const editor = useEditor({
@@ -52,9 +53,9 @@ export function TextEditorProvider(props: { children: ReactNode, content: string
   });
 
   return (
-    <TextEditorContext.Provider value={editor}>
+    <props.context.Provider value={editor}>
       {props.children}
-    </TextEditorContext.Provider>
+    </props.context.Provider>
   )
 }
 
@@ -82,9 +83,14 @@ const AlwaysEmptyParagraph = Paragraph.extend({
         key: new PluginKey("disallowTyping"),
         props: {
           handleTextInput: () => true,
-          handlePaste: (view, event) => [...event.clipboardData?.items ?? []].some(item => item.type == "text/html"),
+          handlePaste: (view, event) => {
+            const items = [...(event.clipboardData?.items ?? [])]
+            if (items.some(item => item.type.startsWith('text/'))) {
+              return true;
+            }
+          },
         },
       }),
-    ]
+    ];
   }
 });
