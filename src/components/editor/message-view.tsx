@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import {difficulties, type Difficulty, type DiscoData, type Message, type Result} from '~/lib/disco-data';
 import {skills} from '~/lib/names';
 import {NameSelect} from '~/components/editor/name-select';
-import { MessageEditorContext, TextEditorProvider } from "~/components/editor/text-editor-provider";
+import { MessageEditorContext } from "~/components/editor/text-editor-provider";
 import { EditorContent } from "@tiptap/react";
 import { cn } from "~/lib/utils";
 import { Dices } from "lucide-react";

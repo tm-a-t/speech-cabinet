@@ -1,6 +1,6 @@
 "use client";
 
-import { type DiscoData, message, type Message } from "~/lib/disco-data";
+import { type DiscoData, type Message } from "~/lib/disco-data";
 import { MessageView } from "~/components/player/message-view";
 import React, { useEffect, useMemo, useState } from "react";
 import {

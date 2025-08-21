@@ -2,7 +2,7 @@ import { type DiscoData, type Message, message} from "~/lib/disco-data";
 import {Button} from '~/components/ui/button';
 import React, { useContext } from 'react';
 import {MessageView} from "./message-view";
-import { addImage, uniqueValues} from '~/lib/utils';
+import { uniqueValues} from '~/lib/utils';
 import { totalDuration, totalTimeLimit } from "~/lib/time";
 import { WatchButton } from "~/components/editor/watch-button";
 import {
@@ -11,7 +11,6 @@ import {
   TextEditorProvider,
 } from "./text-editor-provider";
 import { EditorContent } from "@tiptap/react";
-import { ImagePlus } from "lucide-react";
 
 export function Editor({data, saveData}: { data: DiscoData, saveData: (data: DiscoData) => void }) {
   const usedNames = uniqueValues(data?.messages.map(message => message.name)) ?? [];

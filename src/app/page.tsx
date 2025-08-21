@@ -7,7 +7,7 @@ import {Editor} from '~/components/editor/editor';
 import { Menubar } from "~/components/ui/menubar";
 import {SiteSubmenu} from '~/components/site-menu/site-submenu';
 import {FileSubmenu} from '~/components/site-menu/file-submenu';
-import {VideoSubmenu} from '~/components/site-menu/video-submenu';
+import {OptionsSubmenu} from '~/components/site-menu/options-submenu';
 import { restoreSavedData } from '~/lib/utils';
 import Image from "next/image";
 import {
@@ -66,7 +66,7 @@ export default function EditorPage() {
             <SiteSubmenu/>
             {data && <>
               <FileSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
-              <VideoSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
+              <OptionsSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
             </>}
           </Menubar>
         </div>
