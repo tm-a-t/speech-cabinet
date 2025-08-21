@@ -11,9 +11,9 @@ import {
 import type {DiscoData, Message} from "~/lib/disco-data";
 import {TypeSelect} from '~/components/editor/type-select';
 import {PortraitSelect} from "./portrait-select";
-import {characters, skills} from '~/lib/names';
 import { useContext } from "react";
-import { TextEditorContext } from "~/components/editor/text-editor-provider";
+import { MessageEditorContext } from "~/components/editor/text-editor-provider";
+import { addImage } from "~/lib/utils";
 
 export function MessageExtraMenu({message, removeMessage, data, saveData, moveMessageUp, moveMessageDown}: {
   message: Message,
@@ -24,27 +24,7 @@ export function MessageExtraMenu({message, removeMessage, data, saveData, moveMe
   moveMessageDown: () => void,
 }) {
   const [open, setOpen] = React.useState(false);
-  const editor = useContext(TextEditorContext);
-
-  function addImage() {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-    fileInput.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = () => {
-        if (!editor) return;
-        const source = fileReader.result;
-        if (!source) return;
-        const src = typeof source === 'string' ? source : Buffer.from(source).toString();
-        editor.chain().focus().setImage({ src: src }).run();
-      };
-    };
-    fileInput.click();
-  }
+  const editor = useContext(MessageEditorContext);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -55,7 +35,7 @@ export function MessageExtraMenu({message, removeMessage, data, saveData, moveMe
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="start">
-        <DropdownMenuItem onSelect={addImage}>
+        <DropdownMenuItem onSelect={() => addImage(editor)}>
           <ImagePlus className="mr-2 h-4 w-4"/>
           Add image
         </DropdownMenuItem>

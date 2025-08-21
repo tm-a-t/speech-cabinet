@@ -3,6 +3,7 @@ import { type DiscoData, getDefaultData, toDiscoData } from "./disco-data";
 import {allPortraitNames, skillColorClass} from '~/lib/names';
 import {twMerge} from 'tailwind-merge';
 import { redirect } from "next/navigation";
+import type { Editor } from "@tiptap/core";
 
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
@@ -74,4 +75,27 @@ export function restoreSavedData(): DiscoData {
     return dataSave;
   }
   redirect('/invalid-data');
+}
+
+export function addImage(editor: Editor | null, options?: {onCancel?: () => void}) {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.onchange = (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.onload = () => {
+      if (!editor) return;
+      const source = fileReader.result;
+      if (!source) return;
+      const src = typeof source === 'string' ? source : Buffer.from(source).toString();
+      editor.chain().focus().setImage({ src: src }).run();
+    };
+  };
+  fileInput.oncancel = () => {
+    if (options?.onCancel) options.onCancel();
+  };
+  fileInput.click();
 }

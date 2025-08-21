@@ -24,6 +24,7 @@ export const message = z.object({
   check: z.object({
     difficulty: difficulties,
     result: results,
+    active: z.boolean().default(false),
   }).optional(),
   id: z.number().default(() => Math.floor(Math.random() * 1_000_000)),
 });
@@ -36,6 +37,9 @@ const discoData = z.object({
     colorClass: z.record(z.string(), z.string()),
     portraitUrl: z.record(z.string(), z.string()),
   }),
+  cover: z.object({
+    content: z.string(),
+  }).optional(),
   showPortraits: z.boolean(),
   showParticles: z.boolean().default(true),
   music: z.string().nullable(),

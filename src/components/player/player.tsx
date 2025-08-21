@@ -3,10 +3,15 @@
 import { type DiscoData, type Message } from "~/lib/disco-data";
 import { MessageView } from "~/components/player/message-view";
 import React, { useEffect, useMemo, useState } from "react";
-import { getMessageDuration, startDelay } from "~/lib/time";
+import {
+  activeCheckTapeRollDuration,
+  getMessageDuration,
+  startDelay,
+} from "~/lib/time";
 import { getPortraitUrl, uniqueValues } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
 import {
+  getActiveCheckSoundName,
   getCharacterSoundName,
   playMusic,
   playSound,
@@ -14,16 +19,35 @@ import {
 } from "~/lib/music";
 import { AshesBackground } from "~/components/player/ashes-background";
 
+const messageTransition = "top .3s cubic-bezier(.1, .3, .7, .9)";
+
 const portraitFrameUrl = '/layout/frame.png'
+const activeChecks = {
+  Failure:  {
+    text: '/effects/check-failure.svg',
+    background: '/effects/check-failure-background.png',
+    dice: '/effects/check-failure-dice.svg',
+  },
+  Success: {
+    text: '/effects/check-success.svg',
+    background: '/effects/check-success-background.png',
+    dice: '/effects/check-success-dice.svg',
+  },
+}
+const activeCheckUrls = Object.values(activeChecks).flatMap(Object.values) as string[];
 
 export function Player({ data }: { data: DiscoData }) {
   const playerHeight = 1920;
 
   const [shownMessages, setShownMessages] = useState<{
     all: Message[];
+    last: Message | null,
     lastIsShown: boolean;
-  }>({ all: [], lastIsShown: true });
+  }>({ all: [], last: null, lastIsShown: true });
   const [yPosition, setYPosition] = useState(1536); // 1536 = playerHeight - 2x padding
+
+  const [tapeIsRolling, setTapeIsRolling] = useState(false);
+  const [tapeOffset, setTapeOffset] = useState(0);
 
   const messageSounds = useMemo(
     () =>
@@ -40,6 +64,14 @@ export function Player({ data }: { data: DiscoData }) {
   const [soundsArePreloaded, setSoundsArePreloaded] = useState(false);
 
   useEffect(() => {
+    if (!tapeIsRolling) return;
+    const timer = setTimeout(() => {
+      setTapeOffset(t => t + 16000);
+    }, 100);  // wait so last message starts fading
+    return () => clearTimeout(timer);
+  }, [tapeIsRolling]);
+
+  useEffect(() => {
     if (!imagesArePreloaded || !soundsArePreloaded) return;
 
     setYPosition(
@@ -47,24 +79,44 @@ export function Player({ data }: { data: DiscoData }) {
     );
     const index = shownMessages.all.length;
 
-    if (index < data.messages.length) {
-      const lastMessage = shownMessages.all[index - 1];
-      const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
-      const timer = setTimeout(() => {
-        const all = [...shownMessages.all, data.messages[index]!];
+    if (tapeIsRolling || index >= data.messages.length) return;
+
+    const lastMessage = shownMessages.all[index - 1];
+    const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
+
+    const timer = setTimeout(() => {
+      const newMessage = data.messages[index]!
+
+      const showNewMessage = () => {
+        const all = [...shownMessages.all, newMessage];
         playSound(messageSounds[index]);
-        setShownMessages({ all, lastIsShown: false });
-        setTimeout(() => setShownMessages({ all, lastIsShown: true }), 100);
-      }, delay);
-      return () => clearTimeout(timer);
-    }
-  }, [soundsArePreloaded, imagesArePreloaded, shownMessages, data, messageSounds]);
+        setTapeIsRolling(false);
+        setShownMessages({ all, last: newMessage, lastIsShown: false });
+        setTimeout(() => setShownMessages({ all, last: newMessage, lastIsShown: true }), 100);
+      }
+
+      const isActiveCheck = newMessage.check?.active ?? false;
+      if (isActiveCheck) {
+        playSound(getActiveCheckSoundName(newMessage));
+        setTapeIsRolling(true);
+        setTimeout(() => {
+          showNewMessage();
+        }, activeCheckTapeRollDuration);
+        return;
+      }
+
+      showNewMessage();
+
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [soundsArePreloaded, imagesArePreloaded, shownMessages, data, messageSounds, tapeOffset, tapeIsRolling]);
 
   useEffect(() => {
-    const uniqueImages = [...uniqueValues(messagePortraits), portraitFrameUrl];
+    const uniqueImages = [...uniqueValues(messagePortraits), portraitFrameUrl, ...activeCheckUrls];
     void Promise.allSettled(uniqueImages.map(preloadImage))
       .then(() => setImagesArePreloaded(true));
-    const uniqueSounds = uniqueValues(messageSounds).filter(v => v !== null);
+    const uniqueSounds = uniqueValues([...messageSounds, ...data.messages.map(getActiveCheckSoundName)]).filter(v => v !== null);
     void Promise.allSettled(uniqueSounds.map(preloadAudio))
       .then(() => setSoundsArePreloaded(true));
 
@@ -80,39 +132,84 @@ export function Player({ data }: { data: DiscoData }) {
         id="tape-background"
         className="tape-background absolute bottom-0 left-0 right-0"
         style={{
-          top: yPosition - playerHeight,
-          transition: "top .3s cubic-bezier(.1, .3, .7, .9)",
+          top: yPosition - playerHeight - tapeOffset,
+          transition: tapeIsRolling
+            ? 'top 1s ease-in-out'
+            : messageTransition,
         }}
       ></div>
 
-      {data.showParticles && <AshesBackground/>}
+      {data.showParticles && <AshesBackground />}
 
-      {data.showPortraits && shownMessages.all.length && shownPortrait !== '' && (
-        <div className="aspect-portrait absolute left-4 top-32 z-20 flex h-auto w-[27rem] items-center justify-center">
+      <div className="absolute top-0 left-0 right-0">
+        <div className="z-10 min-h-64 overflow-hidden">
+          {data.cover &&
+            <div className="bg-black w-full [&_img]:w-full [&_img]:max-h-[48rem] [&_img]:object-contain" dangerouslySetInnerHTML={{__html: data.cover.content}}></div>
+          }
+        </div>
+
+        {data.showPortraits &&
+          shownMessages.all.length &&
+          !tapeIsRolling &&
+          shownPortrait !== "" && (
+            <div className="ml-4 -mt-16 relative z-30 flex aspect-portrait w-[27rem] items-center justify-center">
+              <img
+                src={portraitFrameUrl}
+                className="absolute top-1/2 -translate-y-1/2"
+                alt=""
+              />
+              {shownPortrait ? (
+                <img
+                  key={shownPortrait}
+                  src={shownPortrait}
+                  alt=""
+                  className="absolute w-full px-6"
+                />
+              ) : (
+                <Skeleton className="aspect-portrait w-full" />
+              )}
+            </div>
+          )}
+      </div>
+
+
+      {!tapeIsRolling && shownMessages.last?.check?.active && (
+        <div className="fixed bottom-0 left-0 right-0 top-0 z-50 flex flex-col items-center justify-end">
           <img
-            src={portraitFrameUrl}
-            className="absolute top-1/2 -translate-y-1/2"
+            src={activeChecks[shownMessages.last.check.result].background}
+            className={`fixed bottom-0 -z-10 ${shownMessages.lastIsShown ? "opacity-0" : ""}`}
+            style={{
+              transition: "opacity .7s .4s ease-in",
+            }}
             alt=""
           />
-          {shownPortrait ? (
-            <img
-              key={shownPortrait}
-              src={shownPortrait}
-              alt=""
-              className="absolute w-full px-6"
-            />
-          ) : (
-            <Skeleton className="aspect-portrait w-full" />
-          )}
+          <img
+            src={activeChecks[shownMessages.last.check.result].dice}
+            className={`h-60 ${shownMessages.lastIsShown ? "opacity-0" : ""}`}
+            style={{
+              transition: "opacity .4s 1s ease-in",
+            }}
+            alt=""
+          />
+          <img
+            src={activeChecks[shownMessages.last.check.result].text}
+            className={`mb-48 h-20 ${shownMessages.lastIsShown ? "pl-[60rem] opacity-0" : ""}`}
+            style={{
+              transition: "all .3s 1s ease-in",
+            }}
+            alt=""
+          />
         </div>
       )}
 
       <div
         id="messages"
-        className={"absolute px-20 py-48 text-[2.75rem] leading-[4.5rem] w-full"}
+        className={
+          "absolute w-full px-20 py-48 text-[2.75rem] leading-[4.5rem]"
+        }
         style={{
           top: yPosition + "px",
-          transition: "top .3s cubic-bezier(.1, .4, .6, .9)",
+          transition: messageTransition,
         }}
       >
         {shownMessages.all.map((message, index) => (
@@ -120,9 +217,12 @@ export function Player({ data }: { data: DiscoData }) {
             message={message}
             data={data}
             className={
-              shownMessages.lastIsShown || index + 1 !== shownMessages.all.length
-                ? "opacity-100 [&:not(:last-child)]:opacity-60"
-                : ""
+              tapeIsRolling
+                ? "opacity-60"
+                : shownMessages.lastIsShown ||
+                    index + 1 !== shownMessages.all.length
+                  ? "opacity-100 [&:not(:last-child)]:opacity-60"
+                  : ""
             }
             key={message.id}
           />

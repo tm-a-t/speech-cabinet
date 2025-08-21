@@ -7,9 +7,13 @@ import {Editor} from '~/components/editor/editor';
 import { Menubar } from "~/components/ui/menubar";
 import {SiteSubmenu} from '~/components/site-menu/site-submenu';
 import {FileSubmenu} from '~/components/site-menu/file-submenu';
-import {VideoSubmenu} from '~/components/site-menu/video-submenu';
-import { InfoIcon } from 'lucide-react';
+import {OptionsSubmenu} from '~/components/site-menu/options-submenu';
 import { restoreSavedData } from '~/lib/utils';
+import Image from "next/image";
+import {
+  CoverImageEditorContext,
+  TextEditorProvider,
+} from '~/components/editor/text-editor-provider';
 
 export default function EditorPage() {
   const [data, setData] = useState<DiscoData | null>(null);
@@ -18,7 +22,7 @@ export default function EditorPage() {
   useEffect(() => {
     if (data !== null) return;
     setData(restoreSavedData());
-  }, []);
+  }, [data]);
 
   function saveData(newData: DiscoData) {
     setData(newData);
@@ -40,36 +44,43 @@ export default function EditorPage() {
   }, [data]);
 
   return (
-    <div className="w-full h-full">
-      <div
-        className="fixed z-20 top-0 left-0 right-0 py-2 px-1 sm:px-3 flex flex-wrap gap-x-1 gap-y-4 items-center bg-zinc-900/50 backdrop-blur-xl xl:bg-transparent xl:backdrop-blur-none border-b xl:border-0">
-        <Menubar className="border-0 dark:bg-transparent mr-auto"
-                 value={menuValue}
-                 onValueChange={setMenuValue}
-                 id="menubar">
-          <SiteSubmenu/>
-          {data && <>
-            <FileSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
-            <VideoSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
-          </>}
-        </Menubar>
+    <TextEditorProvider
+      context={CoverImageEditorContext}
+      content={data?.cover?.content ?? ""}
+      placeholder="Or paste here"
+      onUpdate={(text, isEmpty) =>
+        data && saveData({ ...data, cover: isEmpty ? undefined : { ...data.cover, content: text } })
+      }
+      allowOnlyImage
+    >
+
+      <div className="w-full h-full">
+        <Image src="/layout/wallpaper.png" alt="" width={1080} height={607} className="w-full h-full object-cover fixed -z-20"/>
+
+        <div
+          className="fixed z-20 top-0 left-0 right-0 py-2 px-1 sm:px-3 flex flex-wrap gap-x-1 gap-y-4 bg-stone-900 sm:bg-transparent items-center border-b sm:border-0">
+          <Menubar className="border-0 dark:bg-transparent mr-auto"
+                   value={menuValue}
+                   onValueChange={setMenuValue}
+                   id="menubar">
+            <SiteSubmenu/>
+            {data && <>
+              <FileSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
+              <OptionsSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
+            </>}
+          </Menubar>
+        </div>
+
+        {data &&
+          <div
+            className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 pt-24 xl:pt-32 h-full min-h-dvh tape-background">
+
+            <Editor data={data} saveData={saveData} />
+          </div>
+        }
       </div>
 
-      {data &&
-        <div
-          className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 h-full min-h-dvh tape-background">
-          <p className="text-zinc-300 font-disco italic mx-2 sm:mx-0 pt-24 xl:pt-16">
-            <InfoIcon className="inline h-4 w-4 mb-1"/> Welcome to the place where you can create your own Disco&nbsp;Elysium-style dialogues.
-            Click on&nbsp;a&nbsp;name to&nbsp;set the&nbsp;character.
-            Your changes are saved automatically.
-          </p>
-
-          <hr className="border-transparent sm:border-zinc-800 mt-4" />
-
-          <Editor data={data} saveData={saveData} />
-        </div>
-      }
-    </div>
+    </TextEditorProvider>
   );
 }
 

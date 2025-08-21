@@ -1,11 +1,16 @@
-import {type DiscoData, type Message, message} from "~/lib/disco-data";
+import { type DiscoData, type Message, message} from "~/lib/disco-data";
 import {Button} from '~/components/ui/button';
-import React from 'react';
+import React, { useContext } from 'react';
 import {MessageView} from "./message-view";
-import {uniqueValues} from '~/lib/utils';
+import { uniqueValues} from '~/lib/utils';
 import { totalDuration, totalTimeLimit } from "~/lib/time";
 import { WatchButton } from "~/components/editor/watch-button";
-import { TextEditorProvider } from "./text-editor-provider";
+import {
+  CoverImageEditorContext,
+  MessageEditorContext,
+  TextEditorProvider,
+} from "./text-editor-provider";
+import { EditorContent } from "@tiptap/react";
 
 export function Editor({data, saveData}: { data: DiscoData, saveData: (data: DiscoData) => void }) {
   const usedNames = uniqueValues(data?.messages.map(message => message.name)) ?? [];
@@ -69,8 +74,10 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
 
   return (
     <>
+      {data.cover && <CoverEditor/>}
+
       {data?.messages.map((message, index) =>
-        <TextEditorProvider key={message.id} content={message.text} onUpdate={text => saveMessage(index, {...message, text})}>
+        <TextEditorProvider context={MessageEditorContext} key={message.id} content={message.text} placeholder="Type a line" onUpdate={text => saveMessage(index, {...message, text})}>
           <MessageView
             message={message}
             saveMessage={m => saveMessage(index, m)}
@@ -79,15 +86,21 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
             moveMessageDown={() => moveMessageDown(index)}
             data={data}
             saveData={saveData}
-            usedNames={usedNames} />
-        </TextEditorProvider>,
+            usedNames={usedNames}
+          />
+        </TextEditorProvider>
       )}
 
-      <hr className="border-transparent sm:border-zinc-800 sm:mt-6 mb-1" />
+      <hr className="border-transparent sm:border-zinc-700 sm:mt-6 mb-1" />
 
-      <div className="flex justify-between -ml-1">
-        <Button variant="ghost" onClick={addMessage}
-                className="opacity-30 hover:opacity-100 transition-opacity block sm:pl-3">+ Add line</Button>
+      <div className="-ml-1 flex justify-between">
+        <Button
+          variant="ghost"
+          onClick={addMessage}
+          className="block opacity-30 transition-opacity hover:opacity-100 sm:pl-3"
+        >
+          + Add line
+        </Button>
 
         {data &&
           <WatchButton data={data} />
@@ -104,4 +117,14 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
       }
     </>
   );
+}
+
+function CoverEditor() {
+  const editor = useContext(CoverImageEditorContext);
+
+  return <div className="mx-2 sm:mx-0 border-b sm:border-0 pb-2 sm:pb-0">
+    <div className={`mb-8 ${editor?.isEmpty ? 'hidden' : ''}`}>
+      <EditorContent editor={editor} className="text-sm [&_[data-placeholder]]:-mt-4 [&_img]:w-full w-full"></EditorContent>
+    </div>
+  </div>
 }

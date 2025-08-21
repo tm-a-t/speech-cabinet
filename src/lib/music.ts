@@ -1,4 +1,4 @@
-import type {DiscoData} from '~/lib/disco-data';
+import type { DiscoData, Message } from '~/lib/disco-data';
 import {getColorClass} from '~/lib/utils';
 
 type OstItem = { name: string, url: string | null }
@@ -55,6 +55,14 @@ export function getCharacterSoundName(name: string, data: DiscoData): string | n
     default:
       return null;
   }
+}
+
+export function getActiveCheckSoundName(message: Message): string | null {
+  if (!message.check?.active) return null
+
+  return message.check.result === 'Success'
+    ? '/sounds/success.mp3'
+    : '/sounds/failure.mp3';
 }
 
 export function playSound(path: string | null | undefined) {

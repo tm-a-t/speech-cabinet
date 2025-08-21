@@ -3,13 +3,14 @@ import {
   MenubarContent,
   MenubarMenu,
   MenubarSeparator,
-  MenubarTrigger,
+  MenubarTrigger
 } from '~/components/ui/menubar';
 import {MusicSelect} from '~/components/site-menu/music-select';
 import React from 'react';
 import type {DiscoData} from '~/lib/disco-data';
+import { CoverSelect } from "~/components/site-menu/cover-select";
 
-export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveData: (data: DiscoData) => void, close: () => void }) {
+export function OptionsSubmenu({data, saveData, close}: { data: DiscoData, saveData: (data: DiscoData) => void, close: () => void }) {
   function setBooleanValue(name: 'showPortraits' | 'skipMusicIntro' | 'showParticles', value: boolean) {
     if (data === null) return;
     saveData({
@@ -30,6 +31,7 @@ export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveDat
         Options
       </MenubarTrigger>
       <MenubarContent>
+        <CoverSelect data={data} saveData={saveData}/>
         <MenubarCheckboxItem checked={data.showPortraits} onCheckedChange={v => setBooleanValue('showPortraits', v)}>
           Portraits
         </MenubarCheckboxItem>

@@ -1,5 +1,5 @@
 import { type Editor, type EditorEvents, useEditor } from "@tiptap/react";
-import { createContext, type ReactNode } from 'react';
+import { type Context, createContext, type ReactNode } from "react";
 import { debounce } from "~/lib/utils";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import History from "@tiptap/extension-history";
@@ -12,17 +12,20 @@ import Dropcursor from "@tiptap/extension-dropcursor";
 import { useIsDesktop } from "~/lib/hooks/use-media-query";
 import { FileHandler } from "./file-handler";
 import { mergeAttributes } from "@tiptap/core";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
 
-export const TextEditorContext = createContext<Editor | null>(null);
+export const MessageEditorContext = createContext<Editor | null>(null);
+export const CoverImageEditorContext = createContext<Editor | null>(null);
 
-export function TextEditorProvider(props: { children: ReactNode, content: string, onUpdate: (value: string) => void }) {
+export function TextEditorProvider(props: { children: ReactNode, context: Context<Editor | null>, content: string, placeholder: string, onUpdate: (value: string, isEmpty: boolean) => void, allowOnlyImage?: boolean }) {
   const isDesktop = useIsDesktop();
+  const handleUpdate = ({editor}: EditorEvents['update']) => {
+    props.onUpdate(editor.getHTML(), editor.isEmpty);
+  };
 
   const editor = useEditor({
     immediatelyRender: false,
-    onUpdate: debounce(({editor}: EditorEvents['update']) => {
-      props.onUpdate(editor.getHTML());
-    }),
+    onUpdate: props.allowOnlyImage ? handleUpdate : debounce(handleUpdate),
     autofocus: isDesktop ? 'end' : false,
     editorProps: {
       attributes: {
@@ -31,12 +34,12 @@ export function TextEditorProvider(props: { children: ReactNode, content: string
     },
     extensions: [
       Placeholder.configure({
-        placeholder: 'Type a line, or paste an image',
+        placeholder: props.placeholder,
       }),
       History,
-      Document,
+      props.allowOnlyImage ? Document.extend({content: 'paragraph|image'}) : Document,
       Text,
-      Paragraph,
+      props.allowOnlyImage ? AlwaysEmptyParagraph : Paragraph,
       ExtendedImage.configure({
         allowBase64: true,
       }),
@@ -50,13 +53,13 @@ export function TextEditorProvider(props: { children: ReactNode, content: string
   });
 
   return (
-    <TextEditorContext.Provider value={editor}>
+    <props.context.Provider value={editor}>
       {props.children}
-    </TextEditorContext.Provider>
+    </props.context.Provider>
   )
 }
 
-export const ExtendedImage = Image.extend({
+const ExtendedImage = Image.extend({
   addAttributes() {
     return {
       ...this.parent?.(),
@@ -72,3 +75,22 @@ export const ExtendedImage = Image.extend({
     return ['img', mergeAttributes(HTMLAttributes)]
   },
 })
+
+const AlwaysEmptyParagraph = Paragraph.extend({
+  addProseMirrorPlugins() {
+    return [
+      new Plugin({
+        key: new PluginKey("disallowTyping"),
+        props: {
+          handleTextInput: () => true,
+          handlePaste: (view, event) => {
+            const items = [...(event.clipboardData?.items ?? [])]
+            if (items.some(item => item.type.startsWith('text/'))) {
+              return true;
+            }
+          },
+        },
+      }),
+    ];
+  }
+});
