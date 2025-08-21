@@ -47,7 +47,7 @@ export function AshesBackground() {
   }, [canvas]);
 
   return (
-    <canvas width={canvasWidth} height={canvasHeight} ref={setCanvas} className="absolute top-0 left-0 z-10"></canvas>
+    <canvas width={canvasWidth} height={canvasHeight} ref={setCanvas} className="absolute top-0 left-0 z-20"></canvas>
   )
 }
 

@@ -37,6 +37,9 @@ const discoData = z.object({
     colorClass: z.record(z.string(), z.string()),
     portraitUrl: z.record(z.string(), z.string()),
   }),
+  cover: z.object({
+    content: z.string(),
+  }).optional(),
   showPortraits: z.boolean(),
   showParticles: z.boolean().default(true),
   music: z.string().nullable(),

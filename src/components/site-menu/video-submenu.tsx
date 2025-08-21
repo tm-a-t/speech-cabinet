@@ -18,6 +18,14 @@ export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveDat
     });
   }
 
+  function setCover(show: boolean) {
+    if (data === null) return;
+    saveData({
+      ...data,
+      cover: show ? { content: '' } : undefined,
+    });
+  }
+
   function handleSaveMusic(music: string | null) {
     saveData({...data, music});
     close();
@@ -30,6 +38,9 @@ export function VideoSubmenu({data, saveData, close}: { data: DiscoData, saveDat
         Options
       </MenubarTrigger>
       <MenubarContent>
+        <MenubarCheckboxItem checked={data.cover !== undefined} onCheckedChange={setCover}>
+          Image on top
+        </MenubarCheckboxItem>
         <MenubarCheckboxItem checked={data.showPortraits} onCheckedChange={v => setBooleanValue('showPortraits', v)}>
           Portraits
         </MenubarCheckboxItem>

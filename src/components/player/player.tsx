@@ -141,31 +141,40 @@ export function Player({ data }: { data: DiscoData }) {
 
       {data.showParticles && <AshesBackground />}
 
-      {data.showPortraits &&
-        shownMessages.all.length &&
-        !tapeIsRolling &&
-        shownPortrait !== "" && (
-          <div className="absolute left-4 top-32 z-20 flex aspect-portrait h-auto w-[27rem] items-center justify-center">
-            <img
-              src={portraitFrameUrl}
-              className="absolute top-1/2 -translate-y-1/2"
-              alt=""
-            />
-            {shownPortrait ? (
+      <div className="absolute top-0 left-0 right-0">
+        <div className="z-10 min-h-64 overflow-hidden">
+          {data.cover &&
+            <div className="bg-black w-full [&_img]:w-full [&_img]:max-h-[48rem] [&_img]:object-contain" dangerouslySetInnerHTML={{__html: data.cover.content}}></div>
+          }
+        </div>
+
+        {data.showPortraits &&
+          shownMessages.all.length &&
+          !tapeIsRolling &&
+          shownPortrait !== "" && (
+            <div className="ml-4 -mt-16 relative z-30 flex aspect-portrait w-[27rem] items-center justify-center">
               <img
-                key={shownPortrait}
-                src={shownPortrait}
+                src={portraitFrameUrl}
+                className="absolute top-1/2 -translate-y-1/2"
                 alt=""
-                className="absolute w-full px-6"
               />
-            ) : (
-              <Skeleton className="aspect-portrait w-full" />
-            )}
-          </div>
-        )}
+              {shownPortrait ? (
+                <img
+                  key={shownPortrait}
+                  src={shownPortrait}
+                  alt=""
+                  className="absolute w-full px-6"
+                />
+              ) : (
+                <Skeleton className="aspect-portrait w-full" />
+              )}
+            </div>
+          )}
+      </div>
+
 
       {!tapeIsRolling && shownMessages.last?.check?.active && (
-        <div className="fixed bottom-0 left-0 right-0 top-0 z-10 flex flex-col items-center justify-end">
+        <div className="fixed bottom-0 left-0 right-0 top-0 z-50 flex flex-col items-center justify-end">
           <img
             src={activeChecks[shownMessages.last.check.result].background}
             className={`fixed bottom-0 -z-10 ${shownMessages.lastIsShown ? "opacity-0" : ""}`}
