@@ -20,15 +20,15 @@ export function WatchButton({data}: {data: DiscoData}) {
     }
   }, [status]);
 
-  const button = <Button variant="default" className="text-zinc-400 mt-0.5">
-    <Play className="h-4 w-4 mr-1.5"/>
-    Watch
-  </Button>
-
   if (isDesktop) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>{button}</DialogTrigger>
+        <DialogTrigger asChild>
+          <Button variant="default" className="text-zinc-400 mt-0.5">
+            <Play className="h-4 w-4 mr-1.5"/>
+            Watch
+          </Button>
+        </DialogTrigger>
         <DialogContent className="w-[26rem] p-0 dark:bg-opacity-0 border-0">
           <PlayerWrapper data={data} setIsOpen={setIsOpen}/>
         </DialogContent>
@@ -38,7 +38,12 @@ export function WatchButton({data}: {data: DiscoData}) {
 
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerTrigger asChild>{button}</DrawerTrigger>
+      <DrawerTrigger asChild>
+        <Button variant="default" size="lg" className="text-zinc-400">
+          <Play className="h-4 w-4 mr-2"/>
+          Watch
+        </Button>
+      </DrawerTrigger>
       <DrawerContent>
         <PlayerWrapper data={data} setIsOpen={setIsOpen}/>
       </DrawerContent>
