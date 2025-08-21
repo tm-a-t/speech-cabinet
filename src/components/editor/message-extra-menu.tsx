@@ -35,13 +35,13 @@ export function MessageExtraMenu({message, removeMessage, data, saveData, moveMe
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="start">
+        <TypeSelect message={message} data={data} saveData={saveData}/>
+        <PortraitSelect message={message} data={data} saveData={saveData} setOpen={setOpen}/>
+        <DropdownMenuSeparator className="first:hidden"/>
         <DropdownMenuItem onSelect={() => addImage(editor)}>
           <ImagePlus className="mr-2 h-4 w-4"/>
           Add image
         </DropdownMenuItem>
-        <PortraitSelect message={message} data={data} saveData={saveData} setOpen={setOpen}/>
-        <TypeSelect message={message} data={data} saveData={saveData}/>
-        <DropdownMenuSeparator/>
         <DropdownMenuItem onSelect={e => {moveMessageUp(); e.preventDefault()}}>
           <ArrowUp className="mr-2 h-4 w-4"/>
           Move up
