@@ -18,6 +18,7 @@ import { spawn } from 'child_process';
 
 const wvc = new WebVideoCreator();
 wvc.config({
+  browserVersion: '136.0.7103.113',
   debug: true,
   browserDebug: true,
   ffmpegDebug: true,
