@@ -29,6 +29,7 @@ export const message = z.object({
   id: z.number().default(() => Math.floor(Math.random() * 1_000_000)),
 });
 export type Message = z.infer<typeof message>;
+export type Check = Message['check'];
 
 const discoData = z.object({
   messages: z.array(message),

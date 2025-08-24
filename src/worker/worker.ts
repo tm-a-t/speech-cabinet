@@ -30,8 +30,8 @@ wvc.config({
 });
 
 const WEB_URL = env.WEB_URL ?? 'http://localhost:3000'
-const GIF_FPS = 10
-const GIF_WIDTH = 720
+const GIF_FPS = 8
+const GIF_WIDTH = 320
 
 async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
   const filename = getVideoPath(id);
@@ -74,7 +74,7 @@ async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
     await run(
       `ffmpeg`,
       `-i`, filename,
-      `-vf`, `fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos,palettegen`,
+      `-vf`, `mpdecimate=hi=768:lo=64:frac=0.1,fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos,unsharp=5:5:0.6:5:5:0.0,palettegen=stats_mode=full:max_colors=64`,
       `${filename}.palette.png`,
       `-update`, `true`,
       `-nostdin`,
@@ -83,7 +83,7 @@ async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
       `ffmpeg`,
       `-i`, filename,
       `-i`, `${filename}.palette.png`,
-      `-lavfi`, `fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos [x]; [x][1:v] paletteuse`,
+      `-lavfi`, `mpdecimate=hi=768:lo=64:frac=0.1,fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos,unsharp=5:5:0.6:5:5:0.0 [x]; [x][1:v] paletteuse`,
       `-nostdin`,
       getGifPath(id),
     );
