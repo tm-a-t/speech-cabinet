@@ -20,7 +20,7 @@ export async function startJob(data: RenderVideoData): Promise<void> {
 
 export async function jobIsPending(id: string): Promise<boolean> {
   const job = await boss.getJobById(queue, id);
-  return job!.state === 'created';
+  return job?.state === 'created';
 }
 
 export async function getJobPosition(id: string): Promise<number> {
