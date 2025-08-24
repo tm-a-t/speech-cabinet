@@ -163,7 +163,7 @@ export function Player({ data }: { data: DiscoData }) {
                   key={shownPortrait}
                   src={shownPortrait}
                   alt=""
-                  className="absolute w-full px-6"
+                  className="absolute w-[calc(100%-3rem)] aspect-portrait object-cover"
                 />
               ) : (
                 <Skeleton className="aspect-portrait w-full" />
