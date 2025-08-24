@@ -50,8 +50,8 @@ export default function EditorPage() {
       context={CoverImageEditorContext}
       content={data?.cover?.content ?? ""}
       placeholder="Or paste here"
-      onUpdate={(text, isEmpty) =>
-        data && saveData({ ...data, cover: isEmpty ? undefined : { ...data.cover, content: text } })
+      onUpdate={(text, editor) =>
+        data && saveData({ ...data, cover: editor.isEmpty ? undefined : { ...data.cover, content: text } })
       }
       allowOnlyImage
     >

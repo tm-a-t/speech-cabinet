@@ -16,11 +16,12 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 
 export const MessageEditorContext = createContext<Editor | null>(null);
 export const CoverImageEditorContext = createContext<Editor | null>(null);
+export const PortraitImageEditorContext = createContext<Editor | null>(null);
 
-export function TextEditorProvider(props: { children: ReactNode, context: Context<Editor | null>, content: string, placeholder: string, onUpdate: (value: string, isEmpty: boolean) => void, allowOnlyImage?: boolean }) {
+export function TextEditorProvider(props: { children: ReactNode, context: Context<Editor | null>, content: string, placeholder: string, onUpdate: (value: string, editor: Editor) => void, allowOnlyImage?: boolean }) {
   const isDesktop = useIsDesktop();
   const handleUpdate = ({editor}: EditorEvents['update']) => {
-    props.onUpdate(editor.getHTML(), editor.isEmpty);
+    props.onUpdate(editor.getHTML(), editor);
   };
 
   const editor = useEditor({

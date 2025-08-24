@@ -5,7 +5,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from '~/components/ui/dropdown-menu';
-import {User} from 'lucide-react';
+import { Paperclip, User} from 'lucide-react';
 import {
   Command,
   CommandGroup,
@@ -16,12 +16,22 @@ import {
 } from '~/components/ui/command';
 import {allPortraitNames, characters, harryPortraitNames, skills} from '~/lib/names';
 import {Tooltip, TooltipContent, TooltipTrigger} from '~/components/ui/tooltip';
-import {getDefaultPortraitUrl, getPortraitUrl} from '~/lib/utils';
+import { addImage, getDefaultPortraitUrl, getPortraitUrl} from '~/lib/utils';
 import * as React from 'react';
 import type {DiscoData, Message} from '~/lib/disco-data';
 import {SkeletonImage} from '../ui/skeleton-image';
 import {useIsDesktop} from '~/lib/hooks/use-media-query';
 import {Drawer, DrawerContent, DrawerTrigger} from '~/components/ui/drawer';
+import { Button } from "~/components/ui/button";
+import {
+  CoverImageEditorContext,
+  MessageEditorContext,
+  PortraitImageEditorContext,
+  TextEditorProvider,
+} from "~/components/editor/text-editor-provider";
+import { EditorContent } from "@tiptap/react";
+import { useContext } from "react";
+import type { Editor } from "@tiptap/core";
 
 export function PortraitSelect({message, data, saveData, setOpen}: {
   message: Message,
@@ -45,7 +55,7 @@ export function PortraitSelect({message, data, saveData, setOpen}: {
         }
       }
     });
-    setTimeout(() => setOpen(false), 200);
+    // setTimeout(() => setOpen(false), 200);
   }
 
   const label = <>
@@ -91,18 +101,35 @@ function PortraitOptionList({message, data, onSelectPortraitUrl}: {
 }) {
   const current = getPortraitUrl(message.name, data)
   const options = message.name === 'You' ? harryPortraitNames : allPortraitNames;
+
+  function handlePastePortrait(text: string, editor: Editor) {
+    if (!text.startsWith('<img src="')) {
+      return;
+    }
+    const src = text.replace(/<img src="/, '').split('"')[0]!;
+    onSelectPortraitUrl(src);
+    editor.commands.clearContent();
+  }
+
   return (
     <Command defaultValue={current}>
-      <p className="text-sm text-zinc-400 px-3 py-2 flex items-center">
-        Custom portraits coming soon.
-      </p>
-      <CommandSeparator/>
       {current && <>
         <SkeletonImage src={current} alt="Current portrait"
-                       className="w-1/2 max-w-28 mx-auto aspect-portrait" width={720} height={1000}/>
+                       className="w-1/2 max-w-28 mx-auto aspect-portrait object-cover" width={720} height={1000}/>
         <CommandSeparator/>
       </>}
-      <CommandInput placeholder="Search..."/>
+
+      <TextEditorProvider
+        context={PortraitImageEditorContext}
+        content={""}
+        placeholder="Paste"
+        onUpdate={handlePastePortrait}
+        allowOnlyImage
+      >
+        <PortraitActionRow/>
+      </TextEditorProvider>
+      <CommandSeparator/>
+
       <CommandList>
         <CommandGroup className="[&>*]:flex [&>*]:flex-wrap [&>*]:w-full">
           <CommandItem onSelect={() => onSelectPortraitUrl('')}
@@ -123,6 +150,22 @@ function PortraitOptionList({message, data, onSelectPortraitUrl}: {
           })}
         </CommandGroup>
       </CommandList>
+
     </Command>
   )
+}
+
+function PortraitActionRow() {
+  const editor = useContext(PortraitImageEditorContext);
+  return (
+    <div className="px-1 text-sm flex gap-x-1 items-center">
+      <Button className="pl-1" variant="ghost" size="sm" onClick={() => addImage(editor)}>
+        <Paperclip className="h-4 mr-1"/> Choose
+      </Button>
+      <EditorContent editor={editor} className="[&>*]:py-2 [&_p.is-empty::before]:text-zinc-400 [&_p.is-empty::before]:opacity-100"></EditorContent>
+      <div className="grow [&>*]:border-b-0">
+        <CommandInput className="" placeholder="Search"/>
+      </div>
+    </div>
+  );
 }
