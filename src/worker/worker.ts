@@ -120,7 +120,7 @@ async function runWorker() {
 
   await boss.work(queue, async (jobs: RenderVideoJob[]) => {
     const job = jobs[0]!;  // Only one job by default
-    console.log(`received job ${job.id} with data ${JSON.stringify(job.data)}`);
+    console.log(`received job ${job.id} with data ${JSON.stringify(job.data).substring(0, 400)}…`);
     await renderVideo(job.data.discoData, job.data.videoId, job.data.convertToGif ?? false);
   });
 }
