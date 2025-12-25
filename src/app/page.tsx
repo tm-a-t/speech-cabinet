@@ -15,6 +15,8 @@ import {
   TextEditorProvider,
 } from '~/components/editor/text-editor-provider';
 import { useIsDesktop } from "~/lib/hooks/use-media-query";
+import { PlayerWrapper } from "~/components/editor/watch-button";
+import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 export default function EditorPage() {
   const [data, setData] = useState<DiscoData | null>(null);
@@ -51,38 +53,88 @@ export default function EditorPage() {
       content={data?.cover?.content ?? ""}
       placeholder="Or paste here"
       onUpdate={(text, editor) =>
-        data && saveData({ ...data, cover: editor.isEmpty ? undefined : { ...data.cover, content: text } })
+        data &&
+        saveData({
+          ...data,
+          cover: editor.isEmpty ? undefined : { ...data.cover, content: text },
+        })
       }
       allowOnlyImage
     >
+      <div className="h-full w-full">
+        <Image
+          src="/layout/wallpaper.png"
+          alt=""
+          width={1080}
+          height={607}
+          className="fixed -z-20 h-full w-full object-cover"
+        />
 
-      <div className="w-full h-full">
-        <Image src="/layout/wallpaper.png" alt="" width={1080} height={607} className="w-full h-full object-cover fixed -z-20"/>
+        <div className="fixed left-0 right-0 top-0 z-20 flex flex-wrap items-center gap-x-1 gap-y-4 py-3 sm:px-3 sm:py-2"></div>
 
         <div
-          className="fixed z-20 top-0 left-0 right-0 py-3 sm:py-2 sm:px-3 flex flex-wrap gap-x-1 gap-y-4 items-center">
-          <Menubar className="border-0 dark:bg-transparent mr-auto"
-                   value={menuValue}
-                   onValueChange={setMenuValue}
-                   id="menubar">
-            <SiteSubmenu/>
-            {data && <>
-              <FileSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
-              <OptionsSubmenu data={data} saveData={saveData} close={() => setMenuValue('')}/>
-            </>}
-          </Menubar>
-        </div>
+          className="mask fixed h-dvh w-full"
+          style={{
+            maskImage: isDesktop
+              ? ""
+              : "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.2) 1rem, rgba(0,0,0,0.5) 3rem, rgba(0,0,0,1) 6rem)",
+          }}
+        >
+          <div className="flex h-full w-full justify-center gap-x-16">
+            <div className="max-w-2xl flex-grow">
+              <div className="container mx-auto h-full min-h-dvh max-w-2xl overflow-y-auto bg-black/70 px-6 pb-64 pt-32 sm:px-24 xl:pt-32">
+                <h2 className="mb-8 px-2 text-2xl font-bold sm:mb-0 sm:px-0">
+                  Dialogue
+                </h2>
 
-        <div className="fixed w-full h-dvh mask" style={{maskImage: isDesktop ? "" : "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.2) 1rem, rgba(0,0,0,0.5) 3rem, rgba(0,0,0,1) 6rem)"}}>
-          <div className="container mx-auto px-6 sm:px-24 max-w-2xl pb-64 pt-32 xl:pt-32 h-full min-h-dvh tape-background overflow-y-auto">
+                <Menubar
+                  className="border-0 dark:bg-transparent -ml-3"
+                  value={menuValue}
+                  onValueChange={setMenuValue}
+                  id="menubar"
+                >
+                  {data && (
+                    <>
+                      <FileSubmenu
+                        data={data}
+                        saveData={saveData}
+                        close={() => setMenuValue("")}
+                      />
+                      <OptionsSubmenu
+                        data={data}
+                        saveData={saveData}
+                        close={() => setMenuValue("")}
+                      />
+                    </>
+                  )}
+                </Menubar>
 
-          {data &&
-              <Editor data={data} saveData={saveData} />
-          }
+                {data && <Editor data={data} saveData={saveData} />}
+              </div>
+            </div>
+            <div>
+              <div className="h-32"></div>
+              <h2 className="mb-8 px-2 text-2xl font-bold sm:mb-0 sm:px-0">
+                Preview
+              </h2>
+              <Tabs>
+                <TabsList>
+                  <TabsTrigger value="Video">Video</TabsTrigger>
+                  <TabsTrigger value="Image">Image</TabsTrigger>
+                </TabsList>
+              </Tabs>
+              {data && (
+                <PlayerWrapper
+                  data={data}
+                  setIsOpen={function (isOpen: boolean): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
-
     </TextEditorProvider>
   );
 }

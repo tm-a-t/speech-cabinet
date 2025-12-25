@@ -51,10 +51,10 @@ export function WatchButton({data}: {data: DiscoData}) {
   )
 }
 
-function PlayerWrapper({data, setIsOpen}: {data: DiscoData, setIsOpen: (isOpen: boolean) => void}) {
+export function PlayerWrapper({data, setIsOpen}: {data: DiscoData, setIsOpen: (isOpen: boolean) => void}) {
   return (
     <>
-      <div className="w-[324px] overflow-hidden mx-auto">
+      <div className="w-[324px] overflow-hidden mx-auto rounded-xl">
         <div className="h-[576px] my-12 lg:my-1 border box-content">
           <div
             className="scale-[0.3] -translate-y-[35%] w-[1080px] relative -translate-x-[50%] left-1/2">
