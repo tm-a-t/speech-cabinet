@@ -21,6 +21,7 @@ Create vertical videos in the style of Disco Elysium dialogues.
 - Choose an OST for the right vibes.
 - You won’t lose your dialogue if you close the page, but you can always download the file to share or open it later.
 - Add custom characters and skills; choose portraits for Harry and custom characters.
+- You can self-host via Docker; see Development > Using Docker.
 - You should build Communism -- precisely \*because\* it's impossible.
 
 <details>
@@ -55,8 +56,22 @@ Animation is made purely with CSS/JS, but the videos are rendered on server: a w
 
 ### Using Docker
 
-The Docker image should build normally&mdash;but not on macOS, apparently?
-Downloading Chrome in Docker doesn’t work on my macOS for some reason.
+Requires Docker Desktop (or any Docker Engine + Compose v2). Tested on Apple Silicon via `linux/amd64` emulation and on linux/amd64 hosts.
+
+1. `cp .env.example .env` and fill in `NEXTAUTH_SECRET` (e.g. `openssl rand -base64 32`). `DATABASE_URL` is already wired to the compose `db` service.
+2. (Optional) drop `.m4a` files into `public/music/` if you want music in the rendered video. They must be named exactly as listed in `src/lib/music.ts`. Missing files are greyed out in the Music menu.
+3. Build and start web + worker + postgres:
+   ```shell
+   DOCKER_DEFAULT_PLATFORM=linux/amd64 docker compose up -d --build
+   ```
+4. Open <http://localhost:3000>.
+5. To tear down: `docker compose down`, or `down -v` to also wipe the DB and rendered videos.
+
+#### Troubleshooting
+
+- **macOS `Unable to locate package google-chrome-stable`**: the Chrome apt repo has no arm64 binary. Use `DOCKER_DEFAULT_PLATFORM=linux/amd64` as shown above to build for amd64 under Rosetta / QEMU.
+- **First web request is slow**: `entrypoint.sh` runs `yarn db:push` on first boot to create the schema.
+- **Render gets stuck at "Rendering..."** on a fresh install: that was issue #20. The worker tried to fetch a gitignored music track and silently 404’d. From this version on, the default is `No music` and the Music menu disables tracks whose files are not installed. If a render still finishes without music (e.g. the file was removed between selection and render), the UI tells you so.
 
 </details>
 
