@@ -10,7 +10,7 @@ import {X} from 'lucide-react';
 type RenderNotStarted = { state: 'not-started' }
 type RenderInQueue = { state: 'in-queue', videoId: string, isGif: boolean, position: number, maxPosition: number }
 type RenderInProgress = { state: 'in-progress', videoId: string, isGif: boolean, progress: number }
-type RenderFinished = { state: 'finished', videoId: string, isGif: boolean }
+type RenderFinished = { state: 'finished', videoId: string, isGif: boolean, warning: string | null }
 export type RenderStatus = RenderNotStarted | RenderInQueue | RenderInProgress | RenderFinished
 
 export const RenderStatusContext = createContext<[RenderStatus, (status: RenderStatus) => void]>(
@@ -70,12 +70,12 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
         }
         : async () => {
           // State is in-progress
-          const progress = await getVideoProgress(status.videoId);
-          if (progress !== 'finished') {
-            setStatus({state: 'in-progress', videoId: status.videoId, isGif: status.isGif, progress});
+          const result = await getVideoProgress(status.videoId);
+          if (result.status === 'progress') {
+            setStatus({state: 'in-progress', videoId: status.videoId, isGif: status.isGif, progress: result.progress});
           } else {
             clearInterval(timer);
-            setStatus({state: 'finished', videoId: status.videoId, isGif: status.isGif});
+            setStatus({state: 'finished', videoId: status.videoId, isGif: status.isGif, warning: result.warning});
           }
         };
 
@@ -110,6 +110,9 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
             {status.state === 'finished' &&
               <>
                 Download started! You can also use <a className="underline underline-offset-4" href={getPath(status)} target="_blank">the temporary link.</a>
+                {status.warning &&
+                  <p className="mt-2 text-sm text-amber-400">{status.warning}</p>
+                }
               </>
             }
           </div>
