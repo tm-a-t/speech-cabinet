@@ -33,8 +33,23 @@ const WEB_URL = env.WEB_URL ?? 'http://localhost:3000'
 const GIF_FPS = 10
 const GIF_WIDTH = 720
 
+/**
+ * HEAD-probe a WEB_URL-relative asset. Returns true only on a 2xx response.
+ * Used before wvc.addAudio() so a missing music file (#20) doesn't make the
+ * Synthesizer's internal fetch throw inside startAndWait and hang the render.
+ */
+async function urlExists(url: string): Promise<boolean> {
+  try {
+    const res = await fetch(url, {method: 'HEAD'});
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
   const filename = getVideoPath(id);
+  let renderWarning: string | null = null;
 
   const video = wvc.createSingleVideo({
     url: WEB_URL + '/render',
@@ -53,16 +68,24 @@ async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
     },
   });
 
-  // Add music here because music added with <audio> in Player
-  // does not work for some reason.
-  // Constants derived from music.ts#playMusic, should refactor this later.
-  if (data.music) {
-    video.addAudio({
-      url: WEB_URL + data.music,
-      volume: 20,
-      loop: true,
-      seekStart: data.skipMusicIntro ? 37000 : 0,
-    });
+  // GIFs have no audio track (ffmpeg paletteuse drops audio), so there is no
+  // reason to fetch the music file at all. Skipping unconditionally makes the
+  // gif path bulletproof against #20 even if the user picked a missing track.
+  if (data.music && !convertToGif) {
+    const musicUrl = WEB_URL + data.music;
+    if (await urlExists(musicUrl)) {
+      video.addAudio({
+        url: musicUrl,
+        volume: 20,
+        loop: true,
+        seekStart: data.skipMusicIntro ? 37000 : 0,
+      });
+    } else {
+      // Skip addAudio so wvc's Synthesizer doesn't 404 mid-render (#20).
+      // The render still succeeds - just silent - and the UI surfaces this.
+      renderWarning = `Rendered without music: "${data.music}" was not found on the server.`;
+      console.warn(`[worker] ${renderWarning}`);
+    }
   }
 
   video.on("progress", async (progress: number) => {
@@ -89,7 +112,7 @@ async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
     );
   }
 
-  await db.video.update({where: {id}, data: {isReady: true}});
+  await db.video.update({where: {id}, data: {isReady: true, renderWarning}});
 }
 
 function run(command: string, ...args: string[]): Promise<void> {

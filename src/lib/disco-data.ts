@@ -76,7 +76,10 @@ export const getDefaultData = () => discoData.parse({
     portraitUrl: {},
   },
   showPortraits: true,
-  music: '/music/Sea Power - Instrument of Surrender.m4a',
+  // #20: default to no music so a fresh install (where `public/music/` is empty because
+  // those files are gitignored) does not hang the render worker on a 404. Users still
+  // pick a track from Options > Music, and the Music menu greys out unavailable tracks.
+  music: null,
   skipMusicIntro: true,
   version: '0.1',
 });

@@ -15,9 +15,11 @@ datasource db {
 }
 
 model Video {
-  id       String  @id @default(uuid())
-  isReady  Boolean @default(false)
-  progress Int     @default(0)
+  id            String  @id @default(uuid())
+  isReady       Boolean @default(false)
+  progress      Int     @default(0)
+  /// Non-fatal note the worker persists when a render finished with a caveat (e.g. selected music file missing on the server). Shown in the UI next to "Download started!" (#20).
+  renderWarning String? @db.Text
 }
 
 // Necessary for Next auth
