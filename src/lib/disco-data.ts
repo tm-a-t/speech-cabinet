@@ -18,6 +18,8 @@ export type Difficulty = z.infer<typeof difficulties>;
 export const results = z.enum(['Success', 'Failure']);
 export type Result = z.infer<typeof results>;
 
+export const dieFace = z.number().int().min(1).max(6);
+
 export const message = z.object({
   name: z.string(),
   text: z.string(),
@@ -25,10 +27,30 @@ export const message = z.object({
     difficulty: difficulties,
     result: results,
     active: z.boolean().default(false),
+    die1: dieFace.optional(),
+    die2: dieFace.optional(),
   }).optional(),
   id: z.number().default(() => Math.floor(Math.random() * 1_000_000)),
 });
 export type Message = z.infer<typeof message>;
+
+/** Default visible dice for legacy projects (matches former combined SVG art). */
+export function getDefaultActiveCheckDice(result: Result): { die1: number; die2: number } {
+  return result === 'Failure' ? { die1: 2, die2: 1 } : { die1: 5, die2: 6 };
+}
+
+export function resolveActiveCheckDice(check: {
+  result: Result;
+  active: boolean;
+  die1?: number;
+  die2?: number;
+}): { die1: number; die2: number } {
+  const defaults = getDefaultActiveCheckDice(check.result);
+  return {
+    die1: check.die1 ?? defaults.die1,
+    die2: check.die2 ?? defaults.die2,
+  };
+}
 
 const discoData = z.object({
   messages: z.array(message),
