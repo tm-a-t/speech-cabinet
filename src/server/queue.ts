@@ -7,7 +7,7 @@ boss.on('error', console.error);
 await boss.start();
 
 export const queue = 'render-video';
-type RenderVideoData = {
+export type RenderVideoData = {
   videoId: string
   discoData: DiscoData
   convertToGif: boolean

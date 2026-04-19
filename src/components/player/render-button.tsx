@@ -22,7 +22,13 @@ export function RenderButton({data, setIsOpen}: { data: DiscoData, setIsOpen: (i
         maxPosition: queuePosition,
       });
     } else {
-      setStatus({ state: "in-progress", videoId: id, isGif: options.convertToGif, progress: 0 });
+      setStatus({
+        state: "in-progress",
+        videoId: id,
+        isGif: options.convertToGif,
+        progress: 0,
+        notice: null,
+      });
     }
   }
 

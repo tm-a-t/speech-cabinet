@@ -9,7 +9,14 @@ import {X} from 'lucide-react';
 
 type RenderNotStarted = { state: 'not-started' }
 type RenderInQueue = { state: 'in-queue', videoId: string, isGif: boolean, position: number, maxPosition: number }
-type RenderInProgress = { state: 'in-progress', videoId: string, isGif: boolean, progress: number }
+type RenderInProgress = {
+  state: 'in-progress'
+  videoId: string
+  isGif: boolean
+  progress: number
+  /** Set when the job sits unclaimed or progress stalls (worker / DB mismatch). */
+  notice: string | null
+}
 type RenderFinished = { state: 'finished', videoId: string, isGif: boolean, warning: string | null }
 export type RenderStatus = RenderNotStarted | RenderInQueue | RenderInProgress | RenderFinished
 
@@ -64,7 +71,13 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
             clearInterval(timer);
             setStatus({state: 'in-queue', videoId: status.videoId, isGif: status.isGif, position: 0, maxPosition});
             setTimeout(() => {
-              setStatus({state: 'in-progress', videoId: status.videoId, isGif: status.isGif, progress: minDisplayedProgress});
+              setStatus({
+                state: 'in-progress',
+                videoId: status.videoId,
+                isGif: status.isGif,
+                progress: minDisplayedProgress,
+                notice: null,
+              });
             }, 200);
           }
         }
@@ -72,7 +85,13 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
           // State is in-progress
           const result = await getVideoProgress(status.videoId);
           if (result.status === 'progress') {
-            setStatus({state: 'in-progress', videoId: status.videoId, isGif: status.isGif, progress: result.progress});
+            setStatus({
+              state: 'in-progress',
+              videoId: status.videoId,
+              isGif: status.isGif,
+              progress: result.progress,
+              notice: result.notice,
+            });
           } else {
             clearInterval(timer);
             setStatus({state: 'finished', videoId: status.videoId, isGif: status.isGif, warning: result.warning});
@@ -102,10 +121,13 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
               </>
             }
             {status.state === 'in-progress' &&
-              (status.isGif && status.progress === 100
-                ? <>Converting to GIF...</>
-                : <>Rendering...</>
-              )
+              <>
+                {status.isGif && status.progress === 100
+                  ? <>Converting to GIF...</>
+                  : <>Rendering...</>}
+                {status.notice &&
+                  <p className="mt-2 text-sm text-amber-400">{status.notice}</p>}
+              </>
             }
             {status.state === 'finished' &&
               <>
