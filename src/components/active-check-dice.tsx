@@ -1,7 +1,6 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useId } from "react";
 import { cn } from "~/lib/utils";
 
 export const SNAKE_EYES_DICE_SVG = "/effects/dice/snake-eyes.svg";
@@ -35,11 +34,9 @@ export function PipDie({
   value: number;
   className?: string;
 }) {
-  const uid = useId().replace(/:/g, "");
   const v = value >= 1 && value <= 6 ? value : 1;
   const faceIndex = (v - 1) as 0 | 1 | 2 | 3 | 4 | 5;
   const pips = PIP_LAYOUT_BY_VALUE[faceIndex];
-  const gradId = `pipFace-${uid}`;
   return (
     <svg
       viewBox="0 0 96 96"
@@ -48,20 +45,14 @@ export function PipDie({
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden
     >
-      <defs>
-        <linearGradient id={gradId} x1="0" y1="0" x2="96" y2="96" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#B84E22" />
-          <stop offset="0.55" stopColor="#6E2A12" />
-          <stop offset="1" stopColor="#361208" />
-        </linearGradient>
-      </defs>
+      {/* Hollow faces like public/effects/check-failure-dice.svg so the check overlay shows through */}
       <rect
         x="2.5"
         y="2.5"
         width="91"
         height="91"
         rx="13.5"
-        fill={`url(#${gradId})`}
+        fill="none"
         stroke="white"
         strokeWidth="5"
       />

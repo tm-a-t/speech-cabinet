@@ -1,28 +1,16 @@
 <svg width="216" height="120" viewBox="0 0 216 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="boxFaceL" x1="48" y1="8" x2="48" y2="96" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#D4A574"/>
-      <stop offset="0.5" stop-color="#9A5A2E"/>
-      <stop offset="1" stop-color="#3D1808"/>
-    </linearGradient>
-    <linearGradient id="boxFaceR" x1="168" y1="8" x2="168" y2="96" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#D4A574"/>
-      <stop offset="0.5" stop-color="#9A5A2E"/>
-      <stop offset="1" stop-color="#3D1808"/>
-    </linearGradient>
-  </defs>
-  <rect x="2.5" y="2.5" width="91" height="91" rx="13.5" fill="url(#boxFaceL)" stroke="white" stroke-width="5"/>
-  <circle cx="25" cy="25" r="8" fill="white"/>
-  <circle cx="71" cy="25" r="8" fill="white"/>
-  <circle cx="25" cy="48" r="8" fill="white"/>
-  <circle cx="71" cy="48" r="8" fill="white"/>
-  <circle cx="25" cy="71" r="8" fill="white"/>
-  <circle cx="71" cy="71" r="8" fill="white"/>
-  <rect x="122.5" y="2.5" width="91" height="91" rx="13.5" fill="url(#boxFaceR)" stroke="white" stroke-width="5"/>
-  <circle cx="145" cy="25" r="8" fill="white"/>
-  <circle cx="191" cy="25" r="8" fill="white"/>
-  <circle cx="145" cy="48" r="8" fill="white"/>
-  <circle cx="191" cy="48" r="8" fill="white"/>
-  <circle cx="145" cy="71" r="8" fill="white"/>
-  <circle cx="191" cy="71" r="8" fill="white"/>
+  <rect x="2.5" y="2.5" width="91" height="91" rx="13.5" fill="none" stroke="white" stroke-width="5"/>
+  <circle cx="25" cy="25" r="9" fill="white"/>
+  <circle cx="71" cy="25" r="9" fill="white"/>
+  <circle cx="25" cy="48" r="9" fill="white"/>
+  <circle cx="71" cy="48" r="9" fill="white"/>
+  <circle cx="25" cy="71" r="9" fill="white"/>
+  <circle cx="71" cy="71" r="9" fill="white"/>
+  <rect x="122.5" y="2.5" width="91" height="91" rx="13.5" fill="none" stroke="white" stroke-width="5"/>
+  <circle cx="145" cy="25" r="9" fill="white"/>
+  <circle cx="191" cy="25" r="9" fill="white"/>
+  <circle cx="145" cy="48" r="9" fill="white"/>
+  <circle cx="191" cy="48" r="9" fill="white"/>
+  <circle cx="145" cy="71" r="9" fill="white"/>
+  <circle cx="191" cy="71" r="9" fill="white"/>
 </svg>
