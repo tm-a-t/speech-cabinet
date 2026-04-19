@@ -20,6 +20,8 @@ model Video {
   progress      Int     @default(0)
   /// Non-fatal note the worker persists when a render finished with a caveat (e.g. selected music file missing on the server). Shown in the UI next to "Download started!" (#20).
   renderWarning String? @db.Text
+  /// Set when a render fails (worker exception or RENDER_DEADLINE_MS timeout) so the UI can exit "Rendering…" instead of polling forever (#18).
+  renderError   String? @db.Text
 }
 
 // Necessary for Next auth
