@@ -1,7 +1,7 @@
 import { ActiveCheckDicePopover } from "~/components/editor/active-check-dice-popover";
 import {MessageExtraMenu} from '~/components/editor/message-extra-menu';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/components/ui/select';
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import {difficulties, getDefaultActiveCheckDice, type Difficulty, type DiscoData, type Message, type Result} from '~/lib/disco-data';
 import {skills} from '~/lib/names';
 import {NameSelect} from '~/components/editor/name-select';
@@ -33,6 +33,8 @@ export function MessageView(
 ) {
   const editor = useContext(MessageEditorContext);
   const [dicePopoverOpen, setDicePopoverOpen] = useState(false);
+  /** After choosing a rolled outcome, open dice popover only once Select has fully closed (avoids Radix dismiss). */
+  const openDicePopoverAfterResultSelectClosesRef = useRef(false);
   const showCheck = data.overrides.checks[message.name] ?? skills.includes(message.name);
 
   function handleCheckToggle(value: boolean) {
@@ -74,8 +76,20 @@ export function MessageView(
         die2: active ? (message.check.die2 ?? defaults.die2) : message.check.die2,
       },
     });
-    if (active) queueMicrotask(() => setDicePopoverOpen(true));
-    else setDicePopoverOpen(false);
+    if (active) {
+      openDicePopoverAfterResultSelectClosesRef.current = true;
+    } else {
+      openDicePopoverAfterResultSelectClosesRef.current = false;
+      setDicePopoverOpen(false);
+    }
+  }
+
+  function handleResultSelectOpenChange(selectIsOpen: boolean) {
+    if (!selectIsOpen && openDicePopoverAfterResultSelectClosesRef.current) {
+      openDicePopoverAfterResultSelectClosesRef.current = false;
+      // Macrotask so opening runs after Select pointer/focus teardown (microtask was too early).
+      setTimeout(() => setDicePopoverOpen(true), 0);
+    }
   }
 
   return (
@@ -103,7 +117,11 @@ export function MessageView(
 
                 {showCheck && message.check &&
                   <span className="inline-flex items-center align-middle">
-                  <Select onValueChange={handleCheckResultSelect} value={`${message.check.result} ${message.check.active}`}>
+                  <Select
+                    onValueChange={handleCheckResultSelect}
+                    onOpenChange={handleResultSelectOpenChange}
+                    value={`${message.check.result} ${message.check.active}`}
+                  >
                     <SelectTrigger
                       className="h-8 px-1 sm:px-1 sm:text-base text-zinc-400 dark:bg-transparent dark:border-0 hover:dark:bg-zinc-800 hover:text-white transition">
                       <SelectValue/>
