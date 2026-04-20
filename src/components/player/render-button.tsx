@@ -29,7 +29,7 @@ export function RenderButton({data, setIsOpen}: { data: DiscoData, setIsOpen: (i
   return (
     <>
       <div className="text-center inline-flex flex-wrap justify-center content-center min-h-12 w-full relative">
-        {(status.state === 'not-started' || status.state === 'finished')
+        {(status.state === 'not-started' || status.state === 'finished' || status.state === 'failed')
           ? <>
             <Button onClick={() => send({ convertToGif: true })} variant="ghost">
               <Download className="w-4 h-4 mr-2"/>
