@@ -61,15 +61,12 @@ export function MessageView(
     const active = activeStr === "true";
     const resultR = result as Result;
     if (!message.check) return;
-    const defaults = getDefaultActiveCheckDice(resultR);
     saveMessage({
       ...message,
       check: {
         ...message.check,
         result: resultR,
         active,
-        die1: active ? (message.check.die1 ?? defaults.die1) : message.check.die1,
-        die2: active ? (message.check.die2 ?? defaults.die2) : message.check.die2,
       },
     });
   }

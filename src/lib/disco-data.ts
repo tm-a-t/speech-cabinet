@@ -34,7 +34,6 @@ export const message = z.object({
 });
 export type Message = z.infer<typeof message>;
 
-/** Default visible dice for legacy projects (matches former combined SVG art). */
 export function getDefaultActiveCheckDice(result: Result): { die1: number; die2: number } {
   return result === 'Failure' ? { die1: 2, die2: 1 } : { die1: 5, die2: 6 };
 }

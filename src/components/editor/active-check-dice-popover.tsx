@@ -39,10 +39,12 @@ export function ActiveCheckDicePopover({
   const { die1, die2 } = resolveActiveCheckDice(check);
 
   function setDie(which: 1 | 2, value: number) {
-    const clamped = Math.min(6, Math.max(1, value));
+    const modValue = value % 6 || 6;
     saveCheck({
       ...check,
-      [which === 1 ? "die1" : "die2"]: clamped,
+      die1,
+      die2,
+      [which === 1 ? "die1" : "die2"]: modValue,
     });
   }
 
@@ -97,8 +99,7 @@ function DieStepper({
         variant="ghost"
         size="icon"
         className="text-white"
-        onClick={() => onChange(value + 1)}
-        disabled={value >= 6}
+        onClick={() => onChange(value - 1)}
         aria-label={`Increase ${label}`}
       >
         <ChevronUp className="h-4 w-4" />
@@ -111,8 +112,7 @@ function DieStepper({
         variant="ghost"
         size="icon"
         className="text-white"
-        onClick={() => onChange(value - 1)}
-        disabled={value <= 1}
+        onClick={() => onChange(value + 1)}
         aria-label={`Decrease ${label}`}
       >
         <ChevronDown className="h-4 w-4" />
