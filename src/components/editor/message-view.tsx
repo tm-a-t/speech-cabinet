@@ -8,7 +8,6 @@ import {NameSelect} from '~/components/editor/name-select';
 import { MessageEditorContext } from "~/components/editor/text-editor-provider";
 import { EditorContent } from "@tiptap/react";
 import { cn } from "~/lib/utils";
-import { Dices } from "lucide-react";
 
 export function MessageView(
   {
@@ -32,9 +31,6 @@ export function MessageView(
   },
 ) {
   const editor = useContext(MessageEditorContext);
-  const [dicePopoverOpen, setDicePopoverOpen] = useState(false);
-  /** After choosing a rolled outcome, open dice popover only once Select has fully closed (avoids Radix dismiss). */
-  const openDicePopoverAfterResultSelectClosesRef = useRef(false);
   const showCheck = data.overrides.checks[message.name] ?? skills.includes(message.name);
 
   function handleCheckToggle(value: boolean) {
@@ -76,20 +72,6 @@ export function MessageView(
         die2: active ? (message.check.die2 ?? defaults.die2) : message.check.die2,
       },
     });
-    if (active) {
-      openDicePopoverAfterResultSelectClosesRef.current = true;
-    } else {
-      openDicePopoverAfterResultSelectClosesRef.current = false;
-      setDicePopoverOpen(false);
-    }
-  }
-
-  function handleResultSelectOpenChange(selectIsOpen: boolean) {
-    if (!selectIsOpen && openDicePopoverAfterResultSelectClosesRef.current) {
-      openDicePopoverAfterResultSelectClosesRef.current = false;
-      // Macrotask so opening runs after Select pointer/focus teardown (microtask was too early).
-      setTimeout(() => setDicePopoverOpen(true), 0);
-    }
   }
 
   return (
@@ -119,7 +101,6 @@ export function MessageView(
                   <span className="inline-flex items-center align-middle">
                   <Select
                     onValueChange={handleCheckResultSelect}
-                    onOpenChange={handleResultSelectOpenChange}
                     value={`${message.check.result} ${message.check.active}`}
                   >
                     <SelectTrigger
@@ -129,16 +110,14 @@ export function MessageView(
                     <SelectContent>
                       <SelectItem value="Failure false">Failure</SelectItem>
                       <SelectItem value="Success false">Success</SelectItem>
-                      <SelectItem value="Failure true">Failure <Dices className="inline h-4" /></SelectItem>
-                      <SelectItem value="Success true">Success <Dices className="inline h-4" /></SelectItem>
+                      <SelectItem value="Failure true">Dice Check Failure</SelectItem>
+                      <SelectItem value="Success true">Dice Check Success</SelectItem>
                     </SelectContent>
                   </Select>
                   {message.check.active && (
                     <ActiveCheckDicePopover
                       check={message.check}
                       saveCheck={(next) => saveMessage({ ...message, check: next })}
-                      open={dicePopoverOpen}
-                      onOpenChange={setDicePopoverOpen}
                     />
                   )}
                   </span>
