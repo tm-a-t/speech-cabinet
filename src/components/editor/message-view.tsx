@@ -9,6 +9,7 @@ import { MessageEditorContext } from "~/components/editor/text-editor-provider";
 import { EditorContent } from "@tiptap/react";
 import { cn } from "~/lib/utils";
 import { Dices } from "lucide-react";
+import { NarrationControls } from "~/components/editor/narration-controls";
 
 export function MessageView(
   {
@@ -128,6 +129,8 @@ export function MessageView(
               </span>
             }
           </span>
+
+          <NarrationControls message={message} saveMessage={saveMessage} data={data}/>
 
           <MessageExtraMenu message={message}
                             removeMessage={removeMessage}
