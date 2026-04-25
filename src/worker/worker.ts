@@ -5,8 +5,8 @@
 
 import {boss, queue, type RenderVideoJob} from '~/server/queue';
 import {type DiscoData, serialize} from '~/lib/disco-data';
-import { getGifPath, getVideoPath, sleep } from "~/lib/utils";
-import {totalDuration, totalTimeLimit} from '~/lib/time';
+import { getGifPath, getVideoPath } from "~/lib/utils";
+import {getMessageTimeline, totalDuration, totalTimeLimit} from '~/lib/time';
 import {db} from '~/server/db';
 // @ts-expect-error untyped lib :(
 import WebVideoCreator from 'web-video-creator';
@@ -15,6 +15,7 @@ import { type Page } from "web-video-creator/core";
 import { type Page as PuppeteerPage } from "puppeteer-core";
 import { env } from "~/env";
 import { spawn } from 'child_process';
+import { mkdir, rename, unlink, writeFile } from 'fs/promises';
 
 const wvc = new WebVideoCreator();
 wvc.config({
@@ -93,6 +94,10 @@ async function renderVideo(data: DiscoData, id: string, convertToGif: boolean) {
   });
   await video.startAndWait();
 
+  if (!convertToGif) {
+    await mixNarrationAudio(data, filename);
+  }
+
   if (convertToGif) {
     await run(
       `ffmpeg`,
@@ -136,6 +141,144 @@ function run(command: string, ...args: string[]): Promise<void> {
       reject(err);
     });
   });
+}
+
+function runOutput(command: string, ...args: string[]): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const p = spawn(command, args);
+    let stdout = '';
+    let stderr = '';
+
+    p.stdout.on('data', (x: string | Uint8Array) => {
+      stdout += x.toString();
+    });
+    p.stderr.on('data', (x: string | Uint8Array) => {
+      stderr += x.toString();
+    });
+    p.on('close', (code) => {
+      if (code === 0) {
+        resolve(stdout);
+      } else {
+        reject(new Error(stderr || `Process exited with code ${code}`));
+      }
+    });
+    p.on('error', reject);
+  });
+}
+
+async function mixNarrationAudio(data: DiscoData, filename: string): Promise<void> {
+  const narrationTimeline = getMessageTimeline(data)
+    .filter(item => item.message.narration);
+  if (!narrationTimeline.length) return;
+
+  await mkdir('temp', {recursive: true});
+  const tempAudioPaths: string[] = [];
+  const outputPath = `${filename}.narration.mp4`;
+
+  try {
+    for (const item of narrationTimeline) {
+      const narration = item.message.narration!;
+      const parsed = parseAudioDataUrl(narration.src);
+      const extension = audioExtensionForMimeType(narration.mimeType ?? parsed.mimeType);
+      const audioPath = `${filename}.narration-${item.index}.${extension}`;
+      await writeFile(audioPath, parsed.buffer);
+      tempAudioPaths.push(audioPath);
+    }
+
+    const hasAudio = await hasAudioStream(filename);
+    const durationSeconds = Math.ceil(Math.min(totalDuration(data), totalTimeLimit) / 1000);
+    const args = ['-y', '-i', filename];
+    let baseAudioLabel = '[0:a]';
+    let narrationInputStartIndex = 1;
+
+    if (!hasAudio) {
+      args.push(
+        '-f', 'lavfi',
+        '-t', String(durationSeconds),
+        '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
+      );
+      baseAudioLabel = '[1:a]';
+      narrationInputStartIndex = 2;
+    }
+
+    tempAudioPaths.forEach(path => {
+      args.push('-i', path);
+    });
+
+    const delayFilters = narrationTimeline.map((item, i) => {
+      const inputIndex = narrationInputStartIndex + i;
+      const delayMs = Math.max(0, Math.round(item.startMs));
+      return `[${inputIndex}:a]adelay=${delayMs}|${delayMs}[n${i}]`;
+    });
+    const mixedInputs = [
+      baseAudioLabel,
+      ...narrationTimeline.map((_, i) => `[n${i}]`),
+    ].join('');
+    const filter = [
+      ...delayFilters,
+      `${mixedInputs}amix=inputs=${narrationTimeline.length + 1}:duration=longest:dropout_transition=0[aout]`,
+    ].join(';');
+
+    await run(
+      'ffmpeg',
+      ...args,
+      '-filter_complex', filter,
+      '-map', '0:v',
+      '-map', '[aout]',
+      '-c:v', 'copy',
+      '-c:a', 'aac',
+      '-shortest',
+      '-nostdin',
+      outputPath,
+    );
+    await rename(outputPath, filename);
+  } finally {
+    await Promise.allSettled([
+      ...tempAudioPaths.map(path => unlink(path)),
+      unlink(outputPath),
+    ]);
+  }
+}
+
+async function hasAudioStream(filename: string): Promise<boolean> {
+  try {
+    const output = await runOutput(
+      'ffprobe',
+      '-v', 'error',
+      '-select_streams', 'a',
+      '-show_entries', 'stream=index',
+      '-of', 'csv=p=0',
+      filename,
+    );
+    return output.trim().length > 0;
+  } catch {
+    return false;
+  }
+}
+
+function parseAudioDataUrl(src: string): { mimeType: string; buffer: Buffer } {
+  const match = /^data:([^;,]+)(;base64)?,(.*)$/s.exec(src);
+  if (!match) {
+    throw new Error('Invalid narration data URL.');
+  }
+
+  const mimeType = match[1] ?? 'audio/webm';
+  const base64Marker = match[2];
+  const data = match[3] ?? '';
+  return {
+    mimeType,
+    buffer: base64Marker
+      ? Buffer.from(data, 'base64')
+      : Buffer.from(decodeURIComponent(data), 'utf8'),
+  };
+}
+
+function audioExtensionForMimeType(mimeType: string): string {
+  if (mimeType.includes('mpeg') || mimeType.includes('mp3')) return 'mp3';
+  if (mimeType.includes('mp4') || mimeType.includes('m4a')) return 'm4a';
+  if (mimeType.includes('wav')) return 'wav';
+  if (mimeType.includes('ogg')) return 'ogg';
+  return 'webm';
 }
 
 async function runWorker() {
