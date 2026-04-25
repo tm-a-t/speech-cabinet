@@ -65,12 +65,15 @@ export function getActiveCheckSoundName(message: Message): string | null {
     : '/sounds/failure.mp3';
 }
 
-export function playSound(path: string | null | undefined) {
-  if (!path) return;
+export function playSound(path: string | null | undefined): HTMLAudioElement | null {
+  if (!path) return null;
   const audio = document.createElement('audio');
   audio.src = path;
+  audio.onended = () => audio.remove();
+  audio.onerror = () => audio.remove();
   document.body.appendChild(audio);
   void audio.play();
+  return audio;
 }
 
 export function playMusic(path: string | null, skipIntro: boolean): HTMLAudioElement {
