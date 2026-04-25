@@ -12,12 +12,29 @@ import {
 } from '~/components/ui/dialog';
 import {Button} from '../ui/button';
 import {useToast} from "~/lib/hooks/use-toast";
+import {
+  formatBytes,
+  getTotalNarrationSizeBytes,
+  narrationSoftLimitBytes,
+  serializedProjectHardWarningBytes,
+} from "~/lib/audio";
 
 export function FileSubmenu({data, saveData, close}: { data: DiscoData, saveData: (data: DiscoData) => void, close: () => void }) {
   const {toast} = useToast();
 
   function exportData() {
-    const base64 = btoa(serialize(data));
+    const serialized = serialize(data);
+    const narrationBytes = getTotalNarrationSizeBytes(data);
+    if (
+      narrationBytes >= narrationSoftLimitBytes ||
+      serialized.length >= serializedProjectHardWarningBytes
+    ) {
+      toast({
+        title: "Large .disco file",
+        description: `This export includes ${formatBytes(narrationBytes)} of embedded audio and is about ${formatBytes(serialized.length)} before download encoding.`,
+      });
+    }
+    const base64 = btoa(serialized);
     downloadFile('data:application/json;base64,' + base64, `Disco Download ${formatTime()}.disco`);
   }
 
