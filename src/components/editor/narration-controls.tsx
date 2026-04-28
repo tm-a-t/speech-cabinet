@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FileAudio, Mic, Square, Trash2, Upload, Volume2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
@@ -55,13 +55,39 @@ export function NarrationControls({
       ? "Edit narration"
       : "Add narration";
 
+  const stopStream = useCallback(() => {
+    streamRef.current?.getTracks().forEach(track => track.stop());
+    streamRef.current = null;
+  }, []);
+
+  const stopPreview = useCallback(() => {
+    audioRef.current?.pause();
+    audioRef.current?.remove();
+    audioRef.current = null;
+    setIsPlaying(false);
+  }, []);
+
+  const handleDragPointerMove = useCallback((event: PointerEvent) => {
+    const dragStart = dragStartRef.current;
+    if (!dragStart) return;
+    setPanelOffset({
+      x: dragStart.originX + event.clientX - dragStart.pointerX,
+      y: dragStart.originY + event.clientY - dragStart.pointerY,
+    });
+  }, []);
+
+  const stopDragging = useCallback(() => {
+    dragStartRef.current = null;
+    window.removeEventListener("pointermove", handleDragPointerMove);
+  }, [handleDragPointerMove]);
+
   useEffect(() => {
     return () => {
       stopPreview();
       stopStream();
       stopDragging();
     };
-  }, []);
+  }, [stopDragging, stopPreview, stopStream]);
 
   async function saveNarration(narration: Narration) {
     const previousSize = message.narration?.sizeBytes ?? 0;
@@ -158,18 +184,6 @@ export function NarrationControls({
     setIsRecording(false);
   }
 
-  function stopStream() {
-    streamRef.current?.getTracks().forEach(track => track.stop());
-    streamRef.current = null;
-  }
-
-  function stopPreview() {
-    audioRef.current?.pause();
-    audioRef.current?.remove();
-    audioRef.current = null;
-    setIsPlaying(false);
-  }
-
   function togglePreview() {
     if (!narration) return;
     if (isPlaying) {
@@ -206,20 +220,6 @@ export function NarrationControls({
     window.addEventListener("pointerup", stopDragging, { once: true });
   }
 
-  function handleDragPointerMove(event: PointerEvent) {
-    const dragStart = dragStartRef.current;
-    if (!dragStart) return;
-    setPanelOffset({
-      x: dragStart.originX + event.clientX - dragStart.pointerX,
-      y: dragStart.originY + event.clientY - dragStart.pointerY,
-    });
-  }
-
-  function stopDragging() {
-    dragStartRef.current = null;
-    window.removeEventListener("pointermove", handleDragPointerMove);
-  }
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -235,6 +235,8 @@ export function NarrationControls({
           )}
           aria-label={triggerLabel}
           title={triggerLabel}
+          data-testid="narration-trigger"
+          data-state={isRecording ? "recording" : narration ? "attached" : "empty"}
         >
           <TriggerIcon className="h-4 w-4" />
         </button>
@@ -248,11 +250,15 @@ export function NarrationControls({
           className="-mx-1 -mt-1 cursor-move rounded px-1 py-1"
           onPointerDown={handleDragPointerDown}
           title="Drag to move"
+          data-testid="narration-drag-handle"
         >
           <div className="flex items-center justify-between gap-3">
             <div className="font-medium">Narration</div>
             {isRecording && (
-              <div className="inline-flex items-center gap-1 rounded-full bg-red-500/10 px-2 py-0.5 text-xs text-red-500">
+              <div
+                className="inline-flex items-center gap-1 rounded-full bg-red-500/10 px-2 py-0.5 text-xs text-red-500"
+                data-testid="narration-recording-badge"
+              >
                 <Mic className="h-3 w-3" />
                 Recording
               </div>
@@ -283,6 +289,7 @@ export function NarrationControls({
           type="file"
           accept="audio/*"
           onChange={handleFileChange}
+          data-testid="narration-file-input"
         />
 
         <div className="grid grid-cols-[1fr_1fr_auto_auto] items-center gap-2">
@@ -326,6 +333,7 @@ export function NarrationControls({
             onClick={removeNarration}
             aria-label="Remove narration"
             className="h-8 w-8 p-0"
+            data-testid="remove-narration"
           >
             <Trash2 className="h-3 w-3" />
           </Button>

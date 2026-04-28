@@ -87,8 +87,8 @@ export function FileSubmenu({data, saveData, close}: { data: DiscoData, saveData
             </div>
           </DialogContent>
         </Dialog>
-        <MenubarItem onSelect={importData}>Open...</MenubarItem>
-        <MenubarItem onSelect={exportData}>Download</MenubarItem>
+        <MenubarItem onSelect={importData} data-testid="open-disco-file">Open...</MenubarItem>
+        <MenubarItem onSelect={exportData} data-testid="download-disco-file">Download</MenubarItem>
       </MenubarContent>
     </MenubarMenu>
   );
