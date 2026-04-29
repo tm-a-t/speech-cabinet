@@ -313,7 +313,8 @@ function parseAudioDataUrl(src: string): { mimeType: string; buffer: Buffer } {
   const payload = src.slice(commaIdx + 1);
   const isBase64 = /;base64$/i.test(header);
   const metaWithoutBase64 = isBase64 ? header.replace(/;base64$/i, '') : header;
-  const mimeType = metaWithoutBase64.split(';')[0]?.trim() || 'audio/webm';
+  const rawMime = metaWithoutBase64.split(';')[0]?.trim();
+  const mimeType = rawMime === '' ? 'audio/webm' : rawMime ?? 'audio/webm';
 
   try {
     return {
