@@ -18,6 +18,17 @@ export type Difficulty = z.infer<typeof difficulties>;
 export const results = z.enum(['Success', 'Failure']);
 export type Result = z.infer<typeof results>;
 
+export const narration = z.object({
+  src: z.string().refine(value => value.startsWith('data:audio/'), {
+    message: 'Narration clips must be audio data URLs',
+  }),
+  durationMs: z.number().finite().positive(),
+  name: z.string().optional(),
+  mimeType: z.string().optional(),
+  sizeBytes: z.number().int().nonnegative().optional(),
+});
+export type Narration = z.infer<typeof narration>;
+
 export const message = z.object({
   name: z.string(),
   text: z.string(),
@@ -26,6 +37,7 @@ export const message = z.object({
     result: results,
     active: z.boolean().default(false),
   }).optional(),
+  narration: narration.optional(),
   id: z.number().default(() => Math.floor(Math.random() * 1_000_000)),
 });
 export type Message = z.infer<typeof message>;

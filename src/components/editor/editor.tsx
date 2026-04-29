@@ -1,4 +1,4 @@
-import { type DiscoData, type Message, message} from "~/lib/disco-data";
+import { type DiscoData, type Message, message, serialize} from "~/lib/disco-data";
 import {Button} from '~/components/ui/button';
 import React, { useContext } from 'react';
 import {MessageView} from "./message-view";
@@ -12,10 +12,18 @@ import {
 } from "./text-editor-provider";
 import { EditorContent } from "@tiptap/react";
 import { useIsDesktop } from "~/lib/hooks/use-media-query";
+import {
+  formatBytes,
+  getTotalNarrationSizeBytes,
+  narrationSoftLimitBytes,
+  serializedProjectHardWarningBytes,
+} from "~/lib/audio";
 
 export function Editor({data, saveData}: { data: DiscoData, saveData: (data: DiscoData) => void }) {
   const usedNames = uniqueValues(data?.messages.map(message => message.name)) ?? [];
   const isDesktop = useIsDesktop();
+  const totalNarrationBytes = getTotalNarrationSizeBytes(data);
+  const serializedProjectBytes = serialize(data).length;
 
   function saveMessage(index: number, message: Message) {
     if (data === null) return;
@@ -120,6 +128,18 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
             Sorry, Speech Cabinet only renders up to {totalTimeLimit / 1000}{" "}
             seconds of mp4 video. Your dialogue is{" "}
             {Math.ceil(totalDuration(data) / 1000)} seconds long.
+          </p>
+        </div>
+      )}
+
+      {(totalNarrationBytes >= narrationSoftLimitBytes ||
+        serializedProjectBytes >= serializedProjectHardWarningBytes) && (
+        <div className="mt-4 px-2 font-serif leading-6 opacity-70 sm:px-0">
+          <p>
+            This dialogue contains {formatBytes(totalNarrationBytes)} of embedded narration
+            and serializes to about {formatBytes(serializedProjectBytes)}. Large audio-heavy
+            dialogues may fail to autosave, import, or render until audio storage moves out
+            of the .disco file.
           </p>
         </div>
       )}

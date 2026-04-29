@@ -7,6 +7,9 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
+/tests/fixtures/audio/*.wav
 
 # database
 /prisma/db.sqlite
@@ -39,6 +42,7 @@ yarn-error.log*
 
 # vercel
 .vercel
+.env.vercel.preview
 
 # typescript
 *.tsbuildinfo

@@ -11,9 +11,13 @@
     "db:studio": "prisma studio",
     "dev": "next dev",
     "dev:work": "tsx watch --env-file=.env src/worker/worker.ts",
+    "generate:audio-fixtures": "tsx scripts/generate-audio-fixtures.ts",
     "lint": "next lint",
     "postinstall": "prisma generate",
     "start": "next start",
+    "test:e2e": "yarn generate:audio-fixtures && playwright test",
+    "test:e2e:ui": "yarn generate:audio-fixtures && playwright test --ui",
+    "test:narration": "tsx scripts/audio-narration-smoke.ts",
     "work": "tsx --env-file=.env src/worker/worker.ts",
     "worker:prod": "tsx src/worker/worker.ts"
   },
@@ -64,6 +68,7 @@
     "zod": "^3.23.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@types/eslint": "^8.56.10",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",

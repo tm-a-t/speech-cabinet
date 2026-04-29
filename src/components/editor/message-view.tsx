@@ -1,6 +1,6 @@
 import {MessageExtraMenu} from '~/components/editor/message-extra-menu';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/components/ui/select';
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {difficulties, type Difficulty, type DiscoData, type Message, type Result} from '~/lib/disco-data';
 import {skills} from '~/lib/names';
 import {NameSelect} from '~/components/editor/name-select';
@@ -8,6 +8,7 @@ import { MessageEditorContext } from "~/components/editor/text-editor-provider";
 import { EditorContent } from "@tiptap/react";
 import { cn } from "~/lib/utils";
 import { Dices } from "lucide-react";
+import { NarrationControls } from "~/components/editor/narration-controls";
 
 export function MessageView(
   {
@@ -31,6 +32,9 @@ export function MessageView(
   },
 ) {
   const editor = useContext(MessageEditorContext);
+  const [narrationPopoverOpen, setNarrationPopoverOpen] = useState(false);
+  const [narrationEntryActive, setNarrationEntryActive] = useState(false);
+  const [narrationSessionKey, setNarrationSessionKey] = useState(0);
   const showCheck = data.overrides.checks[message.name] ?? skills.includes(message.name);
 
   function handleCheckToggle(value: boolean) {
@@ -69,7 +73,7 @@ export function MessageView(
   }
 
   return (
-    <div className="font-disco sm:pl-6 leading-7 [&:not(:first-child)]:mt-3 sm:[&:not(:first-child)]:mt-5 sm:[&:not(:hover)_.message-menu-button]:opacity-0">
+    <div data-testid="message-line" className="font-disco sm:pl-6 leading-7 [&:not(:first-child)]:mt-3 sm:[&:not(:first-child)]:mt-5 sm:[&:not(:hover)_.message-menu-button]:opacity-0">
       <span className="inline-block sm:h-0 sm:-ml-6 -ml-1 -mr-1 w-full sm:w-auto">
         <span className="relative sm:h-0 flex sm:-ml-3 w-full sm:w-auto">
           <span>
@@ -109,12 +113,28 @@ export function MessageView(
             }
           </span>
 
+          <NarrationControls
+            message={message}
+            saveMessage={saveMessage}
+            data={data}
+            popoverOpen={narrationPopoverOpen}
+            onPopoverOpenChange={setNarrationPopoverOpen}
+            entryActive={narrationEntryActive}
+            sessionKey={narrationSessionKey}
+            onExitAudioEntry={() => setNarrationEntryActive(false)}
+          />
+
           <MessageExtraMenu message={message}
                             removeMessage={removeMessage}
                             data={data}
                             saveData={saveData}
                             moveMessageUp={moveMessageUp}
-                            moveMessageDown={moveMessageDown}/>
+                            moveMessageDown={moveMessageDown}
+                            onOpenAddAudio={() => {
+                              setNarrationEntryActive(true);
+                              setNarrationSessionKey(k => k + 1);
+                              setNarrationPopoverOpen(true);
+                            }}/>
         </span>
       </span>
 

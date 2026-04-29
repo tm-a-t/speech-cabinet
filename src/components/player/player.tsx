@@ -5,7 +5,7 @@ import { MessageView } from "~/components/player/message-view";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   activeCheckTapeRollDuration,
-  getMessageDuration,
+  getMessageDisplayDuration,
   startDelay,
 } from "~/lib/time";
 import { getPortraitUrl, uniqueValues } from "~/lib/utils";
@@ -62,6 +62,7 @@ export function Player({ data }: { data: DiscoData }) {
 
   const [imagesArePreloaded, setImagesArePreloaded] = useState(false);
   const [soundsArePreloaded, setSoundsArePreloaded] = useState(false);
+  const playingAudiosRef = React.useRef<HTMLAudioElement[]>([]);
 
   useEffect(() => {
     if (!tapeIsRolling) return;
@@ -82,14 +83,14 @@ export function Player({ data }: { data: DiscoData }) {
     if (tapeIsRolling || index >= data.messages.length) return;
 
     const lastMessage = shownMessages.all[index - 1];
-    const delay = lastMessage ? getMessageDuration(lastMessage) : startDelay;
+    const delay = lastMessage ? getMessageDisplayDuration(lastMessage) : startDelay;
 
     const timer = setTimeout(() => {
       const newMessage = data.messages[index]!
 
       const showNewMessage = () => {
         const all = [...shownMessages.all, newMessage];
-        playSound(messageSounds[index]);
+        playMessageAudio(newMessage, messageSounds[index] ?? null);
         setTapeIsRolling(false);
         setShownMessages({ all, last: newMessage, lastIsShown: false });
         setTimeout(() => setShownMessages({ all, last: newMessage, lastIsShown: true }), 100);
@@ -116,15 +117,32 @@ export function Player({ data }: { data: DiscoData }) {
     const uniqueImages = [...uniqueValues(messagePortraits), portraitFrameUrl, ...activeCheckUrls];
     void Promise.allSettled(uniqueImages.map(preloadImage))
       .then(() => setImagesArePreloaded(true));
-    const uniqueSounds = uniqueValues([...messageSounds, ...data.messages.map(getActiveCheckSoundName)]).filter(v => v !== null);
+    const narrationSounds = data.messages.map(message => message.narration?.src ?? null);
+    const uniqueSounds = uniqueValues([...messageSounds, ...data.messages.map(getActiveCheckSoundName), ...narrationSounds]).filter(v => v !== null);
     void Promise.allSettled(uniqueSounds.map(preloadAudio))
       .then(() => setSoundsArePreloaded(true));
 
     const music = playMusic(data.music, data.skipMusicIntro);
     return () => {
       if (music) stopMusic(music);
+      playingAudiosRef.current.forEach(audio => {
+        audio.pause();
+        audio.remove();
+      });
+      playingAudiosRef.current = [];
     };
   }, [data, messagePortraits, messageSounds]);
+
+  function playMessageAudio(message: Message, fallbackSound: string | null) {
+    const audio = playSound(message.narration?.src ?? fallbackSound);
+    if (!audio) return;
+
+    playingAudiosRef.current.push(audio);
+    audio.onended = audio.onerror = () => {
+      audio.remove();
+      playingAudiosRef.current = playingAudiosRef.current.filter(a => a !== audio);
+    };
+  }
 
   return (
     <div className="relative h-[1920px] w-[1080px] overflow-hidden font-disco">

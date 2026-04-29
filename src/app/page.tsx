@@ -34,10 +34,11 @@ export default function EditorPage() {
     if (!data) return;
     const timer = setTimeout(() => {
       try {
-        localStorage.setItem('data', serialize(data));
+        const serialized = serialize(data);
+        localStorage.setItem('data', serialized);
         console.log('saved');
       } catch (e) {
-        alert("Sorry, can't store this. Looks like the dialogue gets too large.");
+        alert("Sorry, can't store this. The dialogue is too large to autosave, likely because of embedded audio. Try removing or recompressing narration clips, then download a .disco backup.");
         console.error('Could not save:', e);
         setData(restoreSavedData());
       }
