@@ -300,20 +300,31 @@ async function hasAudioStream(filename: string): Promise<boolean> {
 }
 
 function parseAudioDataUrl(src: string): { mimeType: string; buffer: Buffer } {
-  const match = /^data:([^;,]+)(;base64)?,(.*)$/s.exec(src);
-  if (!match) {
+  if (!src.startsWith('data:')) {
     throw new Error('Invalid narration data URL.');
   }
 
-  const mimeType = match[1] ?? 'audio/webm';
-  const base64Marker = match[2];
-  const data = match[3] ?? '';
-  return {
-    mimeType,
-    buffer: base64Marker
-      ? Buffer.from(data, 'base64')
-      : Buffer.from(decodeURIComponent(data), 'utf8'),
-  };
+  const commaIdx = src.indexOf(',');
+  if (commaIdx === -1) {
+    throw new Error('Invalid narration data URL.');
+  }
+
+  const header = src.slice('data:'.length, commaIdx);
+  const payload = src.slice(commaIdx + 1);
+  const isBase64 = /;base64$/i.test(header);
+  const metaWithoutBase64 = isBase64 ? header.replace(/;base64$/i, '') : header;
+  const mimeType = metaWithoutBase64.split(';')[0]?.trim() || 'audio/webm';
+
+  try {
+    return {
+      mimeType,
+      buffer: isBase64
+        ? Buffer.from(payload, 'base64')
+        : Buffer.from(decodeURIComponent(payload), 'utf8'),
+    };
+  } catch {
+    throw new Error('Invalid narration data URL.');
+  }
 }
 
 function audioExtensionForMimeType(mimeType: string): string {
