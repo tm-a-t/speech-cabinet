@@ -1,7 +1,6 @@
 "use client";
 
-import { ActiveCheckDiceStrip, ACTIVE_CHECK_PAIR_SVG_URLS } from "~/components/active-check-dice";
-import { type DiscoData, type Message, resolveActiveCheckDice } from "~/lib/disco-data";
+import { type DiscoData, type Message } from "~/lib/disco-data";
 import { MessageView } from "~/components/player/message-view";
 import React, { useEffect, useMemo, useState } from "react";
 import {
@@ -24,19 +23,18 @@ const messageTransition = "top .3s cubic-bezier(.1, .3, .7, .9)";
 
 const portraitFrameUrl = '/layout/frame.png'
 const activeChecks = {
-  Failure: {
-    text: "/effects/check-failure.svg",
-    background: "/effects/check-failure-background.png",
+  Failure:  {
+    text: '/effects/check-failure.svg',
+    background: '/effects/check-failure-background.png',
+    dice: '/effects/check-failure-dice.svg',
   },
   Success: {
-    text: "/effects/check-success.svg",
-    background: "/effects/check-success-background.png",
+    text: '/effects/check-success.svg',
+    background: '/effects/check-success-background.png',
+    dice: '/effects/check-success-dice.svg',
   },
-};
-const activeCheckUrls = [
-  ...Object.values(activeChecks).flatMap((o) => [o.text, o.background]),
-  ...ACTIVE_CHECK_PAIR_SVG_URLS,
-] as string[];
+}
+const activeCheckUrls = Object.values(activeChecks).flatMap(Object.values) as string[];
 
 export function Player({ data }: { data: DiscoData }) {
   const playerHeight = 1920;
@@ -203,12 +201,13 @@ export function Player({ data }: { data: DiscoData }) {
             }}
             alt=""
           />
-          <ActiveCheckDiceStrip
-            {...resolveActiveCheckDice(shownMessages.last.check)}
-            className={shownMessages.lastIsShown ? "opacity-0" : ""}
+          <img
+            src={activeChecks[shownMessages.last.check.result].dice}
+            className={`h-60 ${shownMessages.lastIsShown ? "opacity-0" : ""}`}
             style={{
               transition: "opacity .4s 1s ease-in",
             }}
+            alt=""
           />
           <img
             src={activeChecks[shownMessages.last.check.result].text}

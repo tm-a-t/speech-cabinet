@@ -1,8 +1,7 @@
-import { ActiveCheckDicePopover } from "~/components/editor/active-check-dice-popover";
 import {MessageExtraMenu} from '~/components/editor/message-extra-menu';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '~/components/ui/select';
-import React, { useContext, useState } from "react";
-import {difficulties, getDefaultActiveCheckDice, type Difficulty, type DiscoData, type Message, type Result} from '~/lib/disco-data';
+import React, { useContext } from "react";
+import {difficulties, type Difficulty, type DiscoData, type Message, type Result} from '~/lib/disco-data';
 import {skills} from '~/lib/names';
 import {NameSelect} from '~/components/editor/name-select';
 import { MessageEditorContext } from "~/components/editor/text-editor-provider";
@@ -33,7 +32,6 @@ export function MessageView(
   },
 ) {
   const editor = useContext(MessageEditorContext);
-  const [dicePopoverOpen, setDicePopoverOpen] = useState(false);
   const showCheck = data.overrides.checks[message.name] ?? skills.includes(message.name);
 
   function handleCheckToggle(value: boolean) {
@@ -60,23 +58,15 @@ export function MessageView(
   }
 
   function handleCheckResultSelect(value: string) {
-    const [result, activeStr] = value.split(' ');
-    const active = activeStr === "true";
-    const resultR = result as Result;
-    if (!message.check) return;
-    const defaults = getDefaultActiveCheckDice(resultR);
+    const [result, active] = value.split(' ');
     saveMessage({
       ...message,
-      check: {
+      check: message.check && {
         ...message.check,
-        result: resultR,
-        active,
-        die1: active ? (message.check.die1 ?? defaults.die1) : message.check.die1,
-        die2: active ? (message.check.die2 ?? defaults.die2) : message.check.die2,
+        result: result as Result,
+        active: active === 'true',
       },
     });
-    if (active) queueMicrotask(() => setDicePopoverOpen(true));
-    else setDicePopoverOpen(false);
   }
 
   return (
@@ -103,7 +93,6 @@ export function MessageView(
                   </Select>
 
                 {showCheck && message.check &&
-                  <span className="inline-flex items-center align-middle">
                   <Select onValueChange={handleCheckResultSelect} value={`${message.check.result} ${message.check.active}`}>
                     <SelectTrigger
                       className="h-8 px-1 sm:px-1 sm:text-base text-zinc-400 dark:bg-transparent dark:border-0 hover:dark:bg-zinc-800 hover:text-white transition">
@@ -116,15 +105,6 @@ export function MessageView(
                       <SelectItem value="Success true">Success <Dices className="inline h-4" /></SelectItem>
                     </SelectContent>
                   </Select>
-                  {message.check.active && (
-                    <ActiveCheckDicePopover
-                      check={message.check}
-                      saveCheck={(next) => saveMessage({ ...message, check: next })}
-                      open={dicePopoverOpen}
-                      onOpenChange={setDicePopoverOpen}
-                    />
-                  )}
-                  </span>
                 }
               </span>
             }
