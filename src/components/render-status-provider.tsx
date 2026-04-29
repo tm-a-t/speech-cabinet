@@ -11,7 +11,8 @@ type RenderNotStarted = { state: 'not-started' }
 type RenderInQueue = { state: 'in-queue', videoId: string, isGif: boolean, position: number, maxPosition: number }
 type RenderInProgress = { state: 'in-progress', videoId: string, isGif: boolean, progress: number }
 type RenderFinished = { state: 'finished', videoId: string, isGif: boolean, warning: string | null }
-export type RenderStatus = RenderNotStarted | RenderInQueue | RenderInProgress | RenderFinished
+type RenderFailed = { state: 'failed', videoId: string, isGif: boolean, message: string }
+export type RenderStatus = RenderNotStarted | RenderInQueue | RenderInProgress | RenderFinished | RenderFailed
 
 export const RenderStatusContext = createContext<[RenderStatus, (status: RenderStatus) => void]>(
   [{state: 'not-started'}, () => {}],
@@ -73,6 +74,9 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
           const result = await getVideoProgress(status.videoId);
           if (result.status === 'progress') {
             setStatus({state: 'in-progress', videoId: status.videoId, isGif: status.isGif, progress: result.progress});
+          } else if (result.status === 'failed') {
+            clearInterval(timer);
+            setStatus({state: 'failed', videoId: status.videoId, isGif: status.isGif, message: result.message});
           } else {
             clearInterval(timer);
             setStatus({state: 'finished', videoId: status.videoId, isGif: status.isGif, warning: result.warning});
@@ -115,13 +119,19 @@ export function RenderStatusProvider({children}: { children: ReactNode }) {
                 }
               </>
             }
+            {status.state === 'failed' &&
+              <>
+                <p className="font-medium text-red-400">Rendering failed</p>
+                <p className="mt-2 max-h-40 overflow-y-auto break-words text-sm text-zinc-400">{status.message}</p>
+              </>
+            }
           </div>
 
           {(status.state === 'in-queue' || status.state === 'in-progress') &&
             <Progress value={displayedProgress} className="mt-3"/>
           }
 
-          {status.state === 'finished' &&
+          {(status.state === 'finished' || status.state === 'failed') &&
             <Button size="icon" variant="ghost" onClick={() => setStatus({state: 'not-started'})}
                     className="absolute right-1 top-1">
               <X className="h-4 w-4"/>

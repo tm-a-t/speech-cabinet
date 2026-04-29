@@ -23,12 +23,19 @@ export async function getVideoQueuePosition(id: string): Promise<number> {
 
 export type VideoProgressResult =
   | { status: 'progress'; progress: number }
-  | { status: 'finished'; warning: string | null };
+  | { status: 'finished'; warning: string | null }
+  | { status: 'failed'; message: string };
 
 export async function getVideoProgress(id: string): Promise<VideoProgressResult> {
   const video = await db.video.findFirst({where: {id}});
-  if (video?.isReady) {
+  if (!video) {
+    return {status: 'failed', message: 'Video not found'};
+  }
+  if (video.isReady) {
     return {status: 'finished', warning: video.renderWarning ?? null};
   }
-  return {status: 'progress', progress: video?.progress ?? 0};
+  if (video.renderError) {
+    return {status: 'failed', message: video.renderError};
+  }
+  return {status: 'progress', progress: video.progress};
 }
