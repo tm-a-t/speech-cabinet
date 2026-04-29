@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { FileAudio, Mic, Square, Trash2, Upload, Volume2 } from "lucide-react";
+import { Mic, Square, Trash2, Upload, Volume2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   Popover,
@@ -24,10 +24,20 @@ export function NarrationControls({
   message,
   saveMessage,
   data,
+  popoverOpen,
+  onPopoverOpenChange,
+  entryActive,
+  sessionKey,
+  onExitAudioEntry,
 }: {
   message: Message;
   saveMessage: (message: Message) => void;
   data: DiscoData;
+  popoverOpen: boolean;
+  onPopoverOpenChange: (open: boolean) => void;
+  entryActive: boolean;
+  sessionKey: number;
+  onExitAudioEntry: () => void;
 }) {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -48,7 +58,9 @@ export function NarrationControls({
 
   const narration = message.narration;
   const totalNarrationBytes = getTotalNarrationSizeBytes(data);
-  const TriggerIcon = isRecording ? Mic : narration ? Volume2 : FileAudio;
+  const showVisibleTrigger = [narration != null, isRecording, entryActive].some(Boolean);
+  /** Speaker = clip attached; mic (muted) = draft / no clip yet; mic + pulse = recording */
+  const TriggerIcon = isRecording ? Mic : narration ? Volume2 : Mic;
   const triggerLabel = isRecording
     ? "Recording narration"
     : narration
@@ -89,12 +101,38 @@ export function NarrationControls({
     };
   }, [stopDragging, stopPreview, stopStream]);
 
+  const discardRecordingSession = useCallback(() => {
+    const rec = recorderRef.current;
+    if (rec) {
+      rec.ondataavailable = null;
+      rec.onstop = null;
+      try {
+        rec.stop();
+      } catch {
+        /* ignore */
+      }
+      recorderRef.current = null;
+    }
+    setIsRecording(false);
+    chunksRef.current = [];
+    stopStream();
+  }, [stopStream]);
+
+  useEffect(() => {
+    discardRecordingSession();
+    stopPreview();
+    setIsBusy(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }, [sessionKey, discardRecordingSession, stopPreview]);
+
   async function saveNarration(narration: Narration) {
     const previousSize = message.narration?.sizeBytes ?? 0;
     const nextTotalBytes =
       totalNarrationBytes - previousSize + (narration.sizeBytes ?? 0);
 
     saveMessage({ ...message, narration });
+
+    onExitAudioEntry();
 
     if (nextTotalBytes >= narrationSoftLimitBytes) {
       toast({
@@ -203,8 +241,11 @@ export function NarrationControls({
   }
 
   function removeNarration() {
+    discardRecordingSession();
     stopPreview();
     saveMessage({ ...message, narration: undefined });
+    onExitAudioEntry();
+    onPopoverOpenChange(false);
   }
 
   function handleDragPointerDown(event: React.PointerEvent<HTMLDivElement>) {
@@ -221,28 +262,35 @@ export function NarrationControls({
   }
 
   return (
-    <Popover>
+    <Popover modal={false} open={popoverOpen} onOpenChange={onPopoverOpenChange}>
       <PopoverTrigger asChild>
         <button
           type="button"
           className={cn(
             "ml-1 inline-flex h-8 items-center rounded px-1 transition hover:bg-zinc-800 hover:text-white",
-            isRecording
-              ? "animate-pulse text-red-400"
-              : narration
-              ? "text-zinc-200"
-              : "border border-dashed border-zinc-600/70 text-zinc-500 hover:border-zinc-400",
+            showVisibleTrigger
+              ? isRecording
+                ? "animate-pulse text-red-400"
+                : narration
+                  ? "text-zinc-200"
+                  : "text-zinc-500 opacity-80 hover:opacity-100 hover:text-zinc-300"
+              : "sr-only h-px w-px shrink-0 overflow-hidden border-0 p-0 opacity-0",
           )}
           aria-label={triggerLabel}
-          title={triggerLabel}
+          title={showVisibleTrigger ? triggerLabel : undefined}
+          aria-hidden={!showVisibleTrigger}
+          tabIndex={showVisibleTrigger ? 0 : -1}
           data-testid="narration-trigger"
-          data-state={isRecording ? "recording" : narration ? "attached" : "empty"}
+          data-state={
+            isRecording ? "recording" : narration ? "attached" : entryActive ? "draft" : "empty"
+          }
         >
-          <TriggerIcon className="h-4 w-4" />
+          {showVisibleTrigger ? <TriggerIcon className="h-4 w-4" /> : <span aria-hidden />}
         </button>
       </PopoverTrigger>
       <PopoverContent
         align="start"
+        data-testid="narration-popover-content"
         className="w-96 space-y-3 font-sans text-sm"
         style={{ transform: `translate(${panelOffset.x}px, ${panelOffset.y}px)` }}
       >
@@ -311,6 +359,7 @@ export function NarrationControls({
             disabled={isBusy}
             onClick={isRecording ? stopRecording : startRecording}
             className="px-3"
+            data-testid="narration-record-toggle"
           >
             {isRecording ? <Square className="mr-1 h-3 w-3" /> : <Mic className="mr-1 h-3 w-3" />}
             {isRecording ? "Stop" : "Record"}
@@ -329,9 +378,9 @@ export function NarrationControls({
             type="button"
             variant="ghost"
             size="icon"
-            disabled={!narration || isBusy || isRecording}
+            disabled={(!narration && !isRecording && !entryActive) || isBusy}
             onClick={removeNarration}
-            aria-label="Remove narration"
+            aria-label="Remove audio"
             className="h-8 w-8 p-0"
             data-testid="remove-narration"
           >

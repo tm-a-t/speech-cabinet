@@ -24,11 +24,16 @@ type SavedData = {
   messages: SavedMessage[];
 };
 
+/** The open narration panel (Radix typically keeps one mounted popover content visible at a time). */
+function activeNarrationPopover(page: Page) {
+  return page.getByTestId("narration-popover-content").filter({ visible: true });
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
   await page.evaluate(() => localStorage.clear());
   await page.reload();
-  await expect(page.getByTestId("narration-trigger").first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "+ Add line" })).toBeVisible();
 });
 
 test("uploads a professional-style WAV and preserves it through .disco export/import", async ({ page }, testInfo) => {
@@ -70,26 +75,26 @@ test("records separate smaller clips line by line with fake microphone input", a
   await page.getByRole("button", { name: "+ Add line" }).click();
 
   const firstPanelBefore = await openNarrationPanel(page, 0);
-  await page.getByRole("button", { name: "Record" }).click();
-  await expect(page.getByTestId("narration-recording-badge")).toBeVisible();
+  await activeNarrationPopover(page).getByTestId("narration-record-toggle").click({ force: true });
+  await expect(activeNarrationPopover(page).getByTestId("narration-recording-badge")).toBeVisible();
   await expect(page.getByTestId("narration-trigger").first()).toHaveAttribute("data-state", "recording");
 
-  const dragHandle = page.getByTestId("narration-drag-handle");
+  const dragHandle = activeNarrationPopover(page).getByTestId("narration-drag-handle");
   await dragBy(page, dragHandle, 120, 70);
-  const firstPanelAfter = await page.getByRole("dialog").boundingBox();
+  const firstPanelAfter = await activeNarrationPopover(page).boundingBox();
   expect(firstPanelAfter?.x).toBeGreaterThan((firstPanelBefore?.x ?? 0) + 40);
   expect(firstPanelAfter?.y).toBeGreaterThan((firstPanelBefore?.y ?? 0) + 20);
 
   await page.waitForTimeout(3_000);
-  await page.getByRole("button", { name: "Stop" }).click();
+  await activeNarrationPopover(page).getByTestId("narration-record-toggle").click({ force: true });
   await expect(page.getByText("Recorded narration")).toBeVisible();
   await page.keyboard.press("Escape");
 
   await openNarrationPanel(page, 1);
-  await page.getByRole("button", { name: "Record" }).click();
-  await expect(page.getByTestId("narration-recording-badge")).toBeVisible();
+  await activeNarrationPopover(page).getByTestId("narration-record-toggle").click({ force: true });
+  await expect(activeNarrationPopover(page).getByTestId("narration-recording-badge")).toBeVisible();
   await page.waitForTimeout(1_500);
-  await page.getByRole("button", { name: "Stop" }).click();
+  await activeNarrationPopover(page).getByTestId("narration-record-toggle").click({ force: true });
   await expect(page.getByText("Recorded narration")).toBeVisible();
 
   const savedData = await waitForSavedData(
@@ -107,7 +112,7 @@ test("records separate smaller clips line by line with fake microphone input", a
   expect(firstNarration.sizeBytes).toBeGreaterThan(10_000);
   expect(secondNarration.sizeBytes).toBeGreaterThan(10_000);
 
-  await page.getByTestId("remove-narration").click();
+  await activeNarrationPopover(page).getByTestId("remove-narration").click();
   const afterRemoval = await waitForSavedData(
     page,
     (data) =>
@@ -126,9 +131,9 @@ test("keeps mixed uploaded and recorded clips mapped line by line", async ({ pag
   await page.keyboard.press("Escape");
 
   await openNarrationPanel(page, 1);
-  await page.getByRole("button", { name: "Record" }).click();
+  await activeNarrationPopover(page).getByTestId("narration-record-toggle").click({ force: true });
   await page.waitForTimeout(1_500);
-  await page.getByRole("button", { name: "Stop" }).click();
+  await activeNarrationPopover(page).getByTestId("narration-record-toggle").click({ force: true });
   await expect(page.getByText("Recorded narration")).toBeVisible();
 
   const savedData = await waitForSavedData(
@@ -158,14 +163,48 @@ test("keeps mixed uploaded and recorded clips mapped line by line", async ({ pag
 
 async function attachAudioToLine(page: Page, lineIndex: number, filePath: string) {
   await openNarrationPanel(page, lineIndex);
-  await page.getByTestId("narration-file-input").setInputFiles(filePath);
+  await activeNarrationPopover(page).getByTestId("narration-file-input").setInputFiles(filePath);
   await expect(page.getByText(path.basename(filePath))).toBeVisible();
 }
 
+test("menu Add audio shows draft trigger; Remove audio clears draft and hides trigger until menu again", async ({
+  page,
+}) => {
+  const row = page.getByTestId("message-line").first();
+  await row.scrollIntoViewIfNeeded();
+  await row.hover();
+  await page.getByTestId("message-line-menu-trigger").first().click({ force: true });
+  await page.getByTestId("add-audio-menu-item").click();
+  await expect(activeNarrationPopover(page)).toBeVisible();
+  await expect(page.getByTestId("narration-trigger").first()).toHaveAttribute("data-state", "draft");
+
+  await activeNarrationPopover(page).getByTestId("remove-narration").click();
+  await expect(page.getByTestId("narration-trigger").first()).toHaveAttribute("data-state", "empty");
+
+  await row.hover();
+  await page.getByTestId("message-line-menu-trigger").first().click({ force: true });
+  await page.getByTestId("add-audio-menu-item").click();
+  await expect(activeNarrationPopover(page)).toBeVisible();
+  await expect(page.getByTestId("narration-trigger").first()).toHaveAttribute("data-state", "draft");
+});
+
 async function openNarrationPanel(page: Page, lineIndex: number) {
-  await page.getByTestId("narration-trigger").nth(lineIndex).click();
-  await expect(page.getByRole("dialog")).toBeVisible();
-  return page.getByRole("dialog").boundingBox();
+  const trigger = page.getByTestId("narration-trigger").nth(lineIndex);
+  const state = await trigger.getAttribute("data-state");
+  if (state === "empty") {
+    const row = page.getByTestId("message-line").nth(lineIndex);
+    await row.scrollIntoViewIfNeeded();
+    await row.hover();
+    await page
+      .getByTestId("message-line-menu-trigger")
+      .nth(lineIndex)
+      .click({ force: true });
+    await page.getByTestId("add-audio-menu-item").click();
+  } else {
+    await trigger.click();
+  }
+  await expect(activeNarrationPopover(page)).toBeVisible();
+  return activeNarrationPopover(page).boundingBox();
 }
 
 async function exportDisco(page: Page, outputPath: string) {
@@ -183,15 +222,13 @@ async function importDisco(page: Page, filePath: string) {
   await page.getByTestId("open-disco-file").click();
   const fileChooser = await fileChooserPromise;
   await fileChooser.setFiles(filePath);
-  await expect(page.getByTestId("narration-trigger").first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "+ Add line" })).toBeVisible();
 }
 
 async function readSavedData(page: Page): Promise<SavedData> {
-  await expect
-    .poll(async () => page.evaluate(() => localStorage.getItem("data")))
-    .not.toBeNull();
-  const data = await page.evaluate(() => localStorage.getItem("data"));
-  return JSON.parse(data!);
+  const raw = await page.evaluate(() => localStorage.getItem("data"));
+  expect(raw).not.toBeNull();
+  return JSON.parse(raw!) as SavedData;
 }
 
 async function waitForSavedData(
@@ -199,10 +236,18 @@ async function waitForSavedData(
   predicate: (data: SavedData) => boolean,
 ): Promise<SavedData> {
   await expect
-    .poll(async () => {
-      const data = await readSavedData(page);
-      return predicate(data);
-    })
+    .poll(
+      async () => {
+        const raw = await page.evaluate(() => localStorage.getItem("data"));
+        if (!raw) return false;
+        try {
+          return predicate(JSON.parse(raw) as SavedData);
+        } catch {
+          return false;
+        }
+      },
+      { timeout: 25_000 },
+    )
     .toBe(true);
 
   return readSavedData(page);
