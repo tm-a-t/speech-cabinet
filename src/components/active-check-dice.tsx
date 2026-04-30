@@ -1,20 +1,6 @@
 import type { CSSProperties } from "react";
 import { cn } from "~/lib/utils";
 
-export const SNAKE_EYES_DICE_SVG = "/effects/dice/snake-eyes.svg";
-export const BOX_CARS_DICE_SVG = "/effects/dice/box-cars.svg";
-
-export const ACTIVE_CHECK_PAIR_SVG_URLS = [SNAKE_EYES_DICE_SVG, BOX_CARS_DICE_SVG] as const;
-
-export function activeCheckPairAssetUrl(
-  die1: number,
-  die2: number,
-): string | null {
-  if (die1 === 1 && die2 === 1) return SNAKE_EYES_DICE_SVG;
-  if (die1 === 6 && die2 === 6) return BOX_CARS_DICE_SVG;
-  return null;
-}
-
 /** Index 0 = face value 1 */
 const PIP_LAYOUT_BY_VALUE = [
   [[48, 48]],
@@ -72,17 +58,6 @@ export function ActiveCheckDiceStrip({
   className?: string;
   style?: CSSProperties;
 }) {
-  const pairUrl = activeCheckPairAssetUrl(die1, die2);
-  if (pairUrl) {
-    return (
-      <img
-        src={pairUrl}
-        className={cn("h-60 w-auto", className)}
-        style={style}
-        alt=""
-      />
-    );
-  }
   return (
     <div
       className={cn(

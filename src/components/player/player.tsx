@@ -1,6 +1,6 @@
 "use client";
 
-import { ActiveCheckDiceStrip, ACTIVE_CHECK_PAIR_SVG_URLS } from "~/components/active-check-dice";
+import { ActiveCheckDiceStrip } from "~/components/active-check-dice";
 import { type DiscoData, type Message, resolveActiveCheckDice } from "~/lib/disco-data";
 import { MessageView } from "~/components/player/message-view";
 import React, { useEffect, useMemo, useState } from "react";
@@ -35,7 +35,6 @@ const activeChecks = {
 };
 const activeCheckUrls = [
   ...Object.values(activeChecks).flatMap((o) => [o.text, o.background]),
-  ...ACTIVE_CHECK_PAIR_SVG_URLS,
 ] as string[];
 
 export function Player({ data }: { data: DiscoData }) {
