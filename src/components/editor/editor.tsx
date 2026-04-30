@@ -99,7 +99,7 @@ export function Editor({data, saveData}: { data: DiscoData, saveData: (data: Dis
         </TextEditorProvider>
       ))}
 
-      <hr className="mb-1 border-transparent md:mt-6 sm:border-zinc-700" />
+      <hr className="mb-1 border-transparent md:mt-6 md:border-zinc-700" />
 
       <div className="fixed md:static bottom-4 left-0 right-0 -ml-1 flex justify-between px-4 md:px-0">
         <Button

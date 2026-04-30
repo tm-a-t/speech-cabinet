@@ -47,6 +47,9 @@ yarn-error.log*
 .idea
 *.iml
 
+# Cursor IDE
+.cursor/
+
 # Disco!
 /public/music/
 /public/sounds/
